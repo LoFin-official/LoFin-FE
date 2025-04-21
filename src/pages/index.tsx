@@ -1,4 +1,4 @@
-import Button from '@/components/Button';
+import Button from '@/components/shared/Button';
 import Header from '@/components/shared/Header';
 import { ReactNode } from 'react';
 
