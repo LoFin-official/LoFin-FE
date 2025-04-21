@@ -1,3 +1,4 @@
+import BottomBar from '@/components/shared/BottomBar';
 import Button from '@/components/shared/Button';
 import Header from '@/components/shared/Header';
 import { ReactNode } from 'react';
@@ -10,7 +11,9 @@ Home.getLayout = (page: ReactNode) => {
   return (
     <>
       <Header>안녕</Header>
-      <Button isComplete={true}>확인{page}</Button>
+      <BottomBar>
+        <Button isComplete={true}>확인{page}</Button>
+      </BottomBar>
     </>
   );
 };
