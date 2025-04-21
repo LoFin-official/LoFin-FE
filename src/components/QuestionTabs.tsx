@@ -10,7 +10,7 @@ export default function QuestionTabs({ selectedTab, onSelectTab, className = '' 
   return (
     <div className={`w-[412px] h-[56px] relative ${className}`}>
       {/* 탭 내용 */}
-      <div className='flex justify-between items-center w-full h-[48px] px-24 py-[5px]'>
+      <div className='flex justify-between items-center w-full h-[52px] px-24 py-[5px]'>
         <button
           onClick={() => onSelectTab('direct')}
           className={`text-base font-medium leading-9 transition-colors duration-200 ${
@@ -30,7 +30,7 @@ export default function QuestionTabs({ selectedTab, onSelectTab, className = '' 
       </div>
 
       {/* 하단 전체 라인 */}
-      <div className='w-full h-[1px] bg-[#CCCCCC] mt-1' />
+      <div className='w-full h-[1px] bg-[#CCCCCC]' />
 
       {/* 선택된 탭 하이라이트 라인 */}
       <div className='relative'>
