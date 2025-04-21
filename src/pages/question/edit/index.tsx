@@ -1,4 +1,4 @@
-import QuestionTabs from '@/components/QuestionTabs';
+import QuestionTabs from '@/components/shared/question/QuestionTabs';
 import BottomBar from '@/components/shared/BottomBar';
 import Header from '@/components/shared/Header';
 import { ReactNode } from 'react';
