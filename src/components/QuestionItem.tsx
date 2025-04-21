@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
-import { useRouter } from 'next/router'; // Next.js 사용시
+import { useRouter } from 'next/router';
+import { QuestionsIcon } from '@/assets/icons/SvgIcon'; // 아이콘 컴포넌트 import
+import { BackIcon } from '@/assets/icons/SvgIcon';
 
 interface QuestionItemProps {
   number: string;
@@ -7,25 +9,24 @@ interface QuestionItemProps {
   className?: string;
   isComplete: boolean;
   onClick?: () => void;
-  detailPageUrl: string; // 상세 페이지 URL
+  detailPageUrl: string;
   children?: ReactNode;
 }
 
 export default function QuestionItem({ number, question, className = '', isComplete, onClick, detailPageUrl }: QuestionItemProps) {
-  const router = useRouter(); // Router 훅 사용
+  const router = useRouter();
 
-  // 클릭 시 상세 페이지로 이동
   const handleClick = () => {
     router.push(detailPageUrl);
-    if (onClick) onClick(); // 추가적인 onClick 기능이 있다면 호출
+    if (onClick) onClick();
   };
 
   return (
     <header className={`relative h-[52px] w-[412px] border-b border-zinc-100 ${className}`} onClick={handleClick}>
-      {/* 뒤로가기 화살표 (예시용, 실제 아이콘으로 교체 추천) */}
+      {/* 완료 시 아이콘 표시 (좌우 반전) */}
       {isComplete && (
-        <div className='absolute left-[396px] top-[38px] w-6 h-6 -rotate-180 origin-top-left overflow-hidden'>
-          <div className='absolute left-[8.33px] top-[5.36px] w-2 h-[13.31px] bg-zinc-800' />
+        <div className='absolute right-[16px] top-[14px] transform rotate-180'>
+          <BackIcon onClick={() => {}} />
         </div>
       )}
 
@@ -37,7 +38,7 @@ export default function QuestionItem({ number, question, className = '', isCompl
 
       {/* 아이콘 */}
       <div className='absolute left-[16px] top-[16px] w-5 h-5 overflow-hidden'>
-        <div className='absolute left-[1.25px] top-[2.55px] w-[17.49px] h-[14.95px] bg-rose-300' />
+        <QuestionsIcon className='w-5 h-5' />
       </div>
     </header>
   );
