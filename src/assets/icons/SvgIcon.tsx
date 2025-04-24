@@ -4,10 +4,10 @@ import React from 'react';
 export function BackIcon({ onClick }: { onClick: () => void }) {
   return (
     <svg width={24} height={24} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' onClick={onClick} preserveAspectRatio='none'>
-      <g clip-path='url(#clip0_176_478)'>
+      <g clipPath='url(#clip0_176_478)'>
         <path
-          fill-rule='evenodd'
-          clip-rule='evenodd'
+          fillRule='evenodd'
+          clipRule='evenodd'
           d='M8.29303 12.707C8.10556 12.5195 8.00024 12.2652 8.00024 12C8.00024 11.7348 8.10556 11.4805 8.29303 11.293L13.95 5.636C14.0423 5.54049 14.1526 5.46431 14.2746 5.4119C14.3966 5.35949 14.5279 5.3319 14.6606 5.33075C14.7934 5.3296 14.9251 5.3549 15.048 5.40518C15.1709 5.45546 15.2825 5.52971 15.3764 5.6236C15.4703 5.7175 15.5446 5.82915 15.5949 5.95205C15.6451 6.07494 15.6704 6.20662 15.6693 6.3394C15.6681 6.47218 15.6405 6.6034 15.5881 6.7254C15.5357 6.84741 15.4595 6.95775 15.364 7.05L10.414 12L15.364 16.95C15.5462 17.1386 15.647 17.3912 15.6447 17.6534C15.6424 17.9156 15.5373 18.1664 15.3518 18.3518C15.1664 18.5372 14.9156 18.6424 14.6534 18.6447C14.3912 18.647 14.1386 18.5462 13.95 18.364L8.29303 12.707Z'
           fill='#333333'
         />
@@ -56,8 +56,8 @@ export const HeartIcon = ({ className }: { className?: string }) => {
 export function MemoryWriteIcon({ onClick }: { onClick: () => void }) {
   return (
     <svg width={18} height={18} viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg' onClick={onClick} preserveAspectRatio='none'>
-      <path d='M9 2V16' stroke='#333333' stroke-width={3} stroke-linecap='round' />
-      <path d='M2 9L16 9' stroke='#333333' stroke-width={3} stroke-linecap='round' />
+      <path d='M9 2V16' stroke='#333333' strokeWidth={3} strokeLinecap='round' />
+      <path d='M2 9L16 9' stroke='#333333' strokeWidth={3} strokeLinecap='round' />
     </svg>
   );
 }
@@ -66,7 +66,7 @@ export function MemoryWriteIcon({ onClick }: { onClick: () => void }) {
 export function CloseIcon({ onClick }: { onClick: () => void }) {
   return (
     <svg width={24} height={24} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' onClick={onClick} preserveAspectRatio='none'>
-      <path d='M6 18L18 6M6 6L18 18' stroke='#333333' stroke-width={2} stroke-linecap='round' />
+      <path d='M6 18L18 6M6 6L18 18' stroke='#333333' strokeWidth={2} strokeLinecap='round' />
     </svg>
   );
 }
@@ -229,7 +229,7 @@ export function AlertIcon({ onClick }: { onClick: () => void }) {
 export const ForwardIcon = ({ className }: { className?: string }) => {
   return (
     <svg width={24} height={24} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className={className} preserveAspectRatio='none'>
-      <path d='M10 7L15 12L10 17' stroke='#767676' stroke-width={2} stroke-linecap='round' stroke-linejoin='round' />
+      <path d='M10 7L15 12L10 17' stroke='#767676' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' />
     </svg>
   );
 };
@@ -253,9 +253,9 @@ export function DayEditIcon({ onClick }: { onClick: () => void }) {
       <path
         d='M12.5366 19.2428L13.2789 18.4109C14.1897 17.3902 15.8237 17.5229 16.5579 18.6772C17.2418 19.7525 18.7275 19.9563 19.6758 19.105L21.0212 17.8969M2.979 19.4699L7.34499 18.5902C7.57677 18.5435 7.78958 18.4293 7.95672 18.2621L17.7304 8.48307C18.199 8.01422 18.1987 7.25423 17.7297 6.78577L15.6593 4.71769C15.1905 4.24942 14.4309 4.24974 13.9625 4.7184L4.18777 14.4985C4.02095 14.6654 3.90705 14.8777 3.86031 15.109L2.979 19.4699Z'
         stroke='#C58EF1'
-        stroke-width={2}
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   );
@@ -268,9 +268,9 @@ export function DayDeleteIcon({ onClick }: { onClick: () => void }) {
       <path
         d='M4 6.17647H20M10 16.7647V10.4118M14 16.7647V10.4118M16 21H8C6.89543 21 6 20.0519 6 18.8824V7.23529C6 6.65052 6.44772 6.17647 7 6.17647H17C17.5523 6.17647 18 6.65052 18 7.23529V18.8824C18 20.0519 17.1046 21 16 21ZM10 6.17647H14C14.5523 6.17647 15 5.70242 15 5.11765V4.05882C15 3.47405 14.5523 3 14 3H10C9.44772 3 9 3.47405 9 4.05882V5.11765C9 5.70242 9.44772 6.17647 10 6.17647Z'
         stroke='#FF4C80'
-        stroke-width={2}
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   );
@@ -281,8 +281,8 @@ export function AlertOnIcon({ onClick }: { onClick: () => void }) {
   return (
     <svg width={56} height={56} viewBox='0 0 56 56' fill='none' xmlns='http://www.w3.org/2000/svg' onClick={onClick} preserveAspectRatio='none'>
       <path
-        fill-rule='evenodd'
-        clip-rule='evenodd'
+        fillRule='evenodd'
+        clipRule='evenodd'
         d='M3.85893 30.3656C5.0229 37.7374 11.3769 43.1668 18.84 43.1668H37.1598C44.6229 43.1668 50.9769 37.7374 52.1409 30.3656C52.3883 28.7983 52.3883 27.202 52.1409 25.6347C50.9769 18.2629 44.6229 12.8335 37.1598 12.8335H18.84C11.3769 12.8335 5.0229 18.2629 3.85894 25.6347C3.61147 27.202 3.61147 28.7983 3.85893 30.3656ZM37.3333 36.1668C41.4979 36.1668 44.9815 32.9865 45.416 28.8591C45.4758 28.2908 45.4758 27.7096 45.416 27.1412C44.9815 23.0139 41.4979 19.8335 37.3333 19.8335C33.1687 19.8335 29.6851 23.0139 29.2506 27.1412C29.1908 27.7096 29.1908 28.2908 29.2506 28.8591C29.6851 32.9865 33.1687 36.1668 37.3333 36.1668Z'
         fill='#FF7A99'
       />
@@ -295,8 +295,8 @@ export function AlertOffIcon({ onClick }: { onClick: () => void }) {
   return (
     <svg width={56} height={56} viewBox='0 0 56 56' fill='none' xmlns='http://www.w3.org/2000/svg' onClick={onClick} preserveAspectRatio='none'>
       <path
-        fill-rule='evenodd'
-        clip-rule='evenodd'
+        fillRule='evenodd'
+        clipRule='evenodd'
         d='M52.1409 30.3656C50.9769 37.7374 44.6229 43.1668 37.1598 43.1668H18.84C11.3769 43.1668 5.0229 37.7374 3.85894 30.3656C3.61147 28.7984 3.61147 27.202 3.85893 25.6347C5.0229 18.2629 11.3769 12.8335 18.84 12.8335H37.1598C44.6229 12.8335 50.9769 18.2629 52.1409 25.6347C52.3883 27.202 52.3883 28.7983 52.1409 30.3656ZM18.6665 36.1668C14.5019 36.1668 11.0183 32.9865 10.5838 28.8591C10.524 28.2908 10.524 27.7096 10.5838 27.1412C11.0183 23.0139 14.5019 19.8335 18.6665 19.8335C22.8311 19.8335 26.3148 23.0139 26.7492 27.1412C26.8091 27.7096 26.8091 28.2908 26.7492 28.8591C26.3148 32.9865 22.8311 36.1668 18.6665 36.1668Z'
         fill='#999999'
       />
