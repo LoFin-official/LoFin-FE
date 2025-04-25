@@ -33,7 +33,7 @@ export default function ProfileItem({ type = 'none', questionIndex = 1 }: Profil
   return (
     <>
       <div
-        className={`w-[380px] h-auto px-6 pt-6 pb-4 bg-[#ffffff] rounded-[18px] flex flex-col mx-auto ${type === 'profile' ? 'cursor-pointer' : ''}`}
+        className={`w-[380px] h-auto px-6 pt-6 pb-4 bg-[#ffffff] rounded-[18px] flex flex-col mx-auto ${type === 'profile' && 'cursor-pointer'}`}
         onClick={handleClick}
       >
         <div className='w-[332px] h-[120px] flex flex-row gap-[30px] items-center justify-center'>
@@ -55,7 +55,7 @@ export default function ProfileItem({ type = 'none', questionIndex = 1 }: Profil
         {type !== 'none' && (
           <div className='w-[332px] h-5 mt-4 flex items-center justify-center'>
             {type === 'question' && <QuestionsIcon className='mr-[2px]' />}
-            <span className={`text-base font-bold text-[#767676] ${type === 'question' ? 'font-medium text-[14px]' : ''}`}>
+            <span className={`text-base font-bold text-[#767676] ${type === 'question' && 'font-medium text-[14px]'}`}>
               {type === 'profile' ? '프로필 정보 확인하기' : type === 'question' ? questionText : today}
             </span>
           </div>
