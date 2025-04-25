@@ -37,9 +37,9 @@ export default function ProfileItem({ type = 'none', questionIndex = 1 }: Profil
         onClick={handleClick}
       >
         <div className='w-[332px] h-[120px] flex flex-row gap-[30px] items-center justify-center'>
-          <div className='w-[120px] h-[120px] rounded-full'></div>
+          <div className='w-[120px] h-[120px] rounded-full bg-[#eeeeee]'></div>
           <VitalIcon />
-          <div className='w-[120px] h-[120px] rounded-full'></div>
+          <div className='w-[120px] h-[120px] rounded-full bg-[#eeeeee]'></div>
         </div>
         <div className='w-[332px] h-6 mt-2 flex items-center justify-center'>
           {type === 'question' ? (
