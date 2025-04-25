@@ -1,12 +1,13 @@
-import { HeartIcon, VitalIcon } from '@/assets/icons/SvgIcon';
+import { HeartIcon, VitalIcon, QuestionsIcon } from '@/assets/icons/SvgIcon';
 import React from 'react';
 import { useRouter } from 'next/router';
 
 interface ProfileProps {
-  type?: 'profile' | 'date' | 'none';
+  type?: 'profile' | 'date' | 'none' | 'question';
+  questionIndex?: number;
 }
 
-export default function ProfileItem({ type = 'none' }: ProfileProps) {
+export default function ProfileItem({ type = 'none', questionIndex = 1 }: ProfileProps) {
   const router = useRouter();
 
   const today = (() => {
@@ -27,6 +28,8 @@ export default function ProfileItem({ type = 'none' }: ProfileProps) {
     }
   };
 
+  const questionText = `${questionIndex}번째 질문`;
+
   return (
     <>
       <div
@@ -39,13 +42,22 @@ export default function ProfileItem({ type = 'none' }: ProfileProps) {
           <div className='w-[120px] h-[120px] rounded-full'></div>
         </div>
         <div className='w-[332px] h-6 mt-2 flex items-center justify-center'>
-          <span className='flex-1 text-right pr-2 text-xl font-bold text-[#333333]'>제리</span>
-          <HeartIcon />
-          <span className='flex-1 text-left pl-2 text-xl font-bold text-[#333333]'>제리</span>
+          {type === 'question' ? (
+            <span className='flex text-xl font-bold text-[#333333]'>질문 하나, 추억 하나</span>
+          ) : (
+            <>
+              <span className='flex-1 text-right pr-2 text-xl font-bold text-[#333333]'>제리</span>
+              <HeartIcon />
+              <span className='flex-1 text-left pl-2 text-xl font-bold text-[#333333]'>제리</span>
+            </>
+          )}
         </div>
         {type !== 'none' && (
           <div className='w-[332px] h-5 mt-4 flex items-center justify-center'>
-            <span className='text-base font-bold text-[#767676]'>{type === 'profile' ? '프로필 정보 확인하기' : today}</span>
+            {type === 'question' && <QuestionsIcon className='mr-[2px]' />}
+            <span className={`text-base font-bold text-[#767676] ${type === 'question' ? 'font-medium text-[14px]' : ''}`}>
+              {type === 'profile' ? '프로필 정보 확인하기' : type === 'question' ? questionText : today}
+            </span>
           </div>
         )}
       </div>
