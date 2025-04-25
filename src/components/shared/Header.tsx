@@ -11,7 +11,7 @@ export default function Header({ children }: HeaderProps) {
   const { pathname } = router;
 
   // 추억, 질문 작성 = X / 경로 수정 예정
-  const noIconPages = ['/memory', '/question', '/present'];
+  const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/edit'];
 
   let IconComponent: React.ElementType | null = BackIcon;
