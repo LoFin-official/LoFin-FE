@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { AlertOnIcon, AlertOffIcon } from '@/assets/icons/SvgIcon';
 
 interface NotificationItemProps {
   title: string;
