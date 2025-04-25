@@ -9,10 +9,12 @@ interface PresentItemProps {
 export default function PresentItem({ sectionTitle, sectionSubtitle, items }: PresentItemProps) {
   return (
     <div>
-      {/* 섹션 제목 */}
-      <div className='ml-6 text-[#333333] text-xl font-bold '>{sectionTitle}</div>
-      {/* 섹션 부제목 */}
-      <div className='ml-6 text-[#737373] text-sm font-medium mb-4'>{sectionSubtitle}</div>
+      <div className='flex flex-col gap-[2px]'>
+        {/* 섹션 제목 */}
+        <div className='ml-6 text-[#333333] text-xl font-bold '>{sectionTitle}</div>
+        {/* 섹션 부제목 */}
+        <div className='ml-6 text-[#767676] mb-4'>{sectionSubtitle}</div>
+      </div>
 
       {/* 선물 리스트 */}
       <div className='space-y-4 px-4'>
@@ -25,9 +27,9 @@ export default function PresentItem({ sectionTitle, sectionSubtitle, items }: Pr
               paddingBottom: '4px',
             }}
           >
-            <div className='text-[#999999] text-sm font-medium mb-0'>{item.label}</div>
-            <div className='text-[#333333] text-[18px] font-medium ml-1.5 break-words'>{item.title}</div>
-            <div className='text-[#767676] text-sm font-medium mb-4 ml-1.5 break-words'>{item.description}</div>
+            <div className='text-[#999999]'>{item.label}</div>
+            <div className='text-[#333333] text-lg ml-1 break-words'>{item.title}</div>
+            <div className='text-[#767676] mb-4 ml-1.5 break-words'>{item.description}</div>
           </div>
         ))}
       </div>

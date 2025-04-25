@@ -1,5 +1,5 @@
 import React from 'react';
-import PresentItem from '@/components/shared/PresentItem'; // Adjust the import path based on your project structure
+import PresentItem from '@/components/shared/PresentItem';
 
 export default function Present() {
   const tomFavorites = [
