@@ -33,7 +33,7 @@ export default function ProfileItem({ type = 'none', questionIndex = 1 }: Profil
   return (
     <>
       <div
-        className={`w-[380px] h-auto px-6 py-6 bg-[#ffffff] rounded-[18px] flex flex-col mx-auto ${type === 'profile' ? 'cursor-pointer' : ''}`}
+        className={`w-[380px] h-auto px-6 pt-6 pb-4 bg-[#ffffff] rounded-[18px] flex flex-col mx-auto ${type === 'profile' ? 'cursor-pointer' : ''}`}
         onClick={handleClick}
       >
         <div className='w-[332px] h-[120px] flex flex-row gap-[30px] items-center justify-center'>
