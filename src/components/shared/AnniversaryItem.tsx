@@ -7,12 +7,13 @@ interface AnniversaryItemProps {
   dday: string;
   date: string;
   onClick?: () => void;
+  onDelete?: () => void; // New prop for delete handler
   iconColor?: string;
   className?: string;
   children?: React.ReactNode;
 }
 
-export default function AnniversaryItem({ label, dday, date, onClick, className = '' }: AnniversaryItemProps) {
+export default function AnniversaryItem({ label, dday, date, onClick, onDelete, className = '' }: AnniversaryItemProps) {
   const [isModalOpen, setIsModalOpen] = useState(false); // Main menu modal
   const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] = useState(false); // Edit confirmation modal
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false); // Delete confirmation modal
@@ -48,6 +49,13 @@ export default function AnniversaryItem({ label, dday, date, onClick, className 
   const handleEditConfirm = () => {
     setIsEditConfirmModalOpen(false); // Close edit confirmation modal
     router.push('/edit-page'); // Navigate to the edit page
+  };
+
+  const handleDeleteConfirm = () => {
+    setIsDeleteConfirmModalOpen(false); // Close delete confirmation modal
+    if (onDelete) {
+      onDelete(); // Call the delete handler passed as a prop
+    }
   };
 
   return (
@@ -138,7 +146,7 @@ export default function AnniversaryItem({ label, dday, date, onClick, className 
             </div>
             <div
               className='left-[137px] top-[61px] absolute text-right justify-start text-[#FF4C80] text-base font-medium  leading-tight cursor-pointer'
-              onClick={handleDeleteModalClose}
+              onClick={handleDeleteConfirm} // Confirm and delete the anniversary
             >
               삭제
             </div>
