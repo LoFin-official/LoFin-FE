@@ -15,7 +15,6 @@ export default function NotificationItem({ title, description, isOn, onToggle, d
 
   // '\n' 문자열을 실제 줄바꿈으로 변환
   const processedDescription = description.replace(/\\n/g, '\n');
-  // 줄바꿈 문자를 기준으로 분리
   const descriptionLines = processedDescription.split('\n');
 
   const handleItemClick = () => {
@@ -24,21 +23,15 @@ export default function NotificationItem({ title, description, isOn, onToggle, d
     }
   };
 
-  // 이벤트 버블링을 신경쓰지 않고 토글 버튼만 처리하기 위한 접근법
-  const handleToggleIconContainer = (e: React.MouseEvent) => {
-    // 아이템 전체 클릭 이벤트(페이지 이동)가 발생하지 않도록 함
-    e.stopPropagation();
-  };
-
   return (
     <div
-      className='relative w-[380px] h-auto min-h-[80px] px-4 py-3 border-b border-[#EEEEEE] flex items-start cursor-pointer'
+      className='relative w-full h-auto min-h-[80px] px-4 py-3 border-b border-[#eeeeee] flex items-start cursor-pointer'
       onClick={handleItemClick}
     >
       {/* 텍스트 */}
       <div className='flex flex-col pr-10'>
-        <div className='text-[#333333] text-xl font-bold'>{title}</div>
-        <div className='text-[#767676] text-base font-medium leading-tight'>
+        <div className='text-[#333333] text-xl font-bold mb-1'>{title}</div>
+        <div className='text-[#767676] text-base font-medium leading-tight ml-1'>
           {descriptionLines.map((line, index) => (
             <React.Fragment key={index}>
               {line}
@@ -48,13 +41,28 @@ export default function NotificationItem({ title, description, isOn, onToggle, d
         </div>
       </div>
 
-      {/* 토글 버튼 - 버블링 방지를 위한 컨테이너 */}
-      <div className='absolute right-4 top-1/2 transform -translate-y-1/2 z-10' onClick={handleToggleIconContainer}>
-        {/* 
-          중요: onClick을 직접 onToggle로 설정하여 
-          아이콘을 클릭하면 바로 상태가 변경되도록 함
-        */}
-        {isOn ? <AlertOnIcon onClick={onToggle} /> : <AlertOffIcon onClick={onToggle} />}
+      {/* 토글 버튼 컨테이너 - 크기 축소 (버튼 크기에 맞게 조정됨) */}
+      <div
+        className='absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-[49px] h-[30px] rounded-full p-0.5 cursor-pointer'
+        style={{
+          backgroundColor: isOn ? '#FF7A99' : '#999999',
+          transition: 'background-color 0.3s ease',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
+      >
+        {/* 슬라이딩 원형 버튼 - 5x5로 축소 */}
+        <div
+          className='w-4 h-4 bg-[#ffffff] rounded-full shadow-md'
+          style={{
+            transform: isOn ? 'translateX(20px)' : 'translateX(0)',
+            transition: 'transform 0.3s ease',
+            marginTop: '5px', // 세로 중앙 정렬 보정
+            marginLeft: '5px',
+          }}
+        />
       </div>
     </div>
   );
