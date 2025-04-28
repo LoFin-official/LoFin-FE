@@ -6,11 +6,12 @@ interface CustomInputProps {
   placeholder?: string;
   width?: string;
   helperText?: string;
+  name?: string;
   value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function Input({ label, placeholder, width = 'w-[380px]', helperText, value, onChange, }: CustomInputProps) {
+export default function Input({ label, placeholder, width = 'w-[380px]', helperText, name, value, onChange }: CustomInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
 
@@ -25,7 +26,7 @@ export default function Input({ label, placeholder, width = 'w-[380px]', helperT
     setInternalValue('');
     if (onChange) {
       const event = {
-        target: { value: '' }
+        target: { value: '' },
       } as React.ChangeEvent<HTMLInputElement>;
       onChange(event);
     }
@@ -41,6 +42,7 @@ export default function Input({ label, placeholder, width = 'w-[380px]', helperT
       <div className={`flex flex-row ${width} h-9 border-b ${isFocused ? 'border-[#FF9BB3]' : 'border-[#ccc]'}`}>
         <input
           type='text'
+          name={name}
           value={internalValue}
           className='w-full h-5 my-2 mx-[2px] bg-transparent outline-none text-base text-left text-[#333333] placeholder-[#cccccc]'
           onChange={handleChange}
