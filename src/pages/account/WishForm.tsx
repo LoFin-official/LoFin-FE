@@ -1,11 +1,11 @@
 import Header from '@/components/shared/Header';
 import React, { ReactNode } from 'react';
 
-export default function WishPage() {
+export default function WishForm() {
   return;
 }
 
-WishPage.getLayout = (page: ReactNode) => {
+WishForm.getLayout = (page: ReactNode) => {
   return (
     <>
       <Header>위시리스트</Header>
