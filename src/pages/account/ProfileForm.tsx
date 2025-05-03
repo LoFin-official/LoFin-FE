@@ -26,8 +26,8 @@ export default function ProfileForm() {
   const steps = ['1', '2', '3', '4'];
   return (
     <>
-      <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between'>
-        <div className='flex flex-1 items-center justify-center'>
+      <div className='flex flex-col min-h-[calc(100vh-56px)] pt-8 justify-between'>
+        <div className='flex flex-1 justify-center'>
           <div className='flex flex-col gap-8 items-center'>
             <div className='flex flex-row gap-1 items-center'>
               {steps.map((step, index) => (
@@ -39,7 +39,7 @@ export default function ProfileForm() {
             </div>
             <div className='flex flex-col gap-0.5 w-[380px] text-center'>
               <span className='h-6 text-[#333333] text-xl font-bold'>사용하실 프로필 정보를 입력해 주세요.</span>
-              <span className='h-4 text-[#767676]'>프로필 사진은 선택 사항이며, 나중에 추가할 수도 있어요.</span>
+              <span className='h-5 text-[#767676]'>프로필 사진은 선택 사항이며, 나중에 추가할 수도 있어요.</span>
             </div>
             <div className='w-[120px] h-[120px] rounded-full bg-[#cccccc]'></div>
             <Input
