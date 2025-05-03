@@ -90,6 +90,9 @@ export default function WishCategoryItem() {
     전자기기: {
       전자기기: ['무선 이어폰', '스마트 워치', '폴라로이드', '포토 프린터'],
     },
+    기타: {
+      '원하시는 카테고리가 없으신가요?': ['기타'],
+    },
   };
 
   const sideMenu = Object.keys(categoriesMap);
@@ -139,14 +142,15 @@ export default function WishCategoryItem() {
         {allSelectedItems.length === 0 ? (
           <div className='flex flex-col gap-0.5 px-1 text-center'>
             <span className='h-6 text-[#767676] text-xl font-bold'>아직 선택된 항목이 없어요.</span>
-            <span className='h-5 text-[#999999] text-sm'>마음에 드는 선물을 최대 3개까지 선택해보세요!</span>
+            <span className='h-5 text-[#999999] text-sm'>마음에 드는 선물을 최대 3개까지 선택할 수 있어요!</span>
           </div>
         ) : (
           allSelectedItems.map((item) => (
             <Input
+              width='w-[376px]'
               key={item}
               label={`${item}`}
-              placeholder='상세 정보를 입력해 주세요'
+              placeholder='해당 카테고리 상품의 상세 정보를 입력해 주세요'
               value={selectedInputsMap[item] || ''}
               onChange={(e) => handleInputChange(item, e.target.value)}
             />
