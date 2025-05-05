@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClearIcon } from '@/assets/icons/SvgIcon';
+import { ClearIcon, EyeCloseIcon, EyeIcon } from '@/assets/icons/SvgIcon';
 
 interface CustomInputProps {
   label: string;
@@ -9,11 +9,25 @@ interface CustomInputProps {
   name?: string;
   value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
+  maxLength?: number;
 }
 
-export default function Input({ label, placeholder, width = 'w-[380px]', helperText, name, value, onChange }: CustomInputProps) {
+export default function Input({
+  label,
+  placeholder,
+  width = 'w-[380px]',
+  helperText,
+  name,
+  value,
+  onChange,
+  type = 'text',
+  maxLength,
+}: CustomInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === 'password';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInternalValue(e.target.value);
@@ -41,18 +55,24 @@ export default function Input({ label, placeholder, width = 'w-[380px]', helperT
       <p className={`text-sm h-4 text-left ${isFocused ? 'text-[#FF9BB3]' : 'text-[#999]'}`}>{label}</p>
       <div className={`flex flex-row ${width} h-9 border-b ${isFocused ? 'border-[#FF9BB3]' : 'border-[#ccc]'}`}>
         <input
-          type='text'
+          type={isPassword && !showPassword ? 'password' : 'text'}
           name={name}
           value={internalValue}
+          maxLength={maxLength}
           className='w-full h-5 my-2 mx-[2px] bg-transparent outline-none text-base text-left text-[#333333] placeholder-[#cccccc]'
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
         />
-        {internalValue && (
-          <div className='cursor-pointer mx-[2px] mt-[6px] mb-[6px]' onClick={handleClear}>
-            <ClearIcon />
+        {isPassword && internalValue && (
+          <div className='flex items-center gap-0.5'>
+            <button type='button' onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <EyeCloseIcon /> : <EyeIcon />}
+            </button>
+            <div className='cursor-pointer mx-0.5 mt-1.5 mb-1.5' onClick={handleClear}>
+              <ClearIcon />
+            </div>
           </div>
         )}
       </div>
