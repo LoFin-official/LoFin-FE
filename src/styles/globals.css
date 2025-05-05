@@ -27,3 +27,10 @@ body {
 html {
   scrollbar-gutter: stable;
 }
+
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-clear-button {
+  display: none !important;
+}

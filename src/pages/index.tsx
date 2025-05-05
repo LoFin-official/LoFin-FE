@@ -7,7 +7,10 @@ export default function Home() {
   return (
     <>
       <div className='flex flex-col items-center justify-center gap-16 min-h-[calc(100vh-148px)]'>
-        <Image src='/images/LoFin.png' alt='LoFin' width={300} height={300} />
+        <div className='flex flex-col gap-8 items-center'>
+          <div className='whitespace-pre-line text-[#333333] text-5xl font-bold text-center'>연인 추억 저장소</div>
+          <Image src='/images/LoFin.png' alt='LoFin' width={300} height={300} />
+        </div>
       </div>
       <div className='flex flex-col gap-4 items-center justify-center'>
         <div className='flex-grow'></div>
