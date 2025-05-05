@@ -52,23 +52,28 @@ export default function forgotPasswordPage() {
               비밀번호를 잊으셨나요?{'\n'}회원가입에 사용한 이메일을 입력해 주세요.
             </div>
             <Image src='/images/LoFin.png' alt='LoFin' width={200} height={200} />
-            <div className='flex flex-row gap-2'>
-              <Input
-                label='아이디'
-                placeholder='회원가입에 사용한 이메일을 입력해 주세요.'
-                width='w-[277px]'
-                name='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <div className='flex items-end'>
-                <div
-                  onClick={() => setShowVerification(true)}
-                  className='w-[95px] h-[36px] rounded-[6px] bg-[#FF9BB3] flex justify-center cursor-pointer'
-                >
-                  <div className='h-5 text-base text-[#ffffff] font-bold mt-1.5'>인증 요청</div>
+            <div className='flex flex-col gap-1'>
+              <div className='flex flex-row gap-2'>
+                <Input
+                  label='아이디'
+                  placeholder='이메일을 입력해 주세요.'
+                  width='w-[277px]'
+                  name='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <div className='flex items-end'>
+                  <div
+                    onClick={() => setShowVerification(true)}
+                    className='w-[95px] h-[36px] rounded-[6px] bg-[#FF9BB3] flex justify-center cursor-pointer'
+                  >
+                    <div className='h-5 text-base text-[#ffffff] font-bold mt-1.5'>인증 요청</div>
+                  </div>
                 </div>
               </div>
+              {!isValidEmail(email) && email && (
+                <div className='text-[#FF2A2A] text-sm ml-0.5'>이메일 주소는 example@domain.com과 같은 형식이어야 합니다.</div>
+              )}
             </div>
             {showVerification && (
               <div className='flex flex-col gap-1'>
