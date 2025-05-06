@@ -1,9 +1,8 @@
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
-import Header from '@/components/shared/Header';
 import React, { ReactNode, useState } from 'react';
 
-export default function CoupleConnectPage() {
+export default function CoupleConnectPage({ onNext }: { onNext: () => void }) {
   const [currentStep, setCurrentStep] = useState(2);
 
   const steps = ['1', '2', '3', '4'];
@@ -22,19 +21,10 @@ export default function CoupleConnectPage() {
             </div>
           </div>
         </div>
-        <Button isComplete={false} className='mb-4'>
+        <Button isComplete={false} onClick={onNext} className='mb-4'>
           연결하기
         </Button>
       </div>
     </>
   );
 }
-
-CoupleConnectPage.getLayout = (page: ReactNode) => {
-  return (
-    <>
-      <Header>커플 연결</Header>
-      {page}
-    </>
-  );
-};

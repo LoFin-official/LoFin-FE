@@ -1,10 +1,9 @@
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
-import Header from '@/components/shared/Header';
 import Input from '@/components/shared/Input';
 import React, { ReactNode, useState } from 'react';
 
-export default function ProfileForm() {
+export default function ProfileForm({ onNext }: { onNext: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     nickname: '',
@@ -58,19 +57,10 @@ export default function ProfileForm() {
             />
           </div>
         </div>
-        <Button isComplete={isComplete} className='mb-4'>
+        <Button isComplete={isComplete} onClick={onNext} className='mb-4'>
           회원가입
         </Button>
       </div>
     </>
   );
 }
-
-ProfileForm.getLayout = (page: ReactNode) => {
-  return (
-    <>
-      <Header>프로필 설정</Header>
-      {page}
-    </>
-  );
-};

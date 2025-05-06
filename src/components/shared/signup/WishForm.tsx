@@ -1,10 +1,9 @@
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
-import Header from '@/components/shared/Header';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import React, { ReactNode, useState } from 'react';
 
-export default function WishForm() {
+export default function WishForm({ onNext }: { onNext: () => void }) {
   const [currentStep, setCurrentStep] = useState(1);
 
   const steps = ['1', '2', '3', '4'];
@@ -28,19 +27,10 @@ export default function WishForm() {
             <WishCategoryItem />
           </div>
         </div>
-        <Button isComplete={false} className='mb-4'>
+        <Button isComplete={false} onClick={onNext} className='mb-4'>
           선택 완료
         </Button>
       </div>
     </>
   );
 }
-
-WishForm.getLayout = (page: ReactNode) => {
-  return (
-    <>
-      <Header>위시리스트</Header>
-      {page}
-    </>
-  );
-};
