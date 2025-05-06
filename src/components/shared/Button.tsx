@@ -15,7 +15,7 @@ export default function Button({ children, className, isComplete, onClick }: But
           <span className='text-xl font-bold text-white'>{children}</span>
         </div>
       ) : (
-        <div className='w-[380px] h-[50px] flex items-center justify-center rounded-md bg-[#999999] mx-auto cursor-pointer hover:bg-[#8A8A8A]'>
+        <div className='w-[380px] h-[50px] flex items-center justify-center rounded-md bg-[#999999] mx-auto hover:bg-[#8A8A8A]'>
           <span className='text-xl font-bold text-white'>{children}</span>
         </div>
       )}
