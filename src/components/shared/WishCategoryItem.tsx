@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Input from './Input';
-import NoItemText from './NoItemText';
 
 const CategorySection = ({
   title,
@@ -36,9 +35,13 @@ const CategorySection = ({
   </div>
 );
 
-export default function WishCategoryItem() {
+type WishCategoryItemProps = {
+  selectedItemsMap: Record<string, string[]>;
+  setSelectedItemsMap: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+};
+
+export default function WishCategoryItem({ selectedItemsMap, setSelectedItemsMap }: WishCategoryItemProps) {
   const [selectedCategory, setSelectedCategory] = useState('패션 & 악세');
-  const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
   const [selectedInputsMap, setSelectedInputsMap] = useState<Record<string, string>>({});
 
   const handleToggleItem = (item: string) => {

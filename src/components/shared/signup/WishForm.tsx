@@ -1,11 +1,13 @@
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
-import Header from '@/components/shared/Header';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 
-export default function WishForm() {
-  const [currentStep, setCurrentStep] = useState(1);
+export default function WishForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
+  const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
+
+  const allSelectedItems = Object.values(selectedItemsMap).flat();
+  const isAnyItemSelected = allSelectedItems.length > 0;
 
   const steps = ['1', '2', '3', '4'];
   return (
@@ -25,22 +27,20 @@ export default function WishForm() {
               <span className='h-6 text-[#333333] text-xl font-bold'>기념일에 받고 싶은 선물을 선택하세요!</span>
               <span className='h-5 text-[#767676]'>카테고리에서 원하는 선물을 고르거나 직접 입력할 수도 있어요.</span>
             </div>
-            <WishCategoryItem />
+            <WishCategoryItem selectedItemsMap={selectedItemsMap} setSelectedItemsMap={setSelectedItemsMap} />
           </div>
         </div>
-        <Button isComplete={false} className='mb-4'>
+        <Button
+          isComplete={isAnyItemSelected}
+          onClick={() => {
+            if (!isAnyItemSelected) return;
+            onNext();
+          }}
+          className='mb-4'
+        >
           선택 완료
         </Button>
       </div>
     </>
   );
 }
-
-WishForm.getLayout = (page: ReactNode) => {
-  return (
-    <>
-      <Header>위시리스트</Header>
-      {page}
-    </>
-  );
-};
