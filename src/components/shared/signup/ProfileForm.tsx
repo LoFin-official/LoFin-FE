@@ -1,28 +1,54 @@
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
 import Input from '@/components/shared/Input';
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 
-export default function ProfileForm({ onNext }: { onNext: () => void }) {
-  const [currentStep, setCurrentStep] = useState(0);
+export default function ProfileForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
+  const steps = ['1', '2', '3', '4'];
   const [formData, setFormData] = useState({
     nickname: '',
     birth: '',
   });
 
-  // 상태 업데이트 함수
+  // 자음/모음만 구성된 닉네임은 제한
+  const isOnlyConsonantsOrVowels = /^[ㄱ-ㅎㅏ-ㅣ]+$/.test(formData.nickname.trim());
+
+  // 닉네임 유효성 검사: 2~8자 사이
+  const isValidNickname = formData.nickname.trim().length >= 2 && formData.nickname.trim().length <= 8 && !isOnlyConsonantsOrVowels;
+
+  // 실제 날짜인지 체크
+  const isValidDate = (dateString: string) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return false;
+
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+
+    return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+  };
+
+  // 생년월일 유효성 검사: YYYY-MM-DD 형식 정규식
+  const isValidBirth = /^\d{4}-\d{2}-\d{2}$/.test(formData.birth) && isValidDate(formData.birth);
+
+  const isComplete = isValidNickname && isValidBirth;
+
+  // 생년월일 하이픈 자동 삽입
+  const formatBirthInput = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 8); // 숫자만 8자리까지 추출
+    const parts = [digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8)].filter(Boolean);
+    return parts.join('-');
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    const newValue = name === 'birth' ? formatBirthInput(value) : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
-  // 필수 입력 값이 있는지 체크
-  const isComplete = formData.nickname.trim() !== '' && formData.birth.trim() !== '';
-
-  const steps = ['1', '2', '3', '4'];
   return (
     <>
       <div className='flex flex-col min-h-[calc(100vh-56px)] pt-8 justify-between'>
@@ -48,16 +74,30 @@ export default function ProfileForm({ onNext }: { onNext: () => void }) {
               value={formData.nickname}
               onChange={handleChange}
             />
-            <Input
-              label='생년월일'
-              placeholder='연도-월-일(YYYY-MM-DD) 형식으로 입력해 주세요.'
-              name='birth'
-              value={formData.birth}
-              onChange={handleChange}
-            />
+            <div className='flex flex-col gap-1'>
+              <Input
+                label='생년월일'
+                placeholder='연도-월-일(YYYY-MM-DD) 형식으로 입력해 주세요.'
+                name='birth'
+                value={formData.birth}
+                maxLength={10}
+                onChange={handleChange}
+              />
+              {!isValidBirth && formData.birth && (
+                <div className='text-[#FF2A2A] text-sm ml-1 mt-1'>생년월일은 YYYY-MM-DD 형식의 올바른 날짜여야 합니다.</div>
+              )}
+            </div>
           </div>
         </div>
-        <Button isComplete={isComplete} onClick={onNext} className='mb-4'>
+        <Button
+          isComplete={isComplete}
+          onClick={() => {
+            if (isComplete) {
+              onNext();
+            }
+          }}
+          className='mb-4'
+        >
           회원가입
         </Button>
       </div>
