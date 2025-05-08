@@ -1,4 +1,5 @@
 import Header from '@/components/shared/Header';
+import CoupleCompletePage from '@/components/shared/signup/Couple-Complete';
 import CoupleConnectPage from '@/components/shared/signup/Couple-Connect';
 import ProfileForm from '@/components/shared/signup/ProfileForm';
 import WishForm from '@/components/shared/signup/WishForm';
@@ -18,12 +19,14 @@ export default function SignupFlowPage() {
         return '위시리스트';
       case 3:
         return '커플 연결';
+      case 4:
+        return '커플 연결 완료';
       default:
         return '';
     }
   };
 
-  const showBackButton = step !== 1;
+  const showBackButton = step !== 1 && step !== 4;
 
   const rightElement =
     step === 2 ? (
@@ -37,9 +40,10 @@ export default function SignupFlowPage() {
       <Header onBack={prevStep} showBackButton={showBackButton} rightElement={rightElement}>
         {getHeaderText()}
       </Header>
-      {step === 1 && <ProfileForm onNext={nextStep} />}
-      {step === 2 && <WishForm onNext={nextStep} onBack={prevStep} />}
-      {step === 3 && <CoupleConnectPage onNext={nextStep} onBack={prevStep} />}
+      {step === 1 && <ProfileForm onNext={nextStep} currentStep={0} />}
+      {step === 2 && <WishForm onNext={nextStep} currentStep={1} />}
+      {step === 3 && <CoupleConnectPage onNext={nextStep} currentStep={2} />}
+      {step === 4 && <CoupleCompletePage currentStep={3} />}
     </div>
   );
 }
