@@ -15,9 +15,9 @@ export default function Header({ children, onBack, showBackButton, rightElement 
 
   // 추억, 질문 작성 = X / 경로 수정 예정
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
-  const closeIconPages = ['/question/edit'];
+  const closeIconPages = ['/question/edit', '/question/[id]/answer'];
   const memoryEditPages = ['/memory'];
-  const questionEditPages = ['/question'];
+  const questionEditPages = ['/question', '/question/[id]'];
   const imagePages = ['/memory/edit'];
   const nextPages = ['/account/WishForm'];
 
@@ -39,7 +39,7 @@ export default function Header({ children, onBack, showBackButton, rightElement 
     if (memoryEditPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' />;
     } else if (questionEditPages.includes(pathname)) {
-      RightComponent = <QuestionEditIcon className='cursor-pointer' />;
+      RightComponent = <QuestionEditIcon onClick={() => router.push('/question/edit')} />;
     } else if (imagePages.includes(pathname)) {
       RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (nextPages.includes(pathname)) {
