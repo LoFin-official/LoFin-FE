@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { GiftIcon, ChatIcon, MemoryIcon, QuestionsIcon, MyIcon } from '@/assets/icons/SvgIcon';
 
 interface BottomBarProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export default function BottomBar({ children }: BottomBarProps) {
