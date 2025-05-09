@@ -1,27 +1,31 @@
 import { useRouter } from 'next/router';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { BackIcon, CloseIcon, MemoryIcon, MemoryImageIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
+import QuestionBottomSheet from './question/QuestionBottomSheet';
 
 interface HeaderProps {
   children: ReactNode;
-  onBack?: () => void; // 프로필 설정 페이지
-  rightElement?: ReactNode; // 건너뛰기 버튼 등등
-  showBackButton?: boolean; // 뒤로가기 보일지 여부
+  onBack?: () => void;
+  rightElement?: ReactNode;
+  showBackButton?: boolean;
+  hasAnswer?: boolean;
 }
 
-export default function Header({ children, onBack, showBackButton, rightElement }: HeaderProps) {
+export default function Header({ children, onBack, showBackButton, rightElement, hasAnswer }: HeaderProps) {
   const router = useRouter();
-  const { pathname } = router;
+  const { pathname, query } = router;
 
-  // 추억, 질문 작성 = X / 경로 수정 예정
+  const id = query.id;
+
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
-  const closeIconPages = ['/question/edit', '/question/[id]/answer'];
+  const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit'];
   const memoryEditPages = ['/memory'];
   const questionEditPages = ['/question', '/question/[id]'];
   const imagePages = ['/memory/edit'];
   const nextPages = ['/account/WishForm'];
 
-  // 뒤로가기 아이콘 설정
   let IconComponent: React.ElementType | null = BackIcon;
 
   if (noIconPages.includes(pathname)) {
@@ -32,14 +36,18 @@ export default function Header({ children, onBack, showBackButton, rightElement 
     IconComponent = CloseIcon;
   }
 
-  // 오른쪽 요소 설정
   let RightComponent: React.ReactNode = rightElement;
 
   if (RightComponent === undefined) {
     if (memoryEditPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' />;
     } else if (questionEditPages.includes(pathname)) {
-      RightComponent = <QuestionEditIcon onClick={() => router.push('/question/edit')} />;
+      RightComponent =
+        pathname === '/question/[id]' ? (
+          <QuestionEditIcon onClick={() => setIsSheetOpen(true)} />
+        ) : (
+          <QuestionEditIcon onClick={() => router.push('/question/create')} />
+        );
     } else if (imagePages.includes(pathname)) {
       RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (nextPages.includes(pathname)) {
@@ -52,10 +60,14 @@ export default function Header({ children, onBack, showBackButton, rightElement 
   }
 
   return (
-    <div className='w-[412px] h-[56px] relative bg-white border-b border-[#eee] flex items-center justify-between px-2'>
-      <div className='cursor-pointer pl-2'>{IconComponent && <IconComponent onClick={onBack ?? (() => router.back())} />}</div>
-      <div className='absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold text-[#333333]'>{children}</div>
-      <div className='text-right pr-2'>{RightComponent}</div>
-    </div>
+    <>
+      <div className='w-[412px] h-[56px] relative bg-white border-b border-[#eee] flex items-center justify-between px-2'>
+        <div className='cursor-pointer pl-2'>{IconComponent && <IconComponent onClick={onBack ?? (() => router.back())} />}</div>
+        <div className='absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold text-[#333333]'>{children}</div>
+        <div className='text-right pr-2'>{RightComponent}</div>
+      </div>
+
+      <QuestionBottomSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)} hasAnswer={hasAnswer} id={id} />
+    </>
   );
 }
