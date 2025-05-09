@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import BottomSheet from '@/components/shared/BottomSheet';
-import { QuestionEditIcon } from '@/assets/icons/SvgIcon';
+import { DeleteIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
 
 interface QuestionBottomSheetProps {
   isOpen: boolean;
@@ -24,10 +24,10 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: 
                   router.push(`/question/${id}/answer`).then(onClose);
                 }
               }}
-              className='flex flex-row gap-0.5 h-[72px] px-4 items-center border-b border-[#D9D9D9] cursor-pointer'
+              className='flex flex-row gap-0.5 h-[72px] px-4 items-center border-b border-[#D9D9D9] text-[#FF4C80] cursor-pointer'
             >
               <QuestionEditIcon onClick={() => {}} />
-              <div className='h-6 text-[#333333] text-lg'>답변하기</div>
+              <div className='h-6 text-lg'>답변하기</div>
             </div>
             <div
               onClick={() => {
@@ -36,9 +36,10 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: 
                   router.push('/question').then(onClose);
                 }
               }}
-              className='flex flex-row gap-0.5 h-[72px] px-4 items-center cursor-pointer'
+              className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'
             >
-              <div className='h-6 text-[#333333] text-lg'>삭제하기</div>
+              <DeleteIcon />
+              <div className='h-6 text-lg'>삭제하기</div>
             </div>
           </>
         ) : (
@@ -50,10 +51,10 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: 
                   router.push(`/question/${id}/edit`).then(onClose);
                 }
               }}
-              className='flex flex-row gap-0.5 h-[72px] px-4 items-center border-b border-[#D9D9D9] cursor-pointer'
+              className='flex flex-row gap-0.5 h-[72px] px-4 items-center border-b border-[#D9D9D9] text-[#FF4C80] cursor-pointer'
             >
               <QuestionEditIcon onClick={() => {}} />
-              <div className='h-6 text-[#333333] text-lg'>수정하기</div>
+              <div className='h-6 text-lg'>수정하기</div>
             </div>
             <div
               onClick={() => {
@@ -62,9 +63,10 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: 
                   router.push('/question').then(onClose);
                 }
               }}
-              className='flex flex-row gap-0.5 h-[72px] px-4 items-center cursor-pointer'
+              className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'
             >
-              <div className='h-6 text-[#333333] text-lg'>삭제하기</div>
+              <DeleteIcon />
+              <div className='h-6 text-lg'>삭제하기</div>
             </div>
           </>
         )}
