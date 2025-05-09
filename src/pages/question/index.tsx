@@ -14,7 +14,7 @@ export default function QuestionPage() {
     <>
       <div>
         {hasQuestions ? (
-          <div className='flex flex-col'>
+          <div className='flex flex-col pb-[56px]'>
             {questions.map((q, index) => (
               <QuestionItem
                 className='cursor-pointer text-[#FF9BB3]'
