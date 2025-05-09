@@ -43,7 +43,7 @@ export default function QuestionAnswerPage() {
   };
 
   return (
-    <div className='flex flex-col gap-8 pt-16 px-4 min-h-[calc(100vh-112px)]'>
+    <div className='flex flex-col gap-8 pt-16 px-4 min-h-[calc(100vh-112px)] items-center'>
       <div className='flex flex-col gap-2 items-center text-center'>
         <span className='w-auto h-6 text-[#333333] font-bold text-xl'>{questionText}</span>
         <div className='flex flex-row gap-0.5'>
