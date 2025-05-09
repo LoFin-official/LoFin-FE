@@ -145,7 +145,7 @@ export function QuestionEditIcon({ onClick }: { onClick: () => void }) {
       viewBox='0 0 24 24'
       fill='#333333'
       xmlns='http://www.w3.org/2000/svg'
-      onClick={onClick}
+      onClick={() => onClick?.()}
       preserveAspectRatio='none'
     >
       <path
