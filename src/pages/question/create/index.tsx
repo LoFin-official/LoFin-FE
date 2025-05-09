@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
 
-export default function QuestionEditPage() {
+export default function QuestionCreatePage() {
   const [selectedTab, setSelectedTab] = useState<'direct' | 'random'>('direct');
   const [question, setQuestion] = useState('');
   const router = useRouter();
@@ -33,8 +33,9 @@ export default function QuestionEditPage() {
   ];
 
   const handleQuestion = () => {
-    //API 요청 예정
-    if (isComplete) {
+    const content = selectedTab === 'direct' ? question.trim() : randomQuestion.trim();
+    if (content) {
+      // 예: API 요청
       router.push('/question');
     }
   };
@@ -90,7 +91,7 @@ export default function QuestionEditPage() {
   );
 }
 
-QuestionEditPage.getLayout = (page: ReactNode) => {
+QuestionCreatePage.getLayout = (page: ReactNode) => {
   return (
     <>
       <Header>질문 생성</Header>
