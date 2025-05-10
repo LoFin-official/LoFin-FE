@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 
 interface ProfileProps {
   type?: 'profile' | 'date' | 'none' | 'question';
-  questionIndex?: number;
+  id?: number;
 }
 
-export default function ProfileItem({ type = 'none', questionIndex = 1 }: ProfileProps) {
+export default function ProfileItem({ type = 'none', id }: ProfileProps) {
   const router = useRouter();
 
   const today = (() => {
@@ -28,7 +28,7 @@ export default function ProfileItem({ type = 'none', questionIndex = 1 }: Profil
     }
   };
 
-  const questionText = `${questionIndex}번째 질문`;
+  const questionText = `${id}번째 질문`;
 
   return (
     <>
@@ -54,7 +54,7 @@ export default function ProfileItem({ type = 'none', questionIndex = 1 }: Profil
         </div>
         {type !== 'none' && (
           <div className='w-[332px] h-5 mt-4 flex items-center justify-center'>
-            {type === 'question' && <QuestionsIcon className='mr-[2px]' />}
+            {type === 'question' && <QuestionsIcon className='mr-[2px] text-[#767676]' />}
             <span className={`text-base font-bold text-[#767676] ${type === 'question' && 'font-medium text-[14px]'}`}>
               {type === 'profile' ? '프로필 정보 확인하기' : type === 'question' ? questionText : today}
             </span>

@@ -1,0 +1,16 @@
+export const questions = [
+  { id: 1, number: '01', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 2, number: '02', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+  { id: 3, number: '03', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 4, number: '04', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+  { id: 5, number: '05', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 6, number: '06', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+  { id: 7, number: '07', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 8, number: '08', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+  { id: 9, number: '09', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 10, number: '10', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+  { id: 11, number: '11', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 12, number: '12', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+  { id: 13, number: '13', question: '서로를 처음 봤을 때 어떤 인상이었나요?', isComplete: true, detailPageUrl: '/question/1' },
+  { id: 14, number: '14', question: '요즘 가장 즐겨 듣는 노래는?', isComplete: false, detailPageUrl: '/question/2' },
+];
