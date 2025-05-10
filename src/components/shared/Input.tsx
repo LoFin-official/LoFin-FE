@@ -70,11 +70,16 @@ export default function Input({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
         />
-        {isPassword && internalValue && (
+        {internalValue && (
           <div className='flex items-center gap-0.5'>
-            <button type='button' onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <EyeCloseIcon /> : <EyeIcon />}
-            </button>
+            {/* 패스워드 타입일 때만 보이는 눈 아이콘 */}
+            {isPassword && (
+              <button type='button' onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <EyeCloseIcon /> : <EyeIcon />}
+              </button>
+            )}
+
+            {/* 모든 타입에서 보이는 Clear 아이콘 */}
             <div className='cursor-pointer mx-0.5 mt-1.5 mb-1.5' onClick={handleClear}>
               <ClearIcon />
             </div>
