@@ -72,7 +72,7 @@ export default function AnniversaryItem({ label, dday, date, onClick, onDelete, 
     >
       <div className='flex items-center space-x-2'>
         <div className='w-6 h-6 flex items-center justify-center'>
-          <HeartIcon />
+          <HeartIcon className='text-[#FF4C80]' />
         </div>
         <div className='text-[#333333] text-base font-bold leading-tight'>{label}</div>
       </div>
