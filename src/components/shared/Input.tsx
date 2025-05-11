@@ -13,6 +13,7 @@ interface CustomInputProps {
   maxLength?: number; // 최대 글자 수 제한
   readOnly?: boolean; // 읽기 전용 텍스트
   alwaysActiveStyle?: boolean; // 포커스 되지 않아도 강조 색상 유지
+  onClick?: () => void;
 }
 
 export default function Input({
@@ -27,6 +28,7 @@ export default function Input({
   maxLength, // 최대 글자 수 제한
   readOnly = false, // 읽기 전용 텍스트
   alwaysActiveStyle = false, // 포커스 되지 않아도 강조 색상 유지
+  onClick,
 }: CustomInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
@@ -64,13 +66,14 @@ export default function Input({
           name={name}
           value={internalValue}
           maxLength={maxLength}
-          className='w-full h-5 my-2 mx-[2px] bg-transparent outline-none text-base text-left text-[#333333] placeholder-[#cccccc]'
+          className={`w-full h-5 my-2 mx-[2px] bg-transparent outline-none text-base text-left text-[#333333] placeholder-[#cccccc] ${onClick ? 'cursor-pointer' : ''}`}
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onClick={onClick}
           placeholder={placeholder}
         />
-        {internalValue && (
+        {internalValue && !onClick && (
           <div className='flex items-center gap-0.5'>
             {/* 패스워드 타입일 때만 보이는 눈 아이콘 */}
             {isPassword && (
