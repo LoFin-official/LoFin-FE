@@ -22,7 +22,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit'];
   const memoryEditPages = ['/memory'];
-  const questionEditPages = ['/question', '/question/[id]'];
+  const questionEditPages = ['/question', '/question/[id]', '/my-page/anniversary'];
   const imagePages = ['/memory/edit'];
   const nextPages = ['/account/WishForm'];
 
@@ -45,6 +45,8 @@ export default function Header({ children, onBack, showBackButton, rightElement,
       RightComponent =
         pathname === '/question/[id]' ? (
           <QuestionEditIcon onClick={() => setIsSheetOpen(true)} />
+        ) : pathname === '/my-page/anniversary' ? (
+          <QuestionEditIcon onClick={() => router.push('/my-page/anniversary/create')} />
         ) : (
           <QuestionEditIcon onClick={() => router.push('/question/create')} />
         );
