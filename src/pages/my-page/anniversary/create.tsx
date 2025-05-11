@@ -44,7 +44,7 @@ export default function AnniversaryCreatePage() {
       </div>
       <div className='flex-grow'>
         <Button isComplete={isComplete} className=''>
-          변경 완료
+          디데이 생성
         </Button>
       </div>
       <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height={'380px'} onSelectDate={handleDateSelect} />
