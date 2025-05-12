@@ -4,11 +4,13 @@ import BottomBar from '@/components/shared/BottomBar';
 import Input from '@/components/shared/Input';
 import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
+import { useRouter } from 'next/router';
 
 export default function AnniversaryCreatePage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [anniversaryName, setAnniversaryName] = useState('');
+  const router = useRouter();
 
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
@@ -19,6 +21,13 @@ export default function AnniversaryCreatePage() {
   };
 
   const isComplete = anniversaryName.trim() !== '' && selectedDate !== '';
+
+  const handleDday = () => {
+    if (isComplete) {
+      // 작성된 경우에만 동작
+      router.push('/my-page/anniversary');
+    }
+  };
 
   return (
     <>
@@ -43,7 +52,7 @@ export default function AnniversaryCreatePage() {
         </div>
       </div>
       <div className='flex-grow'>
-        <Button isComplete={isComplete} className=''>
+        <Button isComplete={isComplete} onClick={handleDday}>
           디데이 생성
         </Button>
       </div>
