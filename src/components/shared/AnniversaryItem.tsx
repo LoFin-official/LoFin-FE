@@ -55,7 +55,7 @@ export default function AnniversaryItem({ label, dday, date, onClick, onDelete, 
   // 수정 확정 시: 수정 확인 모달 닫고 수정 페이지로 이동
   const handleEditConfirm = () => {
     setIsEditConfirmModalOpen(false);
-    router.push('/edit-page');
+    router.push('/my-page/anniversary/edit');
   };
 
   // 삭제 확정 시: 삭제 확인 모달 닫고 삭제 콜백 실행
