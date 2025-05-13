@@ -1,0 +1,135 @@
+/* 캘린더 전체 컨테이너 스타일 */
+.react-calendar {
+  width: 380px; /* 캘린더의 전체 너비 */
+  background: white; /* 배경색 */
+  font-family: 'Pretendard'; /* 글꼴 설정 */
+  line-height: 8px; /* 줄 간격 */
+}
+
+/* 캘린더 상단 네비게이션 영역 (년도/월 선택 및 이전/다음 버튼) */
+.react-calendar__navigation {
+  display: flex; /* 항목들을 가로로 배치 */
+  height: 48px; /* 네비게이션 영역 높이 */
+  margin: 0; /* 외부 여백 제거 */
+  padding: 0; /* 내부 여백 제거 */
+  font-size: 20px; /* 글자 크기 */
+}
+
+/* 네비게이션의 화살표 버튼 크기 */
+.react-calendar__navigation__arrow {
+  width: 48px; /* 이전/다음 화살표 버튼 너비 */
+  border-radius: 16px;
+  margin: 0 8px;
+}
+
+/* 네비게이션 버튼 기본 스타일 */
+.react-calendar__navigation button {
+  background: none; /* 배경 제거 */
+}
+
+/* 네비게이션 버튼 호버/포커스 상태 */
+.react-calendar__navigation button:enabled:hover {
+  background-color: #ff9bb3; /* 호버/포커스 시 배경색 */
+  color: white; /* 호버/포커스 시 글자색 */
+  border-radius: 16px;
+}
+
+/* 네비게이션 버튼 호버/포커스 상태 */
+.react-calendar__navigation button:enabled:active {
+  background-color: #ff9bb3; /* 호버/포커스 시 배경색 */
+  color: white; /* 호버/포커스 시 글자색 */
+  border-radius: 16px;
+}
+
+/* 월 보기의 요일 표시 영역 (월, 화, 수, 목, 금, 토, 일) */
+.react-calendar__month-view__weekdays {
+  height: 48px; /* 요일 표시 영역 높이 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  text-transform: uppercase; /* 텍스트 대문자 변환 */
+  font: inherit; /* 부모 요소에서 글꼴 상속 */
+}
+
+/* 개별 요일 셀 스타일 */
+.react-calendar__month-view__weekdays__weekday {
+  text-align: center; /* 텍스트 중앙 정렬 */
+  margin-top: 16px;
+  padding: 8px; /* 내부 여백 */
+  color: #767676;
+}
+
+/* 일요일 스타일 */
+.react-calendar__month-view__weekdays__weekday:nth-child(1) abbr,
+.react-calendar__month-view__days__day:nth-child(7n + 1):not(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: red;
+}
+
+/* 토요일 스타일 */
+.react-calendar__month-view__weekdays__weekday:nth-child(7) abbr,
+.react-calendar__month-view__days__day:nth-child(7n):not(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: blue;
+}
+
+/* 밑줄 제거 */
+.react-calendar abbr {
+  text-decoration: none;
+}
+
+/* 이전 달과 다음 달의 day를 표시*/
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #d9d9d9 !important;
+}
+
+/* 주 번호 표시 영역의 타일 스타일 */
+.react-calendar__month-view__weekNumbers .react-calendar__tile {
+  display: flex; /* 플렉스 박스 설정 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  font: inherit; /* 부모 요소에서 글꼴 상속 */
+  font-size: 16px; /* 글자 크기 */
+  font-weight: bold; /* 글자 두께 */
+}
+
+/* 캘린더의 각 날짜 셀(타일) 스타일 */
+.react-calendar__tile {
+  max-width: 100%; /* 최대 너비 */
+  height: 32px; /* 높이 감소 */
+  padding: 8px 4px; /* 내부 여백 감소 */
+  background: none; /* 배경 제거 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  line-height: 16px; /* 줄 간격 */
+  font: inherit; /* 부모 요소에서 글꼴 상속 */
+  margin-bottom: 4px;
+}
+
+/* 날짜 셀 호버/포커스 상태 */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #ff9bb3; /* 호버/포커스 시 배경색 */
+  border-radius: 12px; /* 모서리 둥글게 처리 (크기 감소) */
+  color: white; /* 호버/포커스 시 글자색 */
+}
+
+.react-calendar__tile:enabled:active {
+  background-color: #ff9bb3; /* 호버/포커스 시 배경색 */
+}
+
+/* 오늘 날짜 스타일 */
+.react-calendar__tile--now {
+  background: #ffffff; /* 오늘 날짜 배경색을 흰색으로 변경 */
+  color: #333333; /* 오늘 날짜 글자색 */
+  border-radius: 12px; /* 모서리 둥글게 처리 (크기 감소) */
+  font-weight: bold;
+}
+
+/* 선택된 날짜 스타일 */
+.react-calendar__tile--active {
+  background: #ff9bb3; /* 선택된 날짜 배경색 */
+  border-radius: 12px; /* 모서리 둥글게 처리 (크기 감소) */
+  color: white; /* 선택된 날짜 글자색 */
+}
+
+/* 선택된 날짜가 오늘 날짜가 아닐 때 오늘 날짜 스타일 유지 */
+.react-calendar__tile--now:not(.react-calendar__tile--active) {
+  background: white; /* 선택되지 않은 경우 배경색 흰색 유지 */
+  color: #333333;
+}

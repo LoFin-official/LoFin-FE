@@ -47,7 +47,7 @@ export default function ProfileItem({ type = 'none', id }: ProfileProps) {
           ) : (
             <>
               <span className='flex-1 text-right pr-2 text-xl font-bold text-[#333333]'>제리</span>
-              <HeartIcon />
+              <HeartIcon className='text-[#FF4C80]' />
               <span className='flex-1 text-left pl-2 text-xl font-bold text-[#333333]'>제리</span>
             </>
           )}

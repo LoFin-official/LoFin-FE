@@ -35,7 +35,7 @@ export default function AnniversaryPage() {
   return (
     <div className='min-h-[calc(100vh-112px)] pb-[56px]'>
       <ProfileItem type='date'></ProfileItem>
-      <div className='p-4'>
+      <div className='pt-4'>
         {anniversaries.map((anniversary) => (
           <AnniversaryItem
             key={anniversary.label}

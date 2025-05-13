@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 import Input from './Input';
 
 const CategorySection = ({
@@ -38,11 +38,19 @@ const CategorySection = ({
 type WishCategoryItemProps = {
   selectedItemsMap: Record<string, string[]>;
   setSelectedItemsMap: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+  initialInputsMap?: Record<string, string>;
+  selectedInputsMap: Record<string, string>;
+  setSelectedInputsMap: Dispatch<SetStateAction<Record<string, string>>>;
 };
 
-export default function WishCategoryItem({ selectedItemsMap, setSelectedItemsMap }: WishCategoryItemProps) {
+export default function WishCategoryItem({
+  selectedItemsMap,
+  setSelectedItemsMap,
+  initialInputsMap,
+  selectedInputsMap,
+  setSelectedInputsMap,
+}: WishCategoryItemProps) {
   const [selectedCategory, setSelectedCategory] = useState('패션 & 악세');
-  const [selectedInputsMap, setSelectedInputsMap] = useState<Record<string, string>>({});
 
   const handleToggleItem = (item: string) => {
     setSelectedItemsMap((prev) => {
@@ -50,22 +58,37 @@ export default function WishCategoryItem({ selectedItemsMap, setSelectedItemsMap
       const totalSelectedCount = Object.values(prev).flat().length;
 
       if (current.includes(item)) {
+        // 항목 제거
         const updatedMap = {
           ...prev,
           [selectedCategory]: current.filter((i) => i !== item),
         };
+
+        // 관련 입력값도 제거 (하지만 메모리에는 유지)
         setSelectedInputsMap((inputs) => {
           const newInputs = { ...inputs };
-          delete newInputs[item];
+          // 실제로 삭제하지 않고 빈 값으로 설정
+          // 이렇게 하면 항목을 다시 선택했을 때 이전 입력값이 유지됨
+          newInputs[item] = '';
           return newInputs;
         });
+
+        // 카테고리에 아이템이 없으면 카테고리도 제거
+        if (updatedMap[selectedCategory].length === 0) {
+          const finalMap = { ...updatedMap };
+          delete finalMap[selectedCategory];
+          return finalMap;
+        }
+
         return updatedMap;
       } else if (totalSelectedCount < 3) {
+        // 항목 추가 (최대 3개까지)
         return {
           ...prev,
           [selectedCategory]: [...current, item],
         };
       } else {
+        // 이미 3개 선택된 경우 변경 없음
         return prev;
       }
     });
