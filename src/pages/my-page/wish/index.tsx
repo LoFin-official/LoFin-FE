@@ -3,6 +3,7 @@ import Header from '@/components/shared/Header';
 import React, { ReactNode, useEffect, useState } from 'react';
 import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
+import { useRouter } from 'next/router';
 
 // 예시 임시 데이터 (나중엔 API 호출로 대체)
 const mockFetchedWishData: Record<string, string[]> | null = {
@@ -25,6 +26,7 @@ export default function WishPage() {
   const [selectedInputsMap, setSelectedInputsMap] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isComplete, setIsComplete] = useState(false);
+  const router = useRouter();
 
   // 위시리스트가 존재하면 미리 반영
   useEffect(() => {
@@ -102,6 +104,11 @@ export default function WishPage() {
     setInitialInputsMap({ ...selectedInputsMap });
     setIsComplete(false);
     // 성공 메시지 등 추가 로직
+
+    if (isComplete) {
+      // 변경된 경우에만 동작
+      router.push('/my-page');
+    }
   };
 
   return (
@@ -124,7 +131,7 @@ export default function WishPage() {
             )}
           </div>
         </div>
-        <Button isComplete={isComplete} className='mb-4'>
+        <Button isComplete={isComplete} onClick={handleComplete} className='mb-4'>
           선택 완료
         </Button>
       </div>
