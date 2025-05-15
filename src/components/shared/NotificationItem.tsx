@@ -24,11 +24,11 @@ export default function NotificationItem({ title, description, isOn, onToggle, d
 
   return (
     <div
-      className='relative w-full h-auto min-h-[80px] px-4 py-3 border-b border-[#eeeeee] flex items-start cursor-pointer'
+      className='relative w-full h-auto min-h-[80px] px-2 py-3 border-b border-[#eeeeee] flex items-start cursor-pointer'
       onClick={handleItemClick}
     >
       {/* 텍스트 */}
-      <div className='flex flex-col pr-10'>
+      <div className='flex flex-col'>
         <div className='text-[#333333] text-xl font-bold mb-1'>{title}</div>
         <div className='text-[#767676] text-base font-medium leading-tight ml-1'>
           {descriptionLines.map((line, index) => (
@@ -42,7 +42,7 @@ export default function NotificationItem({ title, description, isOn, onToggle, d
 
       {/* 토글 버튼 컨테이너 - 크기 축소 (버튼 크기에 맞게 조정됨) */}
       <div
-        className='absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-[49px] h-[30px] rounded-full p-0.5 cursor-pointer'
+        className='absolute right-2 top-1/2 transform -translate-y-1/2 z-10 w-[49px] h-[30px] rounded-full p-0.5 cursor-pointer'
         style={{
           backgroundColor: isOn ? '#FF7A99' : '#999999',
           transition: 'background-color 0.3s ease',
