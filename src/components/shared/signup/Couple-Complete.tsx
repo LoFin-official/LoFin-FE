@@ -74,13 +74,42 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
   };
 
-  const handleStart = () => {
-    if (isComplete) {
-      // 표준화된 날짜로 API 요청 (필요 시)
-      const standardizedDate = standardizeDate(birth);
+  const handleStart = async () => {
+    console.log('✅ handleStart 호출됨'); // 제일 먼저 이거 찍히는지 확인
 
-      // API 요청 후 라우팅
+    if (!isComplete) {
+      console.log('❌ isComplete가 false라서 종료');
+      return;
+    }
+    const standardizedDate = standardizeDate(birth);
+
+    const token = localStorage.getItem('token') || '';
+    console.log('불러온 토큰:', token);
+
+    if (!token) {
+      alert('로그인 후 다시 시도해 주세요.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/firstMet/firstmet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // 토큰 추가
+        },
+        body: JSON.stringify({ firstMetDate: standardizedDate }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '처음 만난 날짜 설정 실패');
+      }
+
       router.push('/memory');
+    } catch (error: any) {
+      console.error('처음 만난 날짜 설정 실패:', error.message);
+      alert(`오류: ${error.message}`);
     }
   };
 

@@ -3,13 +3,16 @@ import Header from '@/components/shared/Header';
 import Input from '@/components/shared/Input';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function ResetPasswordPage() {
+  const router = useRouter();
+  const { email } = router.query; // 쿼리에서 이메일 받기
+
   const [newpassword, setNewPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
-
-  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const isValidPassword = (password: string) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
@@ -20,10 +23,40 @@ export default function ResetPasswordPage() {
 
   const isComplete = isValidPassword(newpassword) && isMatching && newpassword.trim() !== '' && confirmpassword.trim() !== '';
 
-  const handleLogin = () => {
-    //API 요청 예정
-    if (isComplete) {
-      router.push('/account/login');
+  const handleResetPassword = async () => {
+    if (!isComplete) return;
+
+    if (!email || typeof email !== 'string') {
+      setErrorMessage('유효한 이메일 정보가 없습니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/password/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          loginId: email,
+          newPassword: newpassword,
+          confirmPassword: confirmpassword, // 추가 필요!
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage('비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.');
+        setErrorMessage('');
+        setTimeout(() => {
+          router.push('/account/login');
+        }, 1500); // 1.5초 후 이동
+      } else {
+        setErrorMessage(data.message || '비밀번호 변경에 실패했습니다.');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      setErrorMessage('서버와 통신 중 오류가 발생했습니다.');
+      setSuccessMessage('');
     }
   };
 
@@ -61,10 +94,12 @@ export default function ResetPasswordPage() {
                 <div className='text-[#FF2A2A] text-sm ml-0.5'>비밀번호가 일치하지 않습니다.</div>
               )}
             </div>
+            {errorMessage && <div className='text-[#FF2A2A] text-sm mt-2'>{errorMessage}</div>}
+            {successMessage && <div className='text-[#2768FF] text-sm mt-2'>{successMessage}</div>}
           </div>
         </div>
 
-        <Button isComplete={isComplete} onClick={handleLogin} className='mb-4'>
+        <Button isComplete={isComplete} onClick={handleResetPassword} className='mb-4'>
           비밀번호 변경
         </Button>
       </div>

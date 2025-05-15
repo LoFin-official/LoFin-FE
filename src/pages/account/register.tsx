@@ -10,7 +10,6 @@ export default function RegisterPage() {
   const [showVerification, setShowVerification] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
-  const [correctCode, setCorrectCode] = useState('1234'); // 실제로는 서버에서 전송 후 받은 값
   const [isVerified, setIsVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -27,26 +26,77 @@ export default function RegisterPage() {
   };
 
   const isPasswordConfirmed = password === confirmpassword;
-  const isVerificationCodeCorrect = verificationCode === correctCode;
 
-  const isComplete = isValidEmail(email) && isValidPassword(password) && isPasswordConfirmed && isVerificationCodeCorrect && isVerified;
-
-  const handleVerificationCheck = () => {
-    if (verificationCode === correctCode) {
-      setIsVerified(true);
-      setSuccessMessage('인증이 완료 되었습니다.');
-      setErrorMessage('');
-    } else {
-      setIsVerified(false);
-      setErrorMessage('인증번호가 일치하지 않습니다.');
-      setSuccessMessage('');
+  const isComplete = isValidEmail(email) && isValidPassword(password) && isPasswordConfirmed && isVerified;
+  const handleSendCode = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/auth/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loginId: email }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowVerification(true);
+        alert('인증 코드가 전송되었습니다.');
+      } else {
+        alert(data.message || '인증 요청 실패');
+      }
+    } catch (error) {
+      console.error('인증 요청 오류:', error);
+      alert('인증 요청 중 오류 발생');
     }
   };
 
-  const handleRegister = () => {
-    //API 요청 예정
-    if (isComplete) {
-      router.push('/account/login');
+  const handleVerificationCheck = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/auth/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loginId: email, code: verificationCode }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsVerified(true);
+        setSuccessMessage('인증이 완료 되었습니다.');
+        setErrorMessage('');
+      } else {
+        setIsVerified(false);
+        setErrorMessage(data.message || '인증 실패');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      console.error('인증 확인 오류:', error);
+      alert('인증 확인 중 오류 발생');
+    }
+  };
+
+  const handleRegister = async () => {
+    if (!isComplete) return;
+
+    try {
+      const res = await fetch('http://localhost:5000/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          loginId: email,
+          password,
+          passwordConfirm: confirmpassword,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
+        alert('회원가입 완료!');
+        router.push('/signup/profile');
+      } else {
+        alert(data.message || '회원가입 실패');
+      }
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+      alert('회원가입 중 오류 발생');
     }
   };
 
@@ -67,10 +117,7 @@ export default function RegisterPage() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <div className='flex items-end'>
-                  <div
-                    onClick={() => setShowVerification(true)}
-                    className='w-[95px] h-[36px] rounded-[6px] bg-[#FF9BB3] flex justify-center cursor-pointer'
-                  >
+                  <div onClick={handleSendCode} className='w-[95px] h-[36px] rounded-[6px] bg-[#FF9BB3] flex justify-center cursor-pointer'>
                     <div className='h-5 text-base text-[#ffffff] font-bold mt-1.5'>인증 요청</div>
                   </div>
                 </div>
@@ -84,9 +131,9 @@ export default function RegisterPage() {
                 <div className='flex flex-row gap-2'>
                   <Input
                     label='인증번호'
-                    placeholder='인증번호 4자리를 입력해 주세요.'
+                    placeholder='인증번호 6자리를 입력해 주세요.'
                     width='w-[277px]'
-                    maxLength={4}
+                    maxLength={6}
                     name='verificationCode'
                     value={verificationCode}
                     onChange={(e) => setVerificationCode(e.target.value)}

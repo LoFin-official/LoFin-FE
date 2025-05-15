@@ -5,14 +5,13 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
-export default function forgotPasswordPage() {
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const router = useRouter();
 
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
 
-  const [correctCode, setCorrectCode] = useState('1234'); // 실제로는 서버에서 전송 후 받은 값
   const [isVerified, setIsVerified] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -23,22 +22,72 @@ export default function forgotPasswordPage() {
 
   const isComplete = isValidEmail(email) && isVerified;
 
-  const handleForgot = () => {
-    //API 요청 예정
-    if (isComplete) {
-      router.push('/account/reset-password');
+  // 인증 요청 - 이메일로 코드 요청
+  const handleSendCode = async () => {
+    if (!isValidEmail(email)) {
+      setErrorMessage('유효한 이메일을 입력해 주세요.');
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:5000/auth/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loginId: email }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        setShowVerification(true);
+        setSuccessMessage('인증 코드가 이메일로 전송되었습니다.');
+        setErrorMessage('');
+      } else {
+        setErrorMessage(data.message || '인증 코드 전송에 실패했습니다.');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      setErrorMessage('서버와 통신 중 오류가 발생했습니다.');
+      setSuccessMessage('');
     }
   };
 
-  const handleVerificationCheck = () => {
-    if (verificationCode === correctCode) {
-      setIsVerified(true);
-      setSuccessMessage('인증이 완료 되었습니다.');
-      setErrorMessage('');
-    } else {
-      setIsVerified(false);
-      setErrorMessage('인증번호가 일치하지 않습니다.');
+  // 인증 코드 검증
+  const handleVerificationCheck = async () => {
+    if (verificationCode.length !== 6) {
+      setErrorMessage('인증번호 6자리를 입력해 주세요.');
       setSuccessMessage('');
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:5000/auth/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loginId: email, code: verificationCode }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsVerified(true);
+        setSuccessMessage('인증이 완료 되었습니다.');
+        setErrorMessage('');
+      } else {
+        setIsVerified(false);
+        setErrorMessage(data.message || '인증번호가 일치하지 않습니다.');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      setIsVerified(false);
+      setErrorMessage('서버와 통신 중 오류가 발생했습니다.');
+      setSuccessMessage('');
+    }
+  };
+
+  // 비밀번호 재설정 페이지로 이동
+  const handleForgot = () => {
+    if (isComplete) {
+      router.push({
+        pathname: '/account/reset-password',
+        query: { email: email }, // 여기 email 값이 제대로 들어가야 함
+      });
     }
   };
 
@@ -63,10 +112,7 @@ export default function forgotPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <div className='flex items-end'>
-                  <div
-                    onClick={() => setShowVerification(true)}
-                    className='w-[95px] h-[36px] rounded-[6px] bg-[#FF9BB3] flex justify-center cursor-pointer'
-                  >
+                  <div onClick={handleSendCode} className='w-[95px] h-[36px] rounded-[6px] bg-[#FF9BB3] flex justify-center cursor-pointer'>
                     <div className='h-5 text-base text-[#ffffff] font-bold mt-1.5'>인증 요청</div>
                   </div>
                 </div>
@@ -80,9 +126,9 @@ export default function forgotPasswordPage() {
                 <div className='flex flex-row gap-2'>
                   <Input
                     label='인증번호'
-                    placeholder='인증번호 4자리를 입력해 주세요.'
+                    placeholder='인증번호 6자리를 입력해 주세요.'
                     width='w-[277px]'
-                    maxLength={4}
+                    maxLength={6}
                     name='verificationCode'
                     value={verificationCode}
                     onChange={(e) => setVerificationCode(e.target.value)}

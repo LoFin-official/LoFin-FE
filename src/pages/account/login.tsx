@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
@@ -20,22 +21,37 @@ export default function LoginPage() {
 
   const isComplete = isValidEmail(email) && isValidPassword(password);
 
-  const router = useRouter();
+  const handleLogin = async () => {
+    if (!isComplete) return;
 
-  const handleLogin = () => {
-    //API 요청 예정
-    if (isComplete) {
-      router.push('/memory');
+    try {
+      const response = await fetch('http://localhost:5000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ loginId: email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('로그인 성공:', data);
+        router.push('/memory');
+      } else {
+        alert(data.message || '로그인 실패');
+      }
+    } catch (error) {
+      console.error('로그인 요청 실패:', error);
+      alert('서버에 연결할 수 없습니다.');
     }
   };
 
   return (
     <>
-      {/* Header 아래 영역 전체를 채우도록 설정 */}
       <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)]'>
         <Image src='/images/LoFin.png' alt='LoFin' width={250} height={250} />
         <div className='flex flex-col gap-8 w-full max-w-sm'>
-          {/* 인풋 영역 */}
           <div className='flex flex-col gap-8'>
             <div className='flex flex-col gap-1'>
               <Input label='아이디' placeholder='이메일을 입력해 주세요.' value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -57,7 +73,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* 버튼 + 텍스트 */}
           <div className='flex flex-col items-center gap-4'>
             <Button isComplete={isComplete} onClick={handleLogin}>
               로그인
