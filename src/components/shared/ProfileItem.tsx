@@ -33,15 +33,22 @@ export default function ProfileItem({ type = 'none', id }: ProfileProps) {
   return (
     <>
       <div
-        className={`w-[380px] h-auto px-6 pt-6 pb-4 bg-[#ffffff] rounded-[18px] flex flex-col mx-auto ${type === 'profile' && 'cursor-pointer'}`}
+        className={`w-full max-w-[380px] h-auto px-6 pt-6 pb-4 bg-[#ffffff] rounded-[18px] flex flex-col mx-auto ${type === 'profile' && 'cursor-pointer'}`}
         onClick={handleClick}
       >
-        <div className='w-[332px] h-[120px] flex flex-row gap-[30px] items-center justify-center'>
+        <div className='relative w-full max-w-[332px] h-[120px] flex items-center justify-between'>
+          {/* 왼쪽 프로필 */}
           <div className='w-[120px] h-[120px] rounded-full bg-[#eeeeee]'></div>
-          <VitalIcon />
+
+          {/* 오른쪽 프로필 */}
           <div className='w-[120px] h-[120px] rounded-full bg-[#eeeeee]'></div>
+
+          {/* 가운데 아이콘 */}
+          <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
+            <VitalIcon />
+          </div>
         </div>
-        <div className='w-[332px] h-6 mt-2 flex items-center justify-center'>
+        <div className='w-full max-w-[332px] h-6 mt-2 flex items-center justify-center'>
           {type === 'question' ? (
             <span className='flex text-xl font-bold text-[#333333]'>질문 하나, 추억 하나</span>
           ) : (
@@ -53,7 +60,7 @@ export default function ProfileItem({ type = 'none', id }: ProfileProps) {
           )}
         </div>
         {type !== 'none' && (
-          <div className='w-[332px] h-5 mt-4 flex items-center justify-center'>
+          <div className='w-full max-w-[332px] h-5 mt-4 flex items-center justify-center'>
             {type === 'question' && <QuestionsIcon className='mr-[2px] text-[#767676]' />}
             <span className={`text-base font-bold text-[#767676] ${type === 'question' && 'font-medium text-[14px]'}`}>
               {type === 'profile' ? '프로필 정보 확인하기' : type === 'question' ? questionText : today}

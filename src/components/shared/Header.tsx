@@ -63,7 +63,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
 
   return (
     <>
-      <div className='w-[412px] h-[56px] relative bg-white border-b border-[#eee] text-[#333333] flex items-center justify-between px-2'>
+      <div className='w-full max-w-[412px] h-[56px] relative bg-white border-b border-[#eee] text-[#333333] flex items-center justify-between px-2'>
         <div className='cursor-pointer pl-2'>{IconComponent && <IconComponent onClick={onBack ?? (() => router.back())} />}</div>
         <div className='absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold'>{children}</div>
         <div className='text-right pr-2'>{RightComponent}</div>

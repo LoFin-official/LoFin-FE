@@ -9,8 +9,8 @@ export default function AlertPage() {
   const [anniversaryAlert, setAnniversaryAlert] = useState(true);
   const [giftAlert, setGiftAlert] = useState(false);
   return (
-    <div className='flex items-center justify-center'>
-      <div className='w-96 flex flex-col items-start'>
+    <div className='flex items-center justify-center px-4'>
+      <div className='w-full max-w-[380px] flex flex-col items-start'>
         <NotificationItem
           title='추억 등록 알림'
           description='추억이 등록되면 알려드릴게요!'

@@ -9,8 +9,8 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className='flex flex-col gap-4 pt-4 bg-[#ffd9e1]/35 min-h-[calc(100vh-112px)] items-center pb-[72px]'>
-        <div className='flex flex-col gap-4 w-[380px] h-[296px] bg-[#FFFFFF] rounded-[18px] px-6 py-6 items-center'>
+      <div className='flex flex-col gap-4 pt-4 bg-[#ffd9e1]/35 min-h-[calc(100vh-112px)] items-center pb-[72px] px-4'>
+        <div className='flex flex-col gap-4 w-full max-w-[380px] h-[296px] bg-[#FFFFFF] rounded-[18px] px-6 py-6 items-center'>
           {/* 내 프로필 */}
           <span className='h-6 text-xl font-bold text-[#333333] self-start'>내 프로필</span>
 
@@ -35,7 +35,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-        <div className='flex flex-col gap-4 w-[380px] h-[296px] bg-[#FFFFFF] rounded-[18px] px-6 py-6 items-center'>
+        <div className='flex flex-col gap-4 w-full max-w-[380px] h-[296px] bg-[#FFFFFF] rounded-[18px] px-6 py-6 items-center'>
           {/* 애인 프로필 */}
           <span className='h-6 text-xl font-bold text-[#333333] self-start'>애인 프로필</span>
 
@@ -54,7 +54,7 @@ export default function ProfilePage() {
             <span className='text-lg text-[#999999]'>1940. 02. 10.</span>
           </div>
         </div>
-        <div className='flex flex-col gap-4 w-[380px] h-[116px] bg-[#FFFFFF] rounded-[18px] py-6 px-6 items-center'>
+        <div className='flex flex-col gap-4 w-full max-w-[380px] h-[116px] bg-[#FFFFFF] rounded-[18px] py-6 px-6 items-center'>
           <span className='h-6 text-xl font-bold text-[#333333] self-start'>커플 정보</span>
           <div className='flex flex-row justify-between items-center w-full cursor-pointer'>
             <span className='text-lg text-[#333333]'>첫 만남</span>
