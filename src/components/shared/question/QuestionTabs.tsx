@@ -8,7 +8,7 @@ interface QuestionTabsProps {
 
 export default function QuestionTabs({ selectedTab, onSelectTab, className = '' }: QuestionTabsProps) {
   return (
-    <div className={`w-[412px] h-[56px] relative ${className}`}>
+    <div className={`w-full max-w-[412px] h-[56px] relative ${className}`}>
       {/* 탭 내용 */}
       <div className='flex justify-between items-center w-full h-[52px] px-24 py-[5px]'>
         <button
