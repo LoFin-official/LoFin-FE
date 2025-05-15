@@ -1,3 +1,5 @@
+'use client';
+
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
 import Input from '@/components/shared/Input';
@@ -5,48 +7,70 @@ import React, { useState } from 'react';
 
 export default function ProfileForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
   const steps = ['1', '2', '3', '4'];
+
   const [formData, setFormData] = useState({
     nickname: '',
     birth: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // 자음/모음만 구성된 닉네임은 제한
   const isOnlyConsonantsOrVowels = /^[ㄱ-ㅎㅏ-ㅣ]+$/.test(formData.nickname.trim());
-
-  // 닉네임 유효성 검사: 2~8자 사이
   const isValidNickname = formData.nickname.trim().length >= 2 && formData.nickname.trim().length <= 8 && !isOnlyConsonantsOrVowels;
 
-  // 실제 날짜인지 체크
   const isValidDate = (dateString: string) => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return false;
-
     const [year, month, day] = dateString.split('-').map(Number);
     const date = new Date(year, month - 1, day);
-
     return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
   };
 
-  // 생년월일 유효성 검사: YYYY-MM-DD 형식 정규식
   const isValidBirth = /^\d{4}-\d{2}-\d{2}$/.test(formData.birth) && isValidDate(formData.birth);
-
   const isComplete = isValidNickname && isValidBirth;
 
-  // 생년월일 하이픈 자동 삽입
   const formatBirthInput = (value: string) => {
-    const digits = value.replace(/\D/g, '').slice(0, 8); // 숫자만 8자리까지 추출
+    const digits = value.replace(/\D/g, '').slice(0, 8);
     const parts = [digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8)].filter(Boolean);
     return parts.join('-');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     const newValue = name === 'birth' ? formatBirthInput(value) : value;
 
     setFormData((prev) => ({
       ...prev,
       [name]: newValue,
     }));
+  };
+
+  const handleSubmit = async () => {
+    if (!isComplete) return;
+
+    try {
+      const token = localStorage.getItem('token');
+
+      const form = new FormData();
+      form.append('nickname', formData.nickname);
+      form.append('birth', formData.birth);
+
+      const response = await fetch('http://localhost:5000/profile/upload', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: form,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        onNext(); // 성공 시 다음 단계로 이동
+      } else {
+        setErrorMessage(data.message || '프로필 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      setErrorMessage('서버와 통신 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -62,11 +86,14 @@ export default function ProfileForm({ onNext, currentStep }: { onNext: () => voi
                 </div>
               ))}
             </div>
+
             <div className='flex flex-col gap-0.5 w-[380px] text-center'>
               <span className='h-6 text-[#333333] text-xl font-bold'>사용하실 프로필 정보를 입력해 주세요.</span>
               <span className='h-5 text-[#767676]'>프로필 사진은 선택 사항이며, 나중에 추가할 수도 있어요.</span>
             </div>
-            <div className='w-[120px] h-[120px] rounded-full bg-[#cccccc]'></div>
+
+            <div className='w-[120px] h-[120px] rounded-full bg-[#cccccc]' />
+
             <Input
               label='닉네임'
               placeholder='닉네임은 최소 두 글자, 최대 여덟 글자까지 작성 가능합니다.'
@@ -87,17 +114,11 @@ export default function ProfileForm({ onNext, currentStep }: { onNext: () => voi
                 <div className='text-[#FF2A2A] text-sm ml-1 mt-1'>생년월일은 YYYY-MM-DD 형식의 올바른 날짜여야 합니다.</div>
               )}
             </div>
+
+            {errorMessage && <div className='text-[#FF2A2A] text-sm'>{errorMessage}</div>}
           </div>
         </div>
-        <Button
-          isComplete={isComplete}
-          onClick={() => {
-            if (isComplete) {
-              onNext();
-            }
-          }}
-          className='mb-4'
-        >
+        <Button isComplete={isComplete} onClick={handleSubmit} className='mb-4'>
           회원가입
         </Button>
       </div>
