@@ -17,7 +17,7 @@ export default function BottomBar({ children }: BottomBarProps) {
   return (
     <div>
       {children}
-      <div className='fixed bottom-0 w-[412px] h-[56px] bg-white border-t flex justify-around items-center'>
+      <div className='fixed bottom-0 w-full max-w-[412px] h-[56px] bg-white border-t flex justify-around items-center'>
         <Link href={'/present'}>
           <button className={`flex flex-col items-center ${getActiveClass('/present')}`}>
             <GiftIcon className='fill-current' />
