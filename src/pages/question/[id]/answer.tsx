@@ -51,11 +51,11 @@ export default function QuestionAnswerPage() {
           <span className='w-auto h-5 text-[#999999]'>{id}번째 질문</span>
         </div>
       </div>
-      <div className='flex flex-col gap-2 w-[348px] h-auto'>
+      <div className='flex flex-col gap-2 w-full max-w-[348px] h-auto mx-4'>
         <span className='w-auto h-6 text-[#333333] font-bold text-lg'>나의 답변</span>
         <textarea
           ref={textareaRef}
-          className='w-full h-6 text-[#767676] text-base border-none resize-none focus:outline-none'
+          className='w-full max-w-[348px] h-6 pl-1 text-[#767676] text-base border-none resize-none focus:outline-none'
           placeholder='솔직한 마음을 편하게 적어주세요 :)'
           value={inputValue}
           onChange={handleInputChange}
@@ -64,7 +64,7 @@ export default function QuestionAnswerPage() {
         <span className='w-auto h-5 text-[#999999] text-xs text-end pr-1'>{inputValue.length}/150</span>
       </div>
       <div className='fixed bottom-[72px]'>
-        <Button isComplete={isComplete} onClick={handleQuestion} className='w-full'>
+        <Button isComplete={isComplete} onClick={handleQuestion} className='w-full max-w-[380px]'>
           작성 완료
         </Button>
       </div>
