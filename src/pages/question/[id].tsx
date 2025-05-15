@@ -21,23 +21,23 @@ export default function QuestionDetailPage() {
   }, [id]);
 
   const question = [
-    { nickname: '제리', content: '크고 시끄러운데...' },
+    { nickname: '제리', content: '크고 시끄러운데... 크고 시끄러운데... 크고 시끄러운데 크고 시끄러운데...' },
     { nickname: '톰', content: '' },
   ];
 
   return (
     <div className='flex flex-col items-center gap-8 px-4 py-4 min-h-[calc(100vh-112px)]'>
       <ProfileItem type='question' id={Number(id)}></ProfileItem>
-      <div className='flex flex-col gap-8 w-[348px] h-auto'>
-        <span className='h-7.5 text-[#333333] font-bold text-2xl'>{questionText}</span>
-        <div className='flex flex-col gap-4 w-[344px] h-auto mr-auto'>
+      <div className='flex flex-col gap-8 w-full max-w-[348px] h-auto mx-4'>
+        <span className='w-full max-w-[348px] h-7.5 text-[#333333] font-bold text-2xl'>{questionText}</span>
+        <div className='flex flex-col gap-4 w-full max-w-[344px] h-auto mr-auto'>
           {question.map((question, index) => (
             <div className='flex flex-col gap-2' key={index}>
-              <span className='w-auto h-6 pl-1 text-[#333333] font-bold text-xl'>{question.nickname}</span>
+              <span className='w-auto h-6 px-1 text-[#333333] font-bold text-xl'>{question.nickname}</span>
               {question.content ? (
-                <span className='w-auto h-auto pl-1.5 text-[#767676] text-base'>{question.content}</span>
+                <span className='w-full max-w-[348px] h-auto px-1.5 text-[#767676] text-base'>{question.content}</span>
               ) : (
-                <span className='w-auto h-auto pl-1.5 text-[#767676] text-base'>아직 답변을 작성하지 않았어요!</span>
+                <span className='w-full max-w-[348px] h-auto px-1.5 text-[#767676] text-base'>아직 답변을 작성하지 않았어요!</span>
               )}
             </div>
           ))}

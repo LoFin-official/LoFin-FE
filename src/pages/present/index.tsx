@@ -42,7 +42,7 @@ export default function PresentPage() {
   ];
   return (
     <div className='min-h-[calc(100vh-112px)] pb-[56px] bg-[#F6F8FA]'>
-      <main className='flex flex-col items-center gap-8 py-8'>
+      <main className='w-full max-w-[412px] mx-auto flex flex-col gap-8 py-8 px-6 md:px-8'>
         {/* 톰이 관심 있어 한 선물 */}
         <PresentItem sectionTitle='톰이 관심 있어 한 선물이에요.' sectionSubtitle='' items={tomFavorites} />
 
