@@ -22,7 +22,7 @@ export default function QuestionItem({ number, question, className = '', isCompl
   };
 
   return (
-    <header className={`relative h-[52px] w-[412px] border-b border-[#EEEEEE] ${className}`} onClick={handleClick}>
+    <header className={`relative h-[52px] w-full max-w-[412px] border-b border-[#EEEEEE] ${className}`} onClick={handleClick}>
       <div className='flex items-center '>
         {/* 아이콘 */}
         <div className='ml-4 pt-1.5 w-5 h-5 '>
