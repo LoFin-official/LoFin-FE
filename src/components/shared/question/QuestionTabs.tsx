@@ -35,7 +35,12 @@ export default function QuestionTabs({ selectedTab, onSelectTab, className = '' 
       {/* 선택된 탭 하이라이트 라인 */}
       <div className='relative'>
         <div
-          className={`absolute w-[74px] h-0.5 bg-[#333333] transition-all duration-300 mt-[-2px] ${selectedTab === 'direct' ? 'ml-[88px]' : 'ml-[250px]'}`}
+          className={`
+          absolute w-[74px] h-0.5 bg-[#333333] transition-all duration-300 mt-[-2px]
+          ml-[88px]            // 기본 (작은 화면, 앱일 가능성 높음)
+          md:ml-[88px]          // 중간 이상 화면일 때 (웹 등)
+          ${selectedTab === 'direct' ? '' : 'translate-x-[110px] md:translate-x-[162px]'}
+        `}
         />
       </div>
     </div>
