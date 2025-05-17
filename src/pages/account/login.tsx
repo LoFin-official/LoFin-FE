@@ -51,16 +51,23 @@ export default function LoginPage() {
     <>
       <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)]'>
         <Image src='/images/LoFin.png' alt='LoFin' width={250} height={250} />
-        <div className='flex flex-col gap-8 w-full max-w-sm'>
-          <div className='flex flex-col gap-8'>
+        <div className='flex flex-col gap-8 w-full max-w-[412px]'>
+          <div className='w-full max-w-[380px] md:w-[412px] flex flex-col gap-8'>
             <div className='flex flex-col gap-1'>
-              <Input label='아이디' placeholder='이메일을 입력해 주세요.' value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                width='w-full max-w-[380px] mx-auto'
+                label='아이디'
+                placeholder='이메일을 입력해 주세요.'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
               {!isValidEmail(email) && email && (
                 <div className='text-[#FF2A2A] text-sm ml-0.5'>이메일 주소는 example@domain.com과 같은 형식이어야 합니다.</div>
               )}
             </div>
             <div className='flex flex-col gap-1'>
               <Input
+                width='w-full max-w-[380px] mx-auto'
                 type='password'
                 label='비밀번호'
                 placeholder='비밀번호를 입력해 주세요.'
