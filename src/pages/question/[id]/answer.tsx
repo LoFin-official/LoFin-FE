@@ -63,7 +63,7 @@ export default function QuestionAnswerPage() {
         />
         <span className='w-auto h-5 text-[#999999] text-xs text-end pr-1'>{inputValue.length}/150</span>
       </div>
-      <div className='fixed bottom-[72px]'>
+      <div className='fixed bottom-[72px] w-full max-w-[412px] mx-auto px-4'>
         <Button isComplete={isComplete} onClick={handleQuestion} className='w-full max-w-[380px]'>
           작성 완료
         </Button>
