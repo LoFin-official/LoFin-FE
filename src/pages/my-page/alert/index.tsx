@@ -31,7 +31,7 @@ export default function AlertPage() {
         />
         <NotificationItem
           title='선물 추천 알림'
-          description='다가오는 기념일엔 어떤 선물이 어울릴까요?\n직접 추천해드릴게요!'
+          description='다가올 기념일엔 어떤 선물이 좋을까요?\n직접 추천해드릴게요!'
           isOn={giftAlert}
           onToggle={() => setGiftAlert((prev) => !prev)}
         />
