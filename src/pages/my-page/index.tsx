@@ -10,7 +10,7 @@ export default function MyPage() {
 
   return (
     <div className='flex flex-col gap-4 bg-[#ffd9e1]/35 min-h-[calc(100vh-56px)] items-center'>
-      <div className='w-full max-w-[480px] flex flex-col gap-4 px-4'>
+      <div className='w-full max-w-[412px] flex flex-col gap-4 px-4'>
         <div className='h-8 px-2 mt-4 flex flex-row font-bold items-center justify-between w-full max-w-[380px]'>
           <span className='text-[#333333] text-2xl'>마이페이지</span>
           <span className='text-[#FF9BB3] text-lg'>DDay</span>
