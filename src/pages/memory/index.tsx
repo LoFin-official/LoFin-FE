@@ -10,7 +10,7 @@ export default function MemoryPage() {
   const hasMemories = memories.length > 0;
   return (
     <>
-      <div>
+      <div className='w-full max-w-[412px] mx-auto'>
         {hasMemories ? (
           // 나중에 추억 아이템이 생기면 여기에 컴포넌트 or 리스트를 렌더링
           <div>추억 아이템 리스트 출력 영역</div>
