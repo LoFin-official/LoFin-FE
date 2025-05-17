@@ -57,21 +57,21 @@ export default function ProfileEditPage() {
 
   return (
     <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center'>
-      <div className='flex flex-col gap-16 items-center'>
+      <div className='flex flex-col gap-16 items-center w-full max-w-[412px] px-4'>
         <div className='w-[150px] h-[150px] bg-[#CCCCCC] rounded-full'></div>
-        <div className='flex flex-col gap-8'>
+        <div className='flex flex-col gap-8 w-full max-w-[348px]'>
           <Input
-            width={'348px'}
+            width='w-full max-w-[348px]'
             label='닉네임'
             placeholder='제리'
-            helperText='ㆍ닉네임은 최소 두 글자, 최대 여덟 글자까지 작성 가능합니다.'
+            helperText='ㆍ닉네임은 최소 두 글자, 최대 여덟 글자입니다.'
             name='nickname'
             maxLength={8}
             value={formData.nickname}
             onChange={handleChange}
           />
           <Input
-            width={'348px'}
+            width='w-full max-w-[348px]'
             label='생년월일'
             placeholder='1940. 02. 10.'
             helperText='ㆍ연도-월-일(YYYY-MM-DD) 형식으로 입력해 주세요.'
@@ -82,7 +82,7 @@ export default function ProfileEditPage() {
           />
         </div>
       </div>
-      <div className='mt-16'>
+      <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
         <Button isComplete={isComplete} onClick={handleProfile} className='mb-4'>
           변경 완료
         </Button>
