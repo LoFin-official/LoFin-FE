@@ -48,25 +48,25 @@ export default function AnniversaryEditPage() {
     <>
       <div className='flex flex-col gap-16 min-h-[calc(100vh-178px)] items-center pt-16'>
         <span className='h-6 text-[#333333] font-bold text-xl'>우리만의 D-Day, 설레는 순간을 기록해요.</span>
-        <div className='flex flex-col gap-8'>
+        <div className='flex flex-col gap-8 w-full max-w-[380px] px-4'>
           <Input
             label='이 날을 뭐라고 부를까요?'
             placeholder='ex) 100일, 200일'
-            width='w-[348px]'
+            width='w-full max-w-[348px]'
             value={anniversaryName}
             onChange={(e) => setAnniversaryName(e.target.value)}
           />
           <Input
             label='이 날은 언제인가요?'
             placeholder='날짜를 선택해 주세요.'
-            width='w-[348px]'
+            width='w-full max-w-[348px]'
             value={selectedDate}
             readOnly
             onClick={() => setIsDateSheetOpen(true)}
           />
         </div>
       </div>
-      <div className='flex-grow'>
+      <div className='flex-grow w-full max-w-[412px] mx-auto px-4'>
         <Button isComplete={isComplete} onClick={handleDday}>
           디데이 수정
         </Button>
