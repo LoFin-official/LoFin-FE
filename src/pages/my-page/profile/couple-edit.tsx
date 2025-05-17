@@ -58,7 +58,7 @@ export default function CoupleSinceEditPage() {
         <ProfileItem />
         <div className='flex flex-col gap-8'>
           <Input
-            width={'348px'}
+            width='w-full max-w-[348px]'
             label='첫 만남'
             placeholder='1940. 02. 10.'
             helperText='ㆍ연도-월-일(YYYY-MM-DD) 형식으로 입력해 주세요.'
@@ -69,7 +69,7 @@ export default function CoupleSinceEditPage() {
           />
         </div>
       </div>
-      <div className='mt-16'>
+      <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
         <Button isComplete={isComplete} onClick={handleProfile} className='mb-4'>
           변경 완료
         </Button>
