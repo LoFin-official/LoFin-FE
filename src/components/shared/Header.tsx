@@ -9,9 +9,10 @@ interface HeaderProps {
   rightElement?: ReactNode;
   showBackButton?: boolean;
   hasAnswer?: boolean;
+  onAnswerDeleted?: () => void; // 답변 삭제 후 콜백 함수 추가
 }
 
-export default function Header({ children, onBack, showBackButton, rightElement, hasAnswer }: HeaderProps) {
+export default function Header({ children, onBack, showBackButton, rightElement, hasAnswer, onAnswerDeleted }: HeaderProps) {
   const router = useRouter();
   const { pathname, query } = router;
 
@@ -70,7 +71,13 @@ export default function Header({ children, onBack, showBackButton, rightElement,
       </div>
 
       {/* 질문 답변, 수정, 삭제 바텀 시트 */}
-      <QuestionBottomSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)} hasAnswer={hasAnswer} id={id} />
+      <QuestionBottomSheet
+        isOpen={isSheetOpen}
+        onClose={() => setIsSheetOpen(false)}
+        hasAnswer={hasAnswer}
+        id={id}
+        onAnswerDeleted={onAnswerDeleted} // 답변 삭제 콜백 전달
+      />
     </>
   );
 }
