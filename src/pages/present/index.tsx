@@ -110,7 +110,7 @@ export default function PresentPage() {
   if (error) return <div>에러: {error}</div>;
 
   return (
-    <div className='min-h-[calc(100vh-112px)] pb-[56px] bg-[#F6F8FA] items-center'>
+    <div className='min-h-[calc(100vh-112px)] bg-[#F6F8FA] items-center'>
       <main className='w-full max-w-[412px] mx-auto flex flex-col gap-8 py-8 px-4 md:px-8'>
         {/* 상대방 위시리스트 추천 */}
         {wishlistGifts.length > 0 && (
@@ -139,8 +139,13 @@ export default function PresentPage() {
         )}
       </main>
       {title && (
-        <div className='text-center text-sm text-blue-600 underline mb-4'>
-          <a href={`https://www.coupang.com/np/search?q=${encodeURIComponent(title + ' 선물')}`} target='_blank' rel='noopener noreferrer'>
+        <div className='text-center mb-4'>
+          <a
+            href={`https://www.coupang.com/np/search?q=${encodeURIComponent(title + ' 선물')}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='inline-block px-4 py-2 bg-[#D1A6F5]/20 text-[#A569E5] text-sm rounded-full hover:bg-[#D1A6F5]/35 transition'
+          >
             🔎 쿠팡에서 “{title} 선물” 더 보기
           </a>
         </div>
@@ -153,7 +158,8 @@ PresentPage.getLayout = (page: ReactNode) => {
   return (
     <>
       <Header>선물 추천</Header>
-      <BottomBar>{page}</BottomBar>
+      {page}
+      <BottomBar />
     </>
   );
 };
