@@ -34,3 +34,11 @@ input::-webkit-credentials-auto-fill-button,
 input::-webkit-clear-button {
   display: none !important;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
+}
