@@ -6,7 +6,7 @@ import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/router';
 
-const backendUrl = 'http://192.168.35.111:5000'; // ✅ 백엔드 주소
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 주소
 
 export default function AnniversaryEditPage() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function AnniversaryEditPage() {
   const [initialAnniversaryName, setInitialAnniversaryName] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // ✅ 날짜 형식 변환 함수
+  // 날짜 형식 변환 함수
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const y = date.getFullYear();
@@ -29,7 +29,7 @@ export default function AnniversaryEditPage() {
     return `${y}-${m}-${d}`;
   };
 
-  // ✅ 서버에서 기념일 정보 불러오기
+  // 서버에서 기념일 정보 불러오기
   useEffect(() => {
     if (!router.isReady || !id) return;
 
@@ -70,7 +70,7 @@ export default function AnniversaryEditPage() {
     fetchAnniversary();
   }, [id, router.isReady]);
 
-  // ✅ 날짜 선택 핸들러
+  // 날짜 선택 핸들러
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
