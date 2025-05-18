@@ -79,7 +79,15 @@ export default function QuestionDetailPage() {
 
   return (
     <>
-      <Header hasAnswer={hasMyAnswer}>질문</Header>
+      <Header
+        hasAnswer={hasMyAnswer}
+        onAnswerDeleted={() => {
+          // 답변 삭제 후 질문 데이터 다시 불러오기
+          fetchQuestionData();
+        }}
+      >
+        질문
+      </Header>
       <div className='flex flex-col items-center gap-8 px-4 py-4 min-h-[calc(100vh-112px)]'>
         <ProfileItem
           type='question'

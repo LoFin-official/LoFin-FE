@@ -2,15 +2,64 @@ import { useRouter } from 'next/router';
 import BottomSheet from '@/components/shared/BottomSheet';
 import { DeleteIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
 
+const backendUrl = 'http://192.168.35.111:5000'; // API 주소
+
 interface QuestionBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   hasAnswer?: boolean;
   id?: string | string[]; // useRouter의 query.id는 string | string[] | undefined
+  onAnswerDeleted?: () => void; // 답변 삭제 후 콜백
 }
 
-export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: QuestionBottomSheetProps) {
+export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id, onAnswerDeleted }: QuestionBottomSheetProps) {
   const router = useRouter();
+
+  // 답변 삭제 함수
+  const handleDeleteAnswer = async () => {
+    if (!id || Array.isArray(id)) {
+      console.error('Invalid question ID');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      // 삭제 확인
+      const confirm = window.confirm('정말로 답변을 삭제하시겠습니까?');
+      if (!confirm) return;
+
+      const response = await fetch(`${backendUrl}/answer/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '답변 삭제에 실패했습니다.');
+      }
+
+      const result = await response.json();
+      alert(result.message || '답변이 삭제되었습니다.');
+
+      // 부모 컴포넌트에 삭제 완료 알림
+      if (onAnswerDeleted) {
+        onAnswerDeleted();
+      }
+
+      onClose();
+    } catch (error: any) {
+      console.error('답변 삭제 오류:', error);
+      alert(error.message || '답변 삭제 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <BottomSheet height={'144px'} isOpen={isOpen} onClose={onClose}>
@@ -29,21 +78,13 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: 
               <QuestionEditIcon onClick={() => {}} />
               <div className='h-6 text-lg'>답변하기</div>
             </div>
-            <div
-              onClick={() => {
-                // API 삭제 로직 추가 예정
-                if (id) {
-                  router.push('/question').then(onClose);
-                }
-              }}
-              className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'
-            >
+            <div onClick={handleDeleteAnswer} className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'>
               <DeleteIcon />
               <div className='h-6 text-lg'>삭제하기</div>
             </div>
           </>
         ) : (
-          // 답변이 있는 경우: 수정하기 + 삭제하기
+          // 답변이 있는 경우: 수정하기 + 삭제하기 (답변 삭제)
           <>
             <div
               onClick={() => {
@@ -56,15 +97,7 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id }: 
               <QuestionEditIcon onClick={() => {}} />
               <div className='h-6 text-lg'>수정하기</div>
             </div>
-            <div
-              onClick={() => {
-                // API 삭제 로직 추가 예정
-                if (id) {
-                  router.push('/question').then(onClose);
-                }
-              }}
-              className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'
-            >
+            <div onClick={handleDeleteAnswer} className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'>
               <DeleteIcon />
               <div className='h-6 text-lg'>삭제하기</div>
             </div>
