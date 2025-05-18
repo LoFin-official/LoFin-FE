@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GiftIcon, ChatIcon, MemoryIcon, QuestionsIcon, MyIcon } from '@/assets/icons/SvgIcon';
+import { stackRouterPush } from '@/store/stackRouter';
 
 interface BottomBarProps {
   children?: ReactNode;
@@ -14,12 +15,17 @@ export default function BottomBar({ children }: BottomBarProps) {
   const getActiveClass = (targetPath: string) =>
     pathname === targetPath || pathname.startsWith(targetPath + '/') ? 'text-[#FF9BB3]' : 'text-[#333333]';
 
+  const handleNavigate = () => {
+    // 다른 페이지로 이동
+    stackRouterPush(router, '/present');
+  };
+
   return (
     <div>
       {children}
       <div className='fixed bottom-0 w-full max-w-[412px] h-[56px] bg-white border-t flex justify-around items-center'>
         <Link href={'/present'}>
-          <button className={`flex flex-col items-center ${getActiveClass('/present')}`}>
+          <button className='flex flex-col items-center' onClick={handleNavigate}>
             <GiftIcon className='fill-current' />
             <span className='text-xs font-bold'>선물</span>
           </button>
