@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function ResetPasswordPage() {
   const router = useRouter();
   const { email } = router.query; // 쿼리에서 이메일 받기
@@ -13,7 +15,6 @@ export default function ResetPasswordPage() {
   const [confirmpassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
   const isValidPassword = (password: string) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
     return regex.test(password);
@@ -32,7 +33,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/password/reset-password', {
+      const response = await fetch(`${backendUrl}/password/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -8,17 +8,18 @@ interface ButtonProps {
 }
 
 export default function Button({ children, className, isComplete, onClick }: ButtonProps) {
+  const baseClasses = 'w-full max-w-[380px] h-[50px] flex items-center justify-center rounded-md mx-auto text-xl font-bold text-white cursor-pointer';
+  const enabledClasses = 'bg-[#FF9BB3] hover:bg-[#FF4C80]';
+  const disabledClasses = 'bg-[#999999] hover:bg-[#8A8A8A]';
+
   return (
-    <div className={className} onClick={onClick}>
-      {isComplete ? (
-        <div className='w-[380px] h-[50px] flex items-center justify-center rounded-md bg-[#FF9BB3] mx-auto cursor-pointer hover:bg-[#FF4C80]'>
-          <span className='text-xl font-bold text-white'>{children}</span>
-        </div>
-      ) : (
-        <div className='w-[380px] h-[50px] flex items-center justify-center rounded-md bg-[#999999] mx-auto hover:bg-[#8A8A8A]'>
-          <span className='text-xl font-bold text-white'>{children}</span>
-        </div>
-      )}
-    </div>
+    <button
+      className={`${baseClasses} ${isComplete ? enabledClasses : disabledClasses} ${className}`}
+      onClick={onClick}
+      disabled={!isComplete}
+      type='button'
+    >
+      {children}
+    </button>
   );
 }

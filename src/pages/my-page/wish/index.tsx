@@ -5,19 +5,7 @@ import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import { useRouter } from 'next/router';
 
-// 예시 임시 데이터 (나중엔 API 호출로 대체)
-const mockFetchedWishData: Record<string, string[]> | null = {
-  '패션 & 악세': ['모자', '자켓'],
-  '뷰티 & 향기': ['향수'],
-  // null이라면 → 건너뛰고 선택 안 한 사용자
-  // {} 라면 → 선택했지만 모두 해제한 사용자
-};
-
-const mockFetchedWishDetails: Record<string, string> = {
-  모자: '베이지색 볼캡, 평소에 자주 착용하는 스타일',
-  자켓: '',
-  향수: '',
-};
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
 
 export default function WishPage() {
   const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
@@ -26,88 +14,141 @@ export default function WishPage() {
   const [selectedInputsMap, setSelectedInputsMap] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isComplete, setIsComplete] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(''); // 메시지 상태 추가
   const router = useRouter();
 
-  // 위시리스트가 존재하면 미리 반영
   useEffect(() => {
     const fetchInitialWishList = async () => {
-      // API 대신 목업 데이터 사용
-      const fetchedItems = mockFetchedWishData || {};
-      const fetchedInputs = mockFetchedWishDetails || {};
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('토큰이 없습니다.');
+          setIsLoading(false);
+          return;
+        }
 
-      setSelectedItemsMap({ ...fetchedItems });
-      setInitialItemsMap({ ...fetchedItems });
-      setSelectedInputsMap({ ...fetchedInputs });
-      setInitialInputsMap({ ...fetchedInputs });
+        const res = await fetch(`${backendUrl}/wishlistUpdate/item`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      setIsLoading(false);
+        if (!res.ok) {
+          throw new Error('서버에서 위시리스트를 불러오는 데 실패했습니다.');
+        }
+
+        const data = await res.json();
+        console.log(' 위시리스트 fetch 결과:', data);
+
+        const fetchedItemsMap: Record<string, string[]> = {};
+        const fetchedInputsMap: Record<string, string> = {};
+
+        if (data?.selectedCategories && Array.isArray(data.selectedCategories)) {
+          data.selectedCategories.forEach((item: any) => {
+            const { mainCategory, subCategory, details } = item;
+            if (!fetchedItemsMap[mainCategory]) {
+              fetchedItemsMap[mainCategory] = [];
+            }
+            // 중복 방지 추가
+            if (!fetchedItemsMap[mainCategory].includes(subCategory)) {
+              fetchedItemsMap[mainCategory].push(subCategory);
+            }
+            fetchedInputsMap[subCategory] = details || '';
+          });
+        } else {
+          console.warn('⚠️ selectedCategories가 비어있거나 존재하지 않음:', data);
+        }
+
+        setSelectedItemsMap(fetchedItemsMap);
+        setInitialItemsMap(fetchedItemsMap);
+        setSelectedInputsMap(fetchedInputsMap);
+        setInitialInputsMap(fetchedInputsMap);
+      } catch (error) {
+        console.error('위시리스트 불러오기 실패:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchInitialWishList();
   }, []);
 
-  // 변경 여부 체크
   useEffect(() => {
     if (isLoading) return;
 
-    // 1. 선택된 아이템 비교 (카테고리 및 아이템)
     let itemsChanged = false;
-
-    // 선택된 아이템 목록이 다른지 확인
-    const initialItems = new Set(Object.entries(initialItemsMap).flatMap(([category, items]) => items.map((item) => `${category}:${item}`)));
-    const currentItems = new Set(Object.entries(selectedItemsMap).flatMap(([category, items]) => items.map((item) => `${category}:${item}`)));
-
-    // Set 크기가 다르거나, 다른 아이템이 포함되어 있다면 변경된 것
-    if (initialItems.size !== currentItems.size) {
-      itemsChanged = true;
-    } else {
-      // 모든 초기 아이템이 현재 아이템에 포함되어 있는지 체크
-      for (const item of initialItems) {
-        if (!currentItems.has(item)) {
-          itemsChanged = true;
-          break;
-        }
-      }
-    }
-
-    // 2. 입력된 상세 정보 비교
     let inputsChanged = false;
 
-    // 현재 선택된 아이템 목록 (문자열 배열)
+    const initialItemsSet = new Set(Object.entries(initialItemsMap).flatMap(([category, items]) => items.map((item) => `${category}:${item}`)));
+    const currentItemsSet = new Set(Object.entries(selectedItemsMap).flatMap(([category, items]) => items.map((item) => `${category}:${item}`)));
+
+    if (initialItemsSet.size !== currentItemsSet.size || [...initialItemsSet].some((item) => !currentItemsSet.has(item))) {
+      itemsChanged = true;
+    }
+
     const currentSelectedItems = Object.values(selectedItemsMap).flat();
-
-    // 각 선택된 아이템에 대해 입력값 변경 여부 확인
     for (const item of currentSelectedItems) {
-      const initialValue = initialInputsMap[item] || '';
-      const currentValue = selectedInputsMap[item] || '';
-
-      if (initialValue !== currentValue) {
+      if ((initialInputsMap[item] || '') !== (selectedInputsMap[item] || '')) {
         inputsChanged = true;
         break;
       }
     }
 
-    console.log('입력값 변경 감지:', inputsChanged);
-    console.log('아이템 변경 감지:', itemsChanged);
-    console.log('초기 입력값:', initialInputsMap);
-    console.log('현재 입력값:', selectedInputsMap);
-
     setIsComplete(itemsChanged || inputsChanged);
   }, [selectedItemsMap, selectedInputsMap, initialItemsMap, initialInputsMap, isLoading]);
 
-  const handleComplete = () => {
-    // 저장 로직 - 실제로는 API 호출
-    console.log('저장할 선택된 아이템:', selectedItemsMap);
-    console.log('저장할 입력값:', selectedInputsMap);
-    // 저장 후 초기값 업데이트
-    setInitialItemsMap({ ...selectedItemsMap });
-    setInitialInputsMap({ ...selectedInputsMap });
-    setIsComplete(false);
-    // 성공 메시지 등 추가 로직
+  const handleComplete = async () => {
+    if (!isComplete) return;
 
-    if (isComplete) {
-      // 변경된 경우에만 동작
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('토큰이 없습니다.');
+        return;
+      }
+
+      const selectedCategoriesPayload: any[] = [];
+
+      Object.entries(selectedItemsMap).forEach(([mainCategory, subCategories]) => {
+        subCategories.forEach((subCategory) => {
+          selectedCategoriesPayload.push({
+            mainCategory,
+            subCategory,
+            details: selectedInputsMap[subCategory] || '',
+          });
+        });
+      });
+
+      const res = await fetch('http://192.168.35.111:5000/wishlistUpdate/item/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          selectedCategories: selectedCategoriesPayload,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('위시리스트 수정에 실패했습니다.');
+      }
+
+      const data = await res.json();
+      console.log('위시리스트 수정 성공:', data);
+
+      setInitialItemsMap({ ...selectedItemsMap });
+      setInitialInputsMap({ ...selectedInputsMap });
+      setIsComplete(false);
+
+      // alert 창 띄우기
+      alert('위시리스트가 수정되었습니다.');
+
       router.push('/my-page');
+    } catch (error) {
+      console.error('위시리스트 수정 오류:', error);
+      alert('위시리스트 수정 중 오류가 발생했습니다.');
     }
   };
 
@@ -129,6 +170,9 @@ export default function WishPage() {
                 setSelectedInputsMap={setSelectedInputsMap}
               />
             )}
+
+            {/* 수정 성공 메시지 */}
+            {successMessage && <div className='mt-4 text-green-600 font-semibold'>{successMessage}</div>}
           </div>
         </div>
         <Button isComplete={isComplete} onClick={handleComplete} className='mb-4'>

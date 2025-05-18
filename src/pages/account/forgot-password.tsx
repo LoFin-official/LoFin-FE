@@ -5,6 +5,8 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const router = useRouter();
@@ -15,7 +17,6 @@ export default function ForgotPasswordPage() {
   const [isVerified, setIsVerified] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
   };
@@ -29,7 +30,7 @@ export default function ForgotPasswordPage() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/auth/send-code', {
+      const response = await fetch(`${backendUrl}/auth/send-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId: email }),
@@ -58,7 +59,7 @@ export default function ForgotPasswordPage() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/auth/verify-code', {
+      const response = await fetch(`${backendUrl}/auth/verify-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId: email, code: verificationCode }),
@@ -96,17 +97,17 @@ export default function ForgotPasswordPage() {
       <Header>비밀번호 변경</Header>
       <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between gap-8 px-4 pt-16'>
         <div className='flex flex-1'>
-          <div className='flex flex-col gap-8 items-center'>
+          <div className='flex flex-col gap-8 items-center w-full max-w-[412px]'>
             <div className='whitespace-pre-line text-[#333333] text-xl font-bold text-center'>
               비밀번호를 잊으셨나요?{'\n'}회원가입에 사용한 이메일을 입력해 주세요.
             </div>
             <Image src='/images/LoFin.png' alt='LoFin' width={200} height={200} />
-            <div className='flex flex-col gap-1'>
+            <div className='flex flex-col gap-1 w-full max-w-[380px]'>
               <div className='flex flex-row gap-2'>
                 <Input
                   label='아이디'
                   placeholder='이메일을 입력해 주세요.'
-                  width='w-[277px]'
+                  width='w-full max-w-[277px]'
                   name='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -123,11 +124,11 @@ export default function ForgotPasswordPage() {
             </div>
             {showVerification && (
               <div className='flex flex-col gap-1'>
-                <div className='flex flex-row gap-2'>
+                <div className='flex flex-row gap-2 w-full'>
                   <Input
                     label='인증번호'
                     placeholder='인증번호 6자리를 입력해 주세요.'
-                    width='w-[277px]'
+                    width='w-full max-w-[277px]'
                     maxLength={6}
                     name='verificationCode'
                     value={verificationCode}

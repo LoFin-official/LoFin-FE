@@ -23,14 +23,11 @@ export default function NotificationItem({ title, description, isOn, onToggle, d
   };
 
   return (
-    <div
-      className='relative w-full h-auto min-h-[80px] px-2 py-3 border-b border-[#eeeeee] flex items-start cursor-pointer'
-      onClick={handleItemClick}
-    >
+    <div className='relative w-full max-w-[380px] h-auto min-h-[80px] px-2 py-3 border-b border-[#eeeeee] flex items-start' onClick={handleItemClick}>
       {/* 텍스트 */}
-      <div className='flex flex-col'>
+      <div className='flex flex-col w-full max-w-[300px]'>
         <div className='text-[#333333] text-xl font-bold mb-1'>{title}</div>
-        <div className='text-[#767676] text-base font-medium leading-tight ml-1'>
+        <div className='text-[#767676] text-base whitespace-pre-line break-words leading-tight ml-1'>
           {descriptionLines.map((line, index) => (
             <React.Fragment key={index}>
               {line}

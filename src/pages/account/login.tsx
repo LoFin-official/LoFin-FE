@@ -5,11 +5,12 @@ import React, { ReactNode, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
   };
@@ -25,7 +26,7 @@ export default function LoginPage() {
     if (!isComplete) return;
 
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch(`${backendUrl}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,6 +38,15 @@ export default function LoginPage() {
 
       if (response.ok) {
         console.log('로그인 성공:', data);
+
+        // 토큰 저장
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        } else {
+          alert('서버에서 토큰이 전달되지 않았습니다.');
+          return;
+        }
+
         router.push('/memory');
       } else {
         alert(data.message || '로그인 실패');
@@ -51,16 +61,23 @@ export default function LoginPage() {
     <>
       <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)]'>
         <Image src='/images/LoFin.png' alt='LoFin' width={250} height={250} />
-        <div className='flex flex-col gap-8 w-full max-w-sm'>
-          <div className='flex flex-col gap-8'>
+        <div className='flex flex-col gap-8 w-full max-w-[412px]'>
+          <div className='w-full max-w-[380px] md:w-[412px] flex flex-col gap-8'>
             <div className='flex flex-col gap-1'>
-              <Input label='아이디' placeholder='이메일을 입력해 주세요.' value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                width='w-full max-w-[380px] mx-auto'
+                label='아이디'
+                placeholder='이메일을 입력해 주세요.'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
               {!isValidEmail(email) && email && (
                 <div className='text-[#FF2A2A] text-sm ml-0.5'>이메일 주소는 example@domain.com과 같은 형식이어야 합니다.</div>
               )}
             </div>
             <div className='flex flex-col gap-1'>
               <Input
+                width='w-full max-w-[380px] mx-auto'
                 type='password'
                 label='비밀번호'
                 placeholder='비밀번호를 입력해 주세요.'

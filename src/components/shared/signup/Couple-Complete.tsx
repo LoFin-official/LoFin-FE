@@ -5,6 +5,8 @@ import Input from '../Input';
 import ProfileItem from '../ProfileItem';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function CoupleCompletePage({ currentStep }: { currentStep: number }) {
   const [birth, setBirth] = useState('');
   const router = useRouter();
@@ -92,7 +94,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
     }
 
     try {
-      const response = await fetch('http://localhost:5000/firstMet/firstmet', {
+      const response = await fetch(`${backendUrl}/firstMet/firstmet`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

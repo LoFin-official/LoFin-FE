@@ -5,6 +5,8 @@ import Button from '@/components/shared/Button';
 import Input from '@/components/shared/Input';
 import React, { useState } from 'react';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function ProfileForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
   const steps = ['1', '2', '3', '4'];
 
@@ -16,7 +18,6 @@ export default function ProfileForm({ onNext, currentStep }: { onNext: () => voi
 
   const isOnlyConsonantsOrVowels = /^[ㄱ-ㅎㅏ-ㅣ]+$/.test(formData.nickname.trim());
   const isValidNickname = formData.nickname.trim().length >= 2 && formData.nickname.trim().length <= 8 && !isOnlyConsonantsOrVowels;
-
   const isValidDate = (dateString: string) => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return false;
     const [year, month, day] = dateString.split('-').map(Number);
@@ -53,7 +54,7 @@ export default function ProfileForm({ onNext, currentStep }: { onNext: () => voi
       form.append('nickname', formData.nickname);
       form.append('birth', formData.birth);
 
-      const response = await fetch('http://localhost:5000/profile/upload', {
+      const response = await fetch(`${backendUrl}/profile/upload`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

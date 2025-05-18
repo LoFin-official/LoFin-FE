@@ -3,6 +3,8 @@ import Button from '@/components/shared/Button';
 import React, { useEffect, useState } from 'react';
 import Input from '../Input';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
   const [isConnected, setIsConnected] = useState(false);
   const [code, setCode] = useState('');
@@ -16,7 +18,7 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
   useEffect(() => {
     async function fetchMyCode() {
       try {
-        const res = await fetch('http://localhost:5000/coupleLink/couple/code', {
+        const res = await fetch(`${backendUrl}/coupleLink/couple/code`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +60,7 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
     }
 
     try {
-      const res = await fetch('http://localhost:5000/coupleLink/connect', {
+      const res = await fetch(`${backendUrl}/coupleLink/connect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

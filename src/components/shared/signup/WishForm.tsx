@@ -3,6 +3,8 @@ import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 interface Props {
   onNext: () => void;
   currentStep: number;
@@ -12,7 +14,6 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
   const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
   const [selectedInputsMap, setSelectedInputsMap] = useState<Record<string, string>>({});
   const steps = ['1', '2', '3', '4'];
-
   // 모든 선택된 아이템을 하나의 배열로 만듦
   const allSelectedItems = Object.values(selectedItemsMap).flat();
   const isAnyItemSelected = allSelectedItems.length > 0;
@@ -46,7 +47,7 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
     }
 
     try {
-      const response = await fetch('http://localhost:5000/wishlist/selection', {
+      const response = await fetch(`${backendUrl}/wishlist/selection`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
       console.log('저장 성공:', data);
 
       // 선택 완료 API 호출
-      const completeResponse = await fetch('http://localhost:5000/wishlist/selection/complete', {
+      const completeResponse = await fetch(`${backendUrl}/wishlist/selection/complete`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
