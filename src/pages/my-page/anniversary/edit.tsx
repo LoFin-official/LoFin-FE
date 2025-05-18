@@ -6,25 +6,71 @@ import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // ✅ 백엔드 주소
+
 export default function AnniversaryEditPage() {
+  const router = useRouter();
+  const { id } = router.query;
+
   const [selectedDate, setSelectedDate] = useState('');
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [anniversaryName, setAnniversaryName] = useState('');
-  const router = useRouter();
 
   const [initialSelectedDate, setInitialSelectedDate] = useState('');
   const [initialAnniversaryName, setInitialAnniversaryName] = useState('');
+  const [loading, setLoading] = useState(true);
 
+  // ✅ 날짜 형식 변환 함수
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
+  // ✅ 서버에서 기념일 정보 불러오기
   useEffect(() => {
-    const initialName = '100일';
-    const initialDate = '2024-05-20';
+    if (!router.isReady || !id) return;
 
-    setAnniversaryName(initialName);
-    setSelectedDate(initialDate);
-    setInitialAnniversaryName(initialName);
-    setInitialSelectedDate(initialDate);
-  }, []);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
+    }
 
+    const fetchAnniversary = async () => {
+      try {
+        const res = await fetch(`${backendUrl}/anniversary/anniversaryedit/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error('기념일 정보를 불러오는데 실패했습니다.');
+        }
+
+        const data = await res.json();
+        const formattedDate = formatDate(data.date);
+
+        setAnniversaryName(data.title);
+        setSelectedDate(formattedDate);
+        setInitialAnniversaryName(data.title);
+        setInitialSelectedDate(formattedDate);
+      } catch (error) {
+        console.error(error);
+        alert('기념일 정보를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnniversary();
+  }, [id, router.isReady]);
+
+  // ✅ 날짜 선택 핸들러
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -33,16 +79,47 @@ export default function AnniversaryEditPage() {
     setIsDateSheetOpen(false);
   };
 
-  // 기존 값과 다른 경우에만 버튼 활성화
+  //  수정 여부 확인
   const isComplete =
     anniversaryName.trim() !== '' && selectedDate !== '' && (anniversaryName !== initialAnniversaryName || selectedDate !== initialSelectedDate);
 
-  const handleDday = () => {
-    if (isComplete) {
-      // 변경된 경우에만 동작
+  //  수정 요청
+  const handleDday = async () => {
+    if (!isComplete) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${backendUrl}/anniversary/anniversaries/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: anniversaryName,
+          date: selectedDate,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('기념일 수정에 실패했습니다.');
+      }
+
+      alert('기념일이 성공적으로 수정되었습니다.');
       router.push('/my-page/anniversary');
+    } catch (error) {
+      console.error(error);
+      alert('기념일 수정에 실패했습니다.');
     }
   };
+
+  if (loading) return <div>로딩 중...</div>;
 
   return (
     <>

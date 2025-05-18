@@ -5,11 +5,12 @@ import React, { ReactNode, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
   };
@@ -25,7 +26,7 @@ export default function LoginPage() {
     if (!isComplete) return;
 
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch(`${backendUrl}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,6 +38,15 @@ export default function LoginPage() {
 
       if (response.ok) {
         console.log('로그인 성공:', data);
+
+        // 토큰 저장
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        } else {
+          alert('서버에서 토큰이 전달되지 않았습니다.');
+          return;
+        }
+
         router.push('/memory');
       } else {
         alert(data.message || '로그인 실패');

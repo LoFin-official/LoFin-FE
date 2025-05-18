@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [showVerification, setShowVerification] = useState(false);
@@ -15,7 +17,6 @@ export default function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
-
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
   };
@@ -30,7 +31,7 @@ export default function RegisterPage() {
   const isComplete = isValidEmail(email) && isValidPassword(password) && isPasswordConfirmed && isVerified;
   const handleSendCode = async () => {
     try {
-      const res = await fetch('http://localhost:5000/auth/send-code', {
+      const res = await fetch(`${backendUrl}/auth/send-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId: email }),
@@ -50,7 +51,7 @@ export default function RegisterPage() {
 
   const handleVerificationCheck = async () => {
     try {
-      const res = await fetch('http://localhost:5000/auth/verify-code', {
+      const res = await fetch(`${backendUrl}/auth/verify-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId: email, code: verificationCode }),
@@ -75,7 +76,7 @@ export default function RegisterPage() {
     if (!isComplete) return;
 
     try {
-      const res = await fetch('http://localhost:5000/auth/register', {
+      const res = await fetch(`${backendUrl}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

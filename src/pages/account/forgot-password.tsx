@@ -5,6 +5,8 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const router = useRouter();
@@ -15,7 +17,6 @@ export default function ForgotPasswordPage() {
   const [isVerified, setIsVerified] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
   };
@@ -29,7 +30,7 @@ export default function ForgotPasswordPage() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/auth/send-code', {
+      const response = await fetch(`${backendUrl}/auth/send-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId: email }),
@@ -58,7 +59,7 @@ export default function ForgotPasswordPage() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/auth/verify-code', {
+      const response = await fetch(`${backendUrl}/auth/verify-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId: email, code: verificationCode }),

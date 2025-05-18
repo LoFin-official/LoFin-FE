@@ -6,12 +6,14 @@ import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/router';
 
+const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+
 export default function AnniversaryCreatePage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [anniversaryName, setAnniversaryName] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -22,10 +24,38 @@ export default function AnniversaryCreatePage() {
 
   const isComplete = anniversaryName.trim() !== '' && selectedDate !== '';
 
-  const handleDday = () => {
-    if (isComplete) {
-      // 작성된 경우에만 동작
+  const handleDday = async () => {
+    if (!isComplete) return;
+
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem('token'); // 토큰 불러오기
+
+      const response = await fetch(`${backendUrl}/anniversary`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          title: anniversaryName,
+          date: selectedDate,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert('기념일 생성 실패: ' + (errorData.message || '알 수 없는 오류'));
+        setLoading(false);
+        return;
+      }
+
       router.push('/my-page/anniversary');
+    } catch (error) {
+      console.error('기념일 생성 중 오류:', error);
+      alert('서버 오류가 발생했습니다.');
+      setLoading(false);
     }
   };
 
@@ -53,7 +83,7 @@ export default function AnniversaryCreatePage() {
       </div>
       <div className='flex-grow w-full max-w-[412px] mx-auto px-4'>
         <Button isComplete={isComplete} onClick={handleDday}>
-          디데이 생성
+          {loading ? '생성 중...' : '디데이 생성'}
         </Button>
       </div>
       <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height={'380px'} onSelectDate={handleDateSelect} />

@@ -3,62 +3,57 @@ import { useRouter } from 'next/router';
 import { HeartIcon, MeunIcon, DayEditIcon, DayDeleteIcon } from '@/assets/icons/SvgIcon';
 
 interface AnniversaryItemProps {
+  Id: string; // 기념일 ID 추가
   label: string;
   dday: string;
   date: string;
   onClick?: () => void;
   onDelete?: () => void;
+  onEdit?: () => void; // 추가
   iconColor?: string;
   className?: string;
   children?: React.ReactNode;
 }
 
-export default function AnniversaryItem({ label, dday, date, onClick, onDelete, className = '' }: AnniversaryItemProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false); // 메인 메뉴 모달 상태
-  const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] = useState(false); // 수정 확인 모달 상태
-  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false); // 삭제 확인 모달 상태
+export default function AnniversaryItem({ Id, label, dday, date, onClick, onEdit, onDelete, className = '' }: AnniversaryItemProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const router = useRouter();
 
-  // 메뉴 모달 열기
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
 
-  // 메뉴 모달 닫기 (클릭 이벤트 버블링 방지)
   const handleModalClose = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsModalOpen(false);
   };
 
-  // 수정 클릭 시: 메뉴 모달 닫고 수정 확인 모달 열기
   const handleEditClick = () => {
     setIsModalOpen(false);
     setIsEditConfirmModalOpen(true);
   };
 
-  // 삭제 클릭 시: 메뉴 모달 닫고 삭제 확인 모달 열기
   const handleDeleteClick = () => {
     setIsModalOpen(false);
     setIsDeleteConfirmModalOpen(true);
   };
 
-  // 수정 확인 모달 닫기
   const handleEditModalClose = () => {
     setIsEditConfirmModalOpen(false);
   };
 
-  // 삭제 확인 모달 닫기
   const handleDeleteModalClose = () => {
     setIsDeleteConfirmModalOpen(false);
   };
 
-  // 수정 확정 시: 수정 확인 모달 닫고 수정 페이지로 이동
+  // 수정 확정 시: id를 쿼리로 넘겨서 수정 페이지로 이동
   const handleEditConfirm = () => {
     setIsEditConfirmModalOpen(false);
-    router.push('/my-page/anniversary/edit');
+    router.push(`/my-page/anniversary/edit?id=${Id}`);
   };
 
-  // 삭제 확정 시: 삭제 확인 모달 닫고 삭제 콜백 실행
   const handleDeleteConfirm = () => {
     setIsDeleteConfirmModalOpen(false);
     if (onDelete) {
@@ -83,7 +78,7 @@ export default function AnniversaryItem({ label, dday, date, onClick, onDelete, 
       </div>
 
       <div className='flex items-center justify-center ml-2'>
-        <MeunIcon onClick={() => setIsModalOpen(true)} />
+        <MeunIcon onClick={handleModalOpen} />
       </div>
 
       {isModalOpen && (
