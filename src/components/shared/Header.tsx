@@ -21,8 +21,9 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
-  const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit'];
-  const memoryEditPages = ['/memory'];
+  const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create'];
+  const memoryPages = ['/memory'];
+  const memoryEditPages = ['/memory/create', '/memory/edit'];
   const questionEditPages = ['/question', '/question/[id]', '/my-page/anniversary'];
   const imagePages = ['/memory/edit'];
   const nextPages = ['/account/WishForm'];
@@ -40,8 +41,10 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   let RightComponent: React.ReactNode = rightElement;
 
   if (RightComponent === undefined) {
-    if (memoryEditPages.includes(pathname)) {
-      RightComponent = <MemoryIcon className='cursor-pointer' />;
+    if (memoryPages.includes(pathname)) {
+      RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push('/memory/create')} />;
+    } else if (memoryEditPages.includes(pathname)) {
+      RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (questionEditPages.includes(pathname)) {
       RightComponent =
         pathname === '/question/[id]' ? (
