@@ -1,34 +1,56 @@
 import { HeartIcon } from '@/assets/icons/SvgIcon';
 import React from 'react';
+import { useRouter } from 'next/router';
 
 interface Memory {
   title: string;
   text: string;
   date: string;
   dday: number;
-}
-
-interface MemoryItemProps {
+  imageUrl?: string;
+  _id: string;
+  position?: { x: number; y: number };
+  rotation?: number;
   border?: boolean;
 }
 
-export default function MemoryItem({ border = true }: MemoryItemProps) {
-  const memories: Memory[] = [
-    { title: '제목1', text: '내용1', date: '2025.03.31', dday: 100 },
-    { title: '제목2', text: '내용2', date: '2025.04.01', dday: 300 },
-    { title: '제목3', text: '내용3', date: '2025.04.02', dday: 9000 },
-  ];
+interface MemoryItemProps {
+  memories: Memory[];
+  onDelete?: (id: string) => void;
+}
+
+export default function MemoryItem({ memories, onDelete }: MemoryItemProps) {
+  const router = useRouter();
+
+  // 메모리 상세 페이지로 이동
+  const handleMemoryClick = (id: string) => {
+    router.push(`/memory/${id}`);
+  };
 
   return (
     <>
       {memories.map((item: Memory, index: number) => (
-        <div key={index} className={`w-[388px] h-[336px] flex gap-0.5 items-center my-4 mx-3 ${index % 2 === 1 ? 'flex-row-reverse' : 'flex-row'}`}>
+        <div
+          key={item._id}
+          className={`w-[388px] h-[336px] flex gap-0.5 items-center my-4 mx-3 ${index % 2 === 1 ? 'flex-row-reverse' : 'flex-row'}`}
+          onClick={() => handleMemoryClick(item._id)}
+        >
           {/* 사진 영역 */}
-          <div className={`w-[296px] h-[336px] flex flex-col gap-2 rounded-[18px] p-4 ${border ? 'border border-[#FF4C80]' : ''}`}>
-            <div className='w-[264px] h-[252px] rounded-[18px] bg-[#eeeeee]'></div>
+          <div className={`w-[296px] h-[336px] flex flex-col gap-2 rounded-[18px] p-4 ${item.border ? 'border border-[#FF4C80]' : ''}`}>
+            <div className='w-[264px] h-[252px] rounded-[18px] bg-[#eeeeee] overflow-hidden'>
+              {item.imageUrl ? (
+                <img
+                  src={item.imageUrl ? `http://192.168.208.161:5000${item.imageUrl}` : undefined}
+                  alt={item.title}
+                  className='w-full h-full object-cover'
+                />
+              ) : (
+                <div className='w-full h-full flex items-center justify-center text-[#999999]'>사진이 없습니다</div>
+              )}
+            </div>
             <div className='w-[256px] h-[52px] flex flex-col gap-1 px-1'>
-              <span className='h-7 text-xl text-[#333333] font-bold'>{item.title}</span>
-              <span className='h-5 text-[#767676]'>{item.text}</span>
+              <span className='h-7 text-xl text-[#333333] font-bold truncate'>{item.title}</span>
+              <span className='h-5 text-[#767676] truncate'>{item.text}</span>
             </div>
           </div>
 

@@ -23,7 +23,7 @@ interface ProfileResponse {
   };
 }
 
-const backendUrl = 'http://192.168.35.111:5000';
+const backendUrl = 'http://192.168.208.161:5000';
 
 export default function AnniversaryPage() {
   const router = useRouter();

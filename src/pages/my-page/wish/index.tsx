@@ -5,7 +5,7 @@ import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import { useRouter } from 'next/router';
 
-const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
 
 export default function WishPage() {
   const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
@@ -120,7 +120,7 @@ export default function WishPage() {
         });
       });
 
-      const res = await fetch('http://192.168.35.111:5000/wishlistUpdate/item/update', {
+      const res = await fetch('http://192.168.208.161:5000/wishlistUpdate/item/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
