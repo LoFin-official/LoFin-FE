@@ -10,7 +10,7 @@ const getBackendUrl = () => {
 
   if (isRunningInWebView) {
     // WebView 환경 (Expo 앱)에서는 로컬 네트워크 IP 사용
-    return 'http://192.168.208.161:5000';
+    return 'http://192.168.211.217:5000';
   } else {
     // 일반 웹 브라우저 환경에서는 localhost 사용
     return 'http://localhost:5000';
@@ -213,7 +213,7 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
   };
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-56px)] pt-8 justify-between'>
+    <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] pt-8 py-4 justify-between'>
       <div className='flex flex-1 justify-center'>
         <div className='flex flex-col gap-8 items-center'>
           <div className='flex flex-row gap-1 items-center'>
@@ -243,6 +243,7 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
           </div>
           <div className='flex flex-col gap-1'>
             <Input
+              width='w-full max-w-[380px] md:w-[380px]'
               label='상대방의 초대 코드를 받으셨나요?'
               placeholder='상대방의 초대 코드를 입력해 주세요.'
               value={code}

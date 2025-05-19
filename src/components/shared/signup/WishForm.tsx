@@ -3,7 +3,7 @@ import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+const backendUrl = 'http://192.168.211.217:5000'; // 백엔드 서버 주소
 
 interface Props {
   onNext: () => void;
@@ -91,20 +91,20 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
   };
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-56px)] pt-8 justify-between'>
-      <div className='flex flex-1 justify-center'>
+    <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] mx-auto pt-8 px-4'>
+      <div className='flex flex-1 justify-center w-full max-w-[388px] mx-auto'>
         <div className='flex flex-col gap-8 items-center'>
           <div className='flex flex-row gap-1 items-center'>
             {steps.map((step, index) => (
-              <div key={index} className='flex items-center gap-1'>
+              <div key={index} className='flex items-center gap-1 w-full max-w-[380px] mx-auto'>
                 <ProgressIcon text={step} active={index <= currentStep} />
                 {index < steps.length - 1 && <ProgressingIcon active={index < currentStep} />}
               </div>
             ))}
           </div>
-          <div className='flex flex-col gap-0.5 w-[380px] text-center'>
+          <div className='flex flex-col gap-0.5 w-full max-w-[380px] text-center'>
             <span className='h-6 text-[#333333] text-xl font-bold'>기념일에 받고 싶은 선물을 선택하세요!</span>
-            <span className='h-5 text-[#767676]'>카테고리에서 원하는 선물을 고르거나 직접 입력할 수도 있어요.</span>
+            <span className='h-5 text-[#767676]'>카테고리에서 원하는 선물을 고르거나 직접 입력도 가능해요!</span>
           </div>
 
           <WishCategoryItem

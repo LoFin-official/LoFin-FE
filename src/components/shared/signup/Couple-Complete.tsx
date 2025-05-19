@@ -5,7 +5,7 @@ import Input from '../Input';
 import ProfileItem from '../ProfileItem';
 import { useRouter } from 'next/router';
 
-const backendUrl = 'http://192.168.208.161:5000';
+const backendUrl = 'http://192.168.211.217:5000';
 
 interface ProfileResponse {
   myProfile: {
@@ -54,7 +54,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
   };
 
   const handleStart = async () => {
-    console.log('✅ handleStart 호출됨');
+    console.log('handleStart 호출됨');
     if (!isComplete) return;
 
     const standardizedDate = standardizeDate(birth);
@@ -114,8 +114,8 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
   const steps = ['1', '2', '3', '4'];
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-56px)] pt-8 justify-between'>
-      <div className='flex flex-1 justify-center'>
+    <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] pt-8 py-4 mx-auto'>
+      <div className='flex flex-1 w-full max-w-[380px] mx-auto'>
         <div className='flex flex-col gap-8 items-center'>
           <div className='flex flex-row gap-1 items-center'>
             {steps.map((step, index) => (
@@ -155,8 +155,9 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
 
           <div className='flex flex-col gap-1'>
             <Input
+              width='w-full max-w-[380px] md:w-[380px]'
               label='두 사람의 첫 순간을 기록해 보세요.'
-              placeholder='연도-월-일(YYYY-MM-DD) 형식으로 입력해 주세요.'
+              placeholder='예: 2001-08-25 형식으로 입력해 주세요.'
               value={birth}
               maxLength={10}
               onChange={handleInputChange}
@@ -165,7 +166,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
           </div>
         </div>
       </div>
-      <Button isComplete={isComplete} onClick={handleStart} className='mb-4'>
+      <Button isComplete={isComplete} onClick={handleStart} className='w-full max-w-[380px]'>
         시작하기
       </Button>
     </div>
