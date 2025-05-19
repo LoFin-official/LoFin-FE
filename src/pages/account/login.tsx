@@ -5,7 +5,7 @@ import React, { ReactNode, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
