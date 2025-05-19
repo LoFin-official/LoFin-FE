@@ -3,8 +3,7 @@ import QuestionItem from '@/components/shared/question/QuestionItem';
 import NoItemText from '@/components/shared/NoItemText';
 import Header from '@/components/shared/Header';
 import BottomBar from '@/components/shared/BottomBar';
-
-const backendUrl = 'http://192.168.208.161:5000';
+import { backendUrl } from '@/config/config';
 
 interface Question {
   _id: string;

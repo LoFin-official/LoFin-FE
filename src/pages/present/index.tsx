@@ -2,7 +2,7 @@ import BottomBar from '@/components/shared/BottomBar';
 import Header from '@/components/shared/Header';
 import PresentItem from '@/components/shared/PresentItem';
 import React, { ReactNode, useEffect, useState } from 'react';
-const backendUrl = 'http://192.168.208.161:5000';
+import { backendUrl } from '@/config/config';
 
 interface GiftItem {
   _id?: string;

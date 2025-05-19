@@ -4,8 +4,7 @@ import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
 import Input from '@/components/shared/Input';
 import React, { useState } from 'react';
-
-const backendUrl = 'http://192.168.211.217:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 export default function ProfileForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
   const steps = ['1', '2', '3', '4'];

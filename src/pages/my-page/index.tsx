@@ -3,8 +3,7 @@ import BottomBar from '@/components/shared/BottomBar';
 import ProfileItem from '@/components/shared/ProfileItem';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 interface ProfileResponse {
   myProfile: {

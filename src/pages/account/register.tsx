@@ -4,8 +4,7 @@ import Input from '@/components/shared/Input';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
-
-const backendUrl = 'http://192.168.211.217:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');

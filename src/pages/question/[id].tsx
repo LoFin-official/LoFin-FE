@@ -1,11 +1,9 @@
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BottomBar from '@/components/shared/BottomBar';
 import Header from '@/components/shared/Header';
 import ProfileItem from '@/components/shared/ProfileItem';
-import Button from '@/components/shared/Button';
-
-const backendUrl = 'http://192.168.208.161:5000'; // API 주소
+import { backendUrl } from '@/config/config';
 
 interface QuestionDetail {
   _id: string;

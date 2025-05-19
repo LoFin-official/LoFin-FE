@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Input from '../Input';
 import ProfileItem from '../ProfileItem';
 import { useRouter } from 'next/router';
-
-const backendUrl = 'http://192.168.211.217:5000';
+import { backendUrl } from '@/config/config';
 
 interface ProfileResponse {
   myProfile: {

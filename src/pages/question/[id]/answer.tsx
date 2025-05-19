@@ -3,8 +3,8 @@ import Button from '@/components/shared/Button';
 import Header from '@/components/shared/Header';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import { backendUrl } from '@/config/config';
 
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
 interface QuestionDetail {
   _id: string;
   title: string;

@@ -5,8 +5,7 @@ import Input from '@/components/shared/Input';
 import ProfileItem from '@/components/shared/ProfileItem';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-
-const backendUrl = 'http://192.168.208.161:5000';
+import { backendUrl } from '@/config/config';
 
 export default function CoupleSinceEditPage() {
   const router = useRouter();

@@ -4,6 +4,7 @@ import Header from '@/components/shared/Header';
 import BottomBar from '@/components/shared/BottomBar';
 import NoItemText from '@/components/shared/NoItemText';
 import { MemoryDateIcon } from '@/assets/icons/SvgIcon';
+import { backendUrl } from '@/config/config';
 
 interface Memory {
   _id: string;
@@ -15,8 +16,6 @@ interface Memory {
   createdAt: string;
   updatedAt: string;
 }
-
-const backendUrl = 'http://192.168.208.161:5000';
 
 export default function MemoryDetailPage() {
   const router = useRouter();
