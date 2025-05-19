@@ -5,7 +5,7 @@ import Header from '@/components/shared/Header';
 import ProfileItem from '@/components/shared/ProfileItem';
 import Button from '@/components/shared/Button';
 
-const backendUrl = 'http://192.168.35.111:5000'; // API 주소
+const backendUrl = 'http://192.168.208.161:5000'; // API 주소
 
 interface QuestionDetail {
   _id: string;

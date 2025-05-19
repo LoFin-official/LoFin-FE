@@ -5,7 +5,7 @@ import Button from '@/components/shared/Button';
 import Input from '@/components/shared/Input';
 import React, { useState } from 'react';
 
-const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
 
 export default function ProfileForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
   const steps = ['1', '2', '3', '4'];

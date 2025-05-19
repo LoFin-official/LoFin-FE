@@ -4,7 +4,7 @@ import ProfileItem from '@/components/shared/ProfileItem';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 
-const backendUrl = 'http://192.168.35.111:5000'; // 백엔드 서버 주소
+const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
 
 interface ProfileResponse {
   myProfile: {

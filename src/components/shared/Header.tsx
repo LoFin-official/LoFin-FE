@@ -23,7 +23,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create'];
   const memoryPages = ['/memory'];
-  const memoryEditPages = ['/memory/create', '/memory/edit'];
+  const memoryEditPages = ['/memory/create', '/memory/[id]', '/memory/edit'];
   const questionEditPages = ['/question', '/question/[id]', '/my-page/anniversary'];
   const imagePages = ['/memory/edit'];
   const nextPages = ['/account/WishForm'];
@@ -41,7 +41,10 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   let RightComponent: React.ReactNode = rightElement;
 
   if (RightComponent === undefined) {
-    if (memoryPages.includes(pathname)) {
+    if (pathname === '/memory/[id]') {
+      // memory/[id] 경로일 때 아이콘 클릭 시 /memory/edit로 이동
+      RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push(`/memory/edit?id=${id}`)} />;
+    } else if (memoryPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push('/memory/create')} />;
     } else if (memoryEditPages.includes(pathname)) {
       RightComponent = <MemoryImageIcon className='cursor-pointer' />;

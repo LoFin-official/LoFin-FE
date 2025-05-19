@@ -5,7 +5,7 @@ import Input from '@/components/shared/Input';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState, useEffect } from 'react';
 // 백엔드 서버 주소 (이미지 URL 완성용)
-const backendUrl = 'http://192.168.35.111:5000';
+const backendUrl = 'http://192.168.208.161:5000';
 
 export default function ProfileEditPage() {
   const router = useRouter();

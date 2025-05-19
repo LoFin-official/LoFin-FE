@@ -6,24 +6,30 @@ import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/router';
 
-interface Memory {
-  _id: string;
-  title: string;
-  content: string;
-  imageUrl?: string;
-  position: { x: number; y: number };
-  rotation: number;
-  createdAt: string;
-  updatedAt: string;
+const backendUrl = 'http://192.168.208.161:5000';
+
+interface ImageData {
+  id: number;
+  file?: File;
+  preview?: string;
 }
 
 export default function MemoryCreatePage() {
   const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDateISO, setSelectedDateISO] = useState(''); // 서버에 보낼 ISO 형식 날짜
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  // **memberId 직접 사용하지 않고, 토큰 기반 인증으로 변경함**
+  // const getMemberId = () => {
+  //   return localStorage.getItem('memberId') || '사용자_아이디_또는_토큰에서_추출';
+  // };
 
   const resizeHeight = (textarea: React.RefObject<HTMLTextAreaElement | null>, e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (textarea.current) {
@@ -33,41 +39,116 @@ export default function MemoryCreatePage() {
     }
   };
 
-  // 날짜 선택 핸들러
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
     setSelectedDate(`${y}. ${m}. ${d}`);
+    setSelectedDateISO(date.toISOString());
     setIsDateSheetOpen(false);
   };
 
-  // 제목 input onChange 핸들러
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
-  // 이미지 데이터 배열 (임의로 id 부여)
-  const [images, setImages] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
+  const [images, setImages] = useState<ImageData[]>([]);
 
-  // 삭제 함수: 클릭된 id 제외한 새 배열로 상태 변경
+  const handleAddImage = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files);
+
+      if (images.length + newFiles.length > 5) {
+        alert('최대 5개의 이미지까지 업로드할 수 있습니다.');
+        return;
+      }
+
+      const newImages = newFiles.map((file) => {
+        const id = Date.now() + Math.random();
+        return {
+          id,
+          file,
+          preview: URL.createObjectURL(file),
+        };
+      });
+
+      setImages([...images, ...newImages]);
+    }
+  };
+
   const handleRemove = (idToRemove: number) => {
+    const imageToRemove = images.find((img) => img.id === idToRemove);
+    if (imageToRemove?.preview) {
+      URL.revokeObjectURL(imageToRemove.preview);
+    }
     setImages(images.filter((img) => img.id !== idToRemove));
   };
 
-  // 버튼 활성화 조건
   const isComplete = title.trim() !== '' && text.trim() !== '' && selectedDate !== '';
 
-  const handleMemory = () => {
-    if (isComplete) {
+  const handleMemory = async () => {
+    if (!isComplete) return;
+
+    try {
+      setIsLoading(true);
+      setError('');
+
+      const token = localStorage.getItem('token'); // JWT 토큰 key 이름에 맞게 변경
+
+      if (!token) {
+        setError('로그인이 필요합니다.');
+        setIsLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      // **memberId는 토큰에서 추출하므로 formData에 넣지 않음**
+      formData.append('title', title);
+      formData.append('content', text);
+      formData.append('createdAt', selectedDateISO);
+
+      images.forEach((img) => {
+        if (img.file) {
+          formData.append('images', img.file);
+        }
+      });
+
+      const position = { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) };
+      const rotation = Math.floor(Math.random() * 10) - 5;
+
+      formData.append('position', JSON.stringify(position));
+      formData.append('rotation', rotation.toString());
+
+      const response = await fetch(`${backendUrl}/memory`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`, // 토큰 헤더에 추가
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('추억 저장에 실패했습니다.');
+      }
+
       router.push('/memory');
+    } catch (err) {
+      console.error(err);
+      setError('추억 저장 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
       <div className='flex flex-col h-[calc(100vh-112px)] w-full max-w-[412px] mx-auto px-4 pt-8 pb-4'>
-        {/* 추억 제목 영역 */}
         <div className='w-full max-w-[380px] h-9 py-2 px-0.5 border-b border-[#cccccc] mb-4'>
           <input
             className='w-full h-5 text-xl text-[#333333] placeholder:text-[#cccccc] font-bold focus:outline-none'
@@ -77,7 +158,6 @@ export default function MemoryCreatePage() {
           />
         </div>
 
-        {/* 추억 내용 영역 */}
         <div className='flex-grow w-full max-w-[380px]'>
           <div className='w-full max-w-[364px] h-auto mx-2'>
             <textarea
@@ -91,24 +171,28 @@ export default function MemoryCreatePage() {
           </div>
         </div>
 
-        {/* 하단 고정 영역 */}
         <div className='flex-shrink-0'>
-          {/* 사진 영역 */}
-          {images.length > 0 && (
-            <div className='w-full max-w-[380px] h-[216px] px-0.5 py-2 border-t border-b border-[#eeeeee] overflow-x-auto overflow-y-hidden scrollbar-hide'>
-              <div className='flex flex-row gap-2 w-max'>
-                {images.map((img) => (
-                  <div key={img.id} className='w-[150px] h-[200px] rounded-md bg-[#eeeeee] relative'>
-                    <div className='absolute top-2 right-2 cursor-pointer' onClick={() => handleRemove(img.id)}>
-                      <ImageCloseIcon />
-                    </div>
+          <div className='w-full max-w-[380px] h-[216px] px-0.5 py-2 border-t border-b border-[#eeeeee] overflow-x-auto overflow-y-hidden scrollbar-hide'>
+            <div className='flex flex-row gap-2 w-max'>
+              {images.map((img) => (
+                <div key={img.id} className='w-[150px] h-[200px] rounded-md bg-[#eeeeee] relative'>
+                  {img.preview && <img src={img.preview} alt='Preview' className='w-full h-full object-cover rounded-md' />}
+                  <div className='absolute top-2 right-2 cursor-pointer' onClick={() => handleRemove(img.id)}>
+                    <ImageCloseIcon />
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                </div>
+              ))}
 
-          {/* 날짜 선택 영역 */}
+              {images.length < 5 && (
+                <div className='w-[150px] h-[200px] rounded-md bg-[#f8f8f8] flex items-center justify-center cursor-pointer' onClick={handleAddImage}>
+                  <div className='text-3xl text-[#cccccc]'>+</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <input type='file' accept='image/*' multiple className='hidden' ref={fileInputRef} onChange={handleFileChange} />
+
           <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
             <div
               className={`flex flex-row gap-1 text-base cursor-pointer ${selectedDate ? 'text-[#333333]' : 'text-[#999999]'}`}
@@ -119,10 +203,11 @@ export default function MemoryCreatePage() {
             </div>
           </div>
 
-          {/* 버튼 영역 */}
+          {error && <div className='w-full max-w-[380px] mb-2 text-red-500 text-sm'>{error}</div>}
+
           <div className='w-full max-w-[380px]'>
-            <Button isComplete={isComplete} onClick={handleMemory}>
-              추억 작성
+            <Button isComplete={isComplete && !isLoading} onClick={handleMemory}>
+              {isLoading ? '저장 중...' : '추억 작성'}
             </Button>
           </div>
         </div>
