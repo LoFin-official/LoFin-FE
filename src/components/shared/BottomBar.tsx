@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { GiftIcon, ChatIcon, MemoryIcon, QuestionsIcon, MyIcon } from '@/assets/icons/SvgIcon';
-import { stackRouterPush } from '@/store/stackRouter';
+//import { stackRouterPush } from '@/store/stackRouter';
 
 interface BottomBarProps {
   children?: ReactNode;
@@ -14,8 +14,14 @@ export default function BottomBar({ children }: BottomBarProps) {
   const getActiveClass = (targetPath: string) =>
     pathname === targetPath || pathname.startsWith(targetPath + '/') ? 'text-[#FF9BB3]' : 'text-[#333333]';
 
-  const handleNavigate = (path: string) => {
+  {
+    /*const handleNavigate = (path: string) => {
     stackRouterPush(router, path);
+  };*/
+  }
+
+  const handleNavigate = (path: string) => {
+    router.push(path);
   };
 
   return (
