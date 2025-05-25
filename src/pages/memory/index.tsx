@@ -157,7 +157,7 @@ export default function MemoryPage() {
 
   return (
     <>
-      <div className='w-full max-w-[412px] mx-auto py-14 '>
+      <div className='w-full max-w-[412px] mx-autog '>
         {hasMemories ? (
           <div>
             <MemoryItem memories={prepareMemoryData(memories)} />
