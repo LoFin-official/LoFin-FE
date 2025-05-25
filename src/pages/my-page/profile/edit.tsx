@@ -164,7 +164,7 @@ export default function ProfileEditPage() {
 
       if (data.success) {
         alert('프로필이 성공적으로 수정되었습니다.');
-        router.push('/my-page/profile');
+        router.replace('/my-page/profile');
       } else {
         alert(data.message || '프로필 수정 실패');
       }

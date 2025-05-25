@@ -128,7 +128,7 @@ export default function CoupleSinceEditPage() {
 
       if (response.ok) {
         alert('첫 만남 날짜가 성공적으로 수정되었습니다.');
-        router.push('/my-page/profile');
+        router.replace('/my-page/profile');
       } else {
         alert(result.message || '날짜 수정에 실패했습니다.');
       }

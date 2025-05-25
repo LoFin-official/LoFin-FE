@@ -50,7 +50,7 @@ export default function AnniversaryCreatePage() {
         return;
       }
 
-      router.push('/my-page/anniversary');
+      router.replace('/my-page/anniversary');
     } catch (error) {
       console.error('기념일 생성 중 오류:', error);
       alert('서버 오류가 발생했습니다.');

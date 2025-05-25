@@ -111,7 +111,7 @@ export default function AnniversaryEditPage() {
       }
 
       alert('기념일이 성공적으로 수정되었습니다.');
-      router.push('/my-page/anniversary');
+      router.replace('/my-page/anniversary');
     } catch (error) {
       console.error(error);
       alert('기념일 수정에 실패했습니다.');

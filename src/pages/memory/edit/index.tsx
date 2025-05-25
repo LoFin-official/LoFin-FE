@@ -179,7 +179,7 @@ export default function MemoryEditPage() {
       }
 
       alert('수정 완료!');
-      router.push('/memory');
+      router.replace('/memory');
     } catch (err: any) {
       alert(`오류: ${err.message}`);
     }

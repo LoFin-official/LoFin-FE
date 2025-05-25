@@ -145,7 +145,7 @@ export default function WishPage() {
       // alert 창 띄우기
       alert('위시리스트가 수정되었습니다.');
 
-      router.push('/my-page');
+      router.replace('/my-page');
     } catch (error) {
       console.error('위시리스트 수정 오류:', error);
       alert('위시리스트 수정 중 오류가 발생했습니다.');
