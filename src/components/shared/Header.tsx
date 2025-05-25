@@ -21,7 +21,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
-  const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create'];
+  const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create', '/chat/emoji/create'];
   const memoryPages = ['/memory'];
   const memoryEditPages = ['/memory/create', '/memory/[id]', '/memory/edit'];
   const questionEditPages = ['/question', '/question/[id]', '/my-page/anniversary'];
@@ -42,7 +42,6 @@ export default function Header({ children, onBack, showBackButton, rightElement,
 
   if (RightComponent === undefined) {
     if (pathname === '/memory/[id]') {
-      // memory/[id] 경로일 때 아이콘 클릭 시 /memory/edit로 이동
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push(`/memory/edit?id=${id}`)} />;
     } else if (memoryPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push('/memory/create')} />;
