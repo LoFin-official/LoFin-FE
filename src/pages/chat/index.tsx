@@ -1,4 +1,4 @@
-import BottomBar from '@/components/shared/BottomBar';
+import ChattingBar from '@/components/shared/ChattingBar';
 import Header from '@/components/shared/Header';
 import React, { ReactNode } from 'react';
 
@@ -9,8 +9,9 @@ export default function ChatPage() {
 ChatPage.getLayout = (page: ReactNode) => {
   return (
     <>
-      <Header>톰</Header>
+      <Header>톰</Header> {/* 연결 시 상대방 닉네임 적용 */}
       {page}
+      <ChattingBar></ChattingBar>
     </>
   );
 };
