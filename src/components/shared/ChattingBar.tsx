@@ -1,4 +1,5 @@
 import { EmojiEditIcon, EmojiIcon, ImageIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 export default function ChattingBar() {
@@ -10,6 +11,8 @@ export default function ChattingBar() {
 
   const [emojis, setEmojis] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]); // 임시 이모티콘 리스트
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const router = useRouter();
 
   const togglePanel = (type: 'plus' | 'emoji') => {
     setOpenPanel((prev) => (prev === type ? null : type));
@@ -44,6 +47,10 @@ export default function ChattingBar() {
     }
   };
 
+  const handleCreateEmoji = () => {
+    router.push('/chat/emoji/create');
+  };
+
   return (
     <>
       <div className='fixed bottom-0 w-full max-w-[412px]'>
@@ -73,8 +80,8 @@ export default function ChattingBar() {
           >
             {openPanel === 'plus' && (
               <div className='flex flex-row gap-8 px-6 py-4'>
-                <div className='w-full max-w-[66px] h-[68px] flex flex-col gap-1 my-auto'>
-                  <EmojiEditIcon onClick={() => {}} />
+                <div className='w-full max-w-[66px] h-[68px] flex flex-col gap-1 my-auto cursor-pointer'>
+                  <EmojiEditIcon onClick={handleCreateEmoji} />
                   <div className='text-xs font-bold text-[#333333] text-center'>이모티콘 제작</div>
                 </div>
                 <div className='w-full max-w-[66px] h-[68px] flex flex-col gap-1 my-auto'>
