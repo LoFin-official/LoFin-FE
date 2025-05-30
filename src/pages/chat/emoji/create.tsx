@@ -6,28 +6,44 @@ import { useRouter } from 'next/router';
 
 export default function CreateEmojiPage() {
   const router = useRouter();
-  const [isComplete, setIsComplete] = useState(false);
+  const [emojiFile, setEmojiFile] = useState<File | null>(null);
 
-  const handleCreateEmoji = () => {
-    if (!isComplete) return;
+  const handleUploadEmoji = async () => {
+    if (!emojiFile) return;
 
-    router.replace('/chat');
+    const formData = new FormData();
+    formData.append('emoji', emojiFile);
+
+    const res = await fetch('/api/chat/emoji/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (res.ok) {
+      router.replace('/chat');
+    } else {
+      alert('이모티콘 업로드 실패');
+    }
   };
 
   return (
     <>
-      <div className='flex flex-col min-h-[calc(100vh-122px)] pt-16 pb-4 justify-between'>
-        <div className='flex flex-1 justify-center'>
-          <div className='flex flex-col gap-8 items-center'>
-            <div className='flex flex-col gap-0.5 w-[380px] text-center'>
-              <span className='h-6 text-[#333333] text-xl font-bold'>둘만의 이모티콘을 만들어볼까요?</span>
-              <span className='h-5 text-[#767676]'>우리 사진으로 감정을 담은 이모티콘을 직접 만들 수 있어요!</span>
+      <div className="flex flex-col min-h-[calc(100vh-122px)] pt-16 pb-4 justify-between">
+        <div className="flex flex-1 justify-center">
+          <div className="flex flex-col gap-8 items-center">
+            <div className="flex flex-col gap-0.5 w-[380px] text-center">
+              <span className="h-6 text-[#333333] text-xl font-bold">둘만의 이모티콘을 만들어볼까요?</span>
+              <span className="h-5 text-[#767676]">우리 사진으로 감정을 담은 이모티콘을 직접 만들 수 있어요!</span>
             </div>
-            <EmojiCropper onComplete={() => setIsComplete(true)} />
+            <EmojiCropper
+              onComplete={(file: File) => {
+                setEmojiFile(file);
+              }}
+            />
           </div>
         </div>
       </div>
-      <Button isComplete={isComplete} onClick={handleCreateEmoji}>
+      <Button isComplete={!!emojiFile} onClick={handleUploadEmoji}>
         생성하기
       </Button>
     </>
