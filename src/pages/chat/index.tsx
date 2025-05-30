@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Emoji {
   _id: string;
@@ -12,7 +12,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3000/emoticon")
+    fetch('http://localhost:3000/emoticon')
       .then((res) => res.json())
       .then((data) => setEmojis(data))
       .catch((err) => console.error(err));
@@ -21,11 +21,11 @@ const Index = () => {
   return (
     <div>
       <h1>이모티콘 목록</h1>
-      <button onClick={() => navigate("/emoji/create")}>이모티콘 생성</button>
+      <button onClick={() => navigate('/emoji/create')}>이모티콘 생성</button>
       <ul>
         {emojis.map((emoji) => (
           <li key={emoji._id}>
-            <img src={emoji.imageUrl} alt="emoji" width={50} />
+            <img src={emoji.imageUrl} alt='emoji' width={50} />
             <span>{new Date(emoji.createdAt).toLocaleString()}</span>
           </li>
         ))}
