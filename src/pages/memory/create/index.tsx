@@ -1,7 +1,8 @@
 import React, { useState, ReactNode, useRef } from 'react';
 import BottomBar from '@/components/shared/BottomBar';
 import Header from '@/components/shared/Header';
-import { ImageCloseIcon, MemoryDateIcon } from '@/assets/icons/SvgIcon';
+import { ImageCloseIcon, MemoryDateIcon, MemoryItemIcon } from '@/assets/icons/SvgIcon';
+import BottomSheetMemoryItem from '@/components/shared/BottomSheetMemoryItem';
 import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/router';
@@ -16,6 +17,8 @@ interface ImageData {
 export default function MemoryCreatePage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedDateISO, setSelectedDateISO] = useState(''); // 서버에 보낼 ISO 형식 날짜
+  const [isItemSheetOpen, setIsItemSheetOpen] = useState(false);
+  const [selectedComponentName, setSelectedComponentName] = useState<string | null>(null);
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -89,7 +92,7 @@ export default function MemoryCreatePage() {
     setImages(images.filter((img) => img.id !== idToRemove));
   };
 
-  const isComplete = title.trim() !== '' && text.trim() !== '' && selectedDate !== '';
+  const isComplete = title.trim() !== '' && text.trim() !== '' && selectedComponentName !== '' && selectedDate !== '';
 
   const handleMemory = async () => {
     if (!isComplete) return;
@@ -161,7 +164,7 @@ export default function MemoryCreatePage() {
           <div className='w-full max-w-[364px] h-auto mx-2'>
             <textarea
               rows={1}
-              className='w-full max-h-[200px] text-base text-[#767676] resize-none overflow-y-auto leading-relaxed focus:outline-none'
+              className='w-full max-h-[150px] text-base text-[#767676] resize-none overflow-y-auto leading-relaxed focus:outline-none'
               placeholder='추억 내용을 작성해 주세요.'
               ref={textarea}
               value={text}
@@ -192,6 +195,7 @@ export default function MemoryCreatePage() {
 
           <input type='file' accept='image/*' multiple className='hidden' ref={fileInputRef} onChange={handleFileChange} />
 
+          {/* 날짜 선택 부분 */}
           <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
             <div
               className={`flex flex-row gap-1 text-base cursor-pointer ${selectedDate ? 'text-[#333333]' : 'text-[#999999]'}`}
@@ -199,6 +203,17 @@ export default function MemoryCreatePage() {
             >
               <MemoryDateIcon />
               <div className='h-6'>{selectedDate ? selectedDate : '기록할 날짜를 선택해 주세요.'}</div>
+            </div>
+          </div>
+
+          {/* 추억 아이템 선택 부분 */}
+          <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
+            <div
+              className={`flex flex-row gap-1 text-base cursor-pointer ${selectedComponentName ? 'text-[#333333]' : 'text-[#999999]'}`}
+              onClick={() => setIsItemSheetOpen(true)}
+            >
+              <MemoryItemIcon />
+              {selectedComponentName ? selectedComponentName : '기록할 추억을 선택해 주세요.'}
             </div>
           </div>
 
@@ -211,6 +226,14 @@ export default function MemoryCreatePage() {
           </div>
         </div>
       </div>
+      <BottomSheetMemoryItem
+        isOpen={isItemSheetOpen}
+        onClose={() => setIsItemSheetOpen(false)}
+        height={'500px'}
+        onSelectComponent={(Component) => {
+          setSelectedComponentName(Component.displayName || Component.name);
+        }}
+      ></BottomSheetMemoryItem>
       <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height={'380px'} onSelectDate={handleDateSelect} />
     </>
   );
