@@ -4,6 +4,7 @@ import Header from '@/components/shared/Header';
 import NoItemText from '@/components/shared/NoItemText';
 import MemoryItem from '@/components/shared/memory/MemoryItem';
 import { useRouter } from 'next/router';
+import { backendUrl } from '@/config/config';
 
 interface Memory {
   _id: string;
@@ -15,8 +16,6 @@ interface Memory {
   createdAt: string;
   updatedAt: string;
 }
-
-const backendUrl = 'http://192.168.208.161:5000';
 
 export default function MemoryPage() {
   const [memories, setMemories] = useState<Memory[]>([]);

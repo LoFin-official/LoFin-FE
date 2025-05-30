@@ -3,9 +3,8 @@ import Header from '@/components/shared/Header';
 import Input from '@/components/shared/Input';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+import React, { useState, useEffect, ReactNode } from 'react';
+import { backendUrl } from '@/config/config';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -66,13 +65,14 @@ export default function ResetPasswordPage() {
       <Header>비밀번호 재설정</Header>
       <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between gap-8 px-4 pt-16'>
         <div className='flex flex-1'>
-          <div className='flex flex-col gap-8 items-center'>
+          <div className='flex flex-col gap-8 items-center w-full max-w-[380px] mx-auto'>
             <div className='whitespace-pre-line text-[#333333] text-xl font-bold text-center'>
               인증이 완료되었습니다!{'\n'}새로운 비밀번호를 입력해 주세요.
             </div>
             <Image src='/images/LoFin.png' alt='LoFin' width={200} height={200} />
             <div className='flex flex-col gap-1'>
               <Input
+                width='w-full max-w-[380px] md:w-[380px]'
                 type='password'
                 label='새 비밀번호'
                 placeholder='영문, 숫자, 특수 문자 조합 8자리 이상'
@@ -85,6 +85,7 @@ export default function ResetPasswordPage() {
             </div>
             <div className='flex flex-col gap-1'>
               <Input
+                width='w-full max-w-[380px] md:w-[380px]'
                 type='password'
                 label='새 비밀번호 재확인'
                 placeholder='비밀번호 재입력'
@@ -107,3 +108,11 @@ export default function ResetPasswordPage() {
     </>
   );
 }
+ResetPasswordPage.getLayout = (page: ReactNode) => {
+  return (
+    <>
+      <Header>비밀번호 재설정</Header>
+      {page}
+    </>
+  );
+};

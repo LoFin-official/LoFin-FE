@@ -2,7 +2,7 @@ import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
 import React, { useEffect, useState } from 'react';
 import Input from '../Input';
-
+import { backendUrl } from '@/config/config';
 // 서버 URL 결정 함수 - 웹과 WebView 환경을 모두 지원
 const getBackendUrl = () => {
   // 실행 환경 확인 (WebView인지 여부 확인)
@@ -213,7 +213,7 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
   };
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-56px)] pt-8 justify-between'>
+    <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] pt-8 py-4 justify-between'>
       <div className='flex flex-1 justify-center'>
         <div className='flex flex-col gap-8 items-center'>
           <div className='flex flex-row gap-1 items-center'>
@@ -243,6 +243,7 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
           </div>
           <div className='flex flex-col gap-1'>
             <Input
+              width='w-full max-w-[380px] md:w-[380px]'
               label='상대방의 초대 코드를 받으셨나요?'
               placeholder='상대방의 초대 코드를 입력해 주세요.'
               value={code}

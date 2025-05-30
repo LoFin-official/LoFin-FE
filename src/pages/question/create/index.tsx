@@ -5,8 +5,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 export default function QuestionCreatePage() {
   const [selectedTab, setSelectedTab] = useState<'direct' | 'random'>('direct');
@@ -51,9 +50,9 @@ export default function QuestionCreatePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // ✅ JWT 토큰 추가
+          Authorization: `Bearer ${token}`, // JWT 토큰 추가
         },
-        body: JSON.stringify({ content }), // ✅ memberId, coupleId는 백엔드에서 처리
+        body: JSON.stringify({ content }), // memberId, coupleId는 백엔드에서 처리
       });
 
       if (!res.ok) {
@@ -63,7 +62,7 @@ export default function QuestionCreatePage() {
       }
 
       alert('질문이 성공적으로 저장되었습니다.');
-      router.push('/question');
+      router.replace('/question');
     } catch (err) {
       console.error(err);
       alert('질문 저장 중 오류가 발생했습니다.');

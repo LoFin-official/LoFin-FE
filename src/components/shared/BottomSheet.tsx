@@ -47,7 +47,7 @@ export default function BottomSheet({ className = '', children, isOpen, onClose,
           isAnimating ? 'translate-y-0' : 'translate-y-full'
         } ${className}`}
       >
-        {children}
+        <div className='h-full max-h-full overflow-y-auto scrollbar-hide'>{children}</div>
       </div>
     </div>
   );

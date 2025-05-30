@@ -5,6 +5,7 @@ import BottomBar from '@/components/shared/BottomBar';
 import Button from '@/components/shared/Button';
 import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import { ImageCloseIcon, MemoryDateIcon } from '@/assets/icons/SvgIcon';
+import { backendUrl } from '@/config/config';
 
 interface Memory {
   _id: string;
@@ -13,8 +14,6 @@ interface Memory {
   imageUrl?: string | string[];
   createdAt: string;
 }
-
-const backendUrl = 'http://192.168.208.161:5000';
 
 export default function MemoryEditPage() {
   const router = useRouter();
@@ -180,7 +179,7 @@ export default function MemoryEditPage() {
       }
 
       alert('수정 완료!');
-      router.push('/memory');
+      router.replace('/memory');
     } catch (err: any) {
       alert(`오류: ${err.message}`);
     }

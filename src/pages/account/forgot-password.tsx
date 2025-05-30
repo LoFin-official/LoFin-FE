@@ -4,8 +4,7 @@ import Input from '@/components/shared/Input';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');

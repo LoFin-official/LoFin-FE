@@ -5,8 +5,7 @@ import Input from '@/components/shared/Input';
 import ProfileItem from '@/components/shared/ProfileItem';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-
-const backendUrl = 'http://192.168.208.161:5000';
+import { backendUrl } from '@/config/config';
 
 export default function CoupleSinceEditPage() {
   const router = useRouter();
@@ -129,7 +128,7 @@ export default function CoupleSinceEditPage() {
 
       if (response.ok) {
         alert('첫 만남 날짜가 성공적으로 수정되었습니다.');
-        router.push('/my-page/profile');
+        router.replace('/my-page/profile');
       } else {
         alert(result.message || '날짜 수정에 실패했습니다.');
       }
@@ -146,11 +145,11 @@ export default function CoupleSinceEditPage() {
   };
 
   return (
-    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center'>
+    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center overflow-auto pb-40'>
       <div className='flex flex-col gap-16 items-center'>
         {profileData && (
           <ProfileItem
-            type='profile'
+            type='none'
             myNickname={profileData.myProfile.nickname}
             partnerNickname={profileData.partnerProfile.nickname}
             myProfileImageUrl={

@@ -5,8 +5,7 @@ import Input from '@/components/shared/Input';
 import BottomSheetDate from '@/components/shared/BottomSheetDate';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/router';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 주소
+import { backendUrl } from '@/config/config';
 
 export default function AnniversaryEditPage() {
   const router = useRouter();
@@ -112,7 +111,7 @@ export default function AnniversaryEditPage() {
       }
 
       alert('기념일이 성공적으로 수정되었습니다.');
-      router.push('/my-page/anniversary');
+      router.replace('/my-page/anniversary');
     } catch (error) {
       console.error(error);
       alert('기념일 수정에 실패했습니다.');

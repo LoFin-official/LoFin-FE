@@ -4,8 +4,7 @@ import Header from '@/components/shared/Header';
 import Input from '@/components/shared/Input';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState, useEffect } from 'react';
-// 백엔드 서버 주소 (이미지 URL 완성용)
-const backendUrl = 'http://192.168.208.161:5000';
+import { backendUrl } from '@/config/config';
 
 export default function ProfileEditPage() {
   const router = useRouter();
@@ -165,7 +164,7 @@ export default function ProfileEditPage() {
 
       if (data.success) {
         alert('프로필이 성공적으로 수정되었습니다.');
-        router.push('/my-page/profile');
+        router.replace('/my-page/profile');
       } else {
         alert(data.message || '프로필 수정 실패');
       }
@@ -176,7 +175,7 @@ export default function ProfileEditPage() {
   };
   console.log('previewUrl:', formData.previewUrl);
   return (
-    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center'>
+    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center overflow-auto pb-40'>
       <div className='flex flex-col gap-16 items-center w-full max-w-[412px] px-4'>
         {/* 이미지 미리보기 */}
         <div className='relative w-[150px] h-[150px] rounded-full overflow-hidden bg-[#CCCCCC]'>

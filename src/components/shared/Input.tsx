@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ClearIcon, EyeCloseIcon, EyeIcon } from '@/assets/icons/SvgIcon';
 
 interface CustomInputProps {
@@ -30,6 +30,7 @@ export default function Input({
   alwaysActiveStyle = false, // 포커스 되지 않아도 강조 색상 유지
   onClick,
 }: CustomInputProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
   const [showPassword, setShowPassword] = useState(false);
@@ -51,6 +52,18 @@ export default function Input({
       onChange(event);
     }
   };
+  const handleFocus = () => {
+    setIsFocused(true);
+    // 모바일 키보드 대응: input 위치로 스크롤
+    if (inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 300); // 키보드 올라오는 시간 고려
+    }
+  };
 
   React.useEffect(() => {
     setInternalValue(value);
@@ -61,6 +74,7 @@ export default function Input({
       <p className={`text-sm h-4 text-left ${alwaysActiveStyle || isFocused ? 'text-[#FF9BB3]' : 'text-[#999]'}`}>{label}</p>
       <div className={`flex flex-row ${width} h-9 border-b ${alwaysActiveStyle || isFocused ? 'border-[#FF9BB3]' : 'border-[#ccc]'}`}>
         <input
+          ref={inputRef}
           readOnly={readOnly}
           type={isPassword && !showPassword ? 'password' : 'text'}
           name={name}
@@ -68,7 +82,7 @@ export default function Input({
           maxLength={maxLength}
           className={`w-full h-5 my-2 mx-[2px] bg-transparent outline-none text-base text-left text-[#333333] placeholder-[#cccccc] ${onClick ? 'cursor-pointer' : ''}`}
           onChange={handleChange}
-          onFocus={() => setIsFocused(true)}
+          onFocus={handleFocus}
           onBlur={() => setIsFocused(false)}
           onClick={onClick}
           placeholder={placeholder}

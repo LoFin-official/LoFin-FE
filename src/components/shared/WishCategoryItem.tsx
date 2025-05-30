@@ -12,18 +12,18 @@ const CategorySection = ({
   selectedItems: string[];
   onToggleItem: (item: string) => void;
 }) => (
-  <div className='flex flex-col gap-4 w-[268px] h-auto'>
+  <div className='flex flex-col gap-4 w-full max-w-[268px] md:w-[268px] h-auto'>
     <div className='h-5'>
       <span className='text-base font-bold text-[#333333]'>{title}</span>
     </div>
-    <div className='flex flex-row flex-wrap gap-2 w-[250px] h-auto self-end ml-auto'>
+    <div className='flex flex-row flex-wrap gap-2 w-full max-w-[250px] md:w-[250px] h-auto self-end ml-auto'>
       {items.map((item, index) => {
         const isSelected = selectedItems.includes(item);
         return (
           <button
             key={index}
             onClick={() => onToggleItem(item)}
-            className={`flex flex-col w-[78px] h-[28px] justify-center items-center rounded-[4px] text-sm ${
+            className={`flex flex-col w-full max-w-[70px] md:w-[78px] h-[28px] justify-center items-center rounded-[4px] text-sm ${
               isSelected ? 'bg-[#FF9BB3]/20 text-[#FF9BB3] font-bold' : 'bg-white text-[#333333]'
             }`}
           >
@@ -128,10 +128,10 @@ export default function WishCategoryItem({
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center w-[388px] h-[368px] border-[#eeeeee] border-b border-t'>
-        <div className='flex w-[380px] h-[336px]'>
+      <div className='flex flex-col items-center justify-center w-full max-w-[388px] md:w-[388px] h-[368px] border-[#eeeeee] border-b border-t mx-auto'>
+        <div className='flex w-full md:w-[380px] h-[336px]'>
           {/* 왼쪽 사이드바 */}
-          <div className='w-[80px] h-full bg-[#eeeeee]'>
+          <div className='w-full max-w-[80px] md:w-[80px] h-full bg-[#eeeeee]'>
             {sideMenu.map((label, index) => {
               const isActive = label === selectedCategory;
               return (
@@ -149,7 +149,7 @@ export default function WishCategoryItem({
           </div>
 
           {/* 오른쪽 콘텐츠 */}
-          <div className='flex flex-col gap-8 w-[300px] h-full px-4 py-4'>
+          <div className='flex flex-col gap-8 flex-1 h-full w-full max-w-[300px] md:w-[300px] px-2 py-4 overflow-auto'>
             {Object.entries(categoriesMap[selectedCategory]).map(([title, items]) => (
               <CategorySection
                 key={title}
@@ -163,8 +163,8 @@ export default function WishCategoryItem({
         </div>
       </div>
       {/* 선택된 아이템에 대한 Input 필드들 */}
-      <div className='flex flex-col gap-4 px-1 mb-8'>
-        <div className='h-6 text-xl font-bold text-[#333333] w-[380px] text-left'>선택된 카테고리</div>
+      <div className='flex flex-col gap-8 w-full max-w-[348px]'>
+        <div className='h-6 text-xl font-bold text-[#333333] w-full max-w-[380px] md:w-[380px] mx-auto text-left'>선택된 카테고리</div>
         {allSelectedItems.length === 0 ? (
           <div className='flex flex-col gap-0.5 px-1 text-center'>
             <span className='h-6 text-[#767676] text-xl font-bold'>아직 선택된 항목이 없어요.</span>
@@ -173,7 +173,7 @@ export default function WishCategoryItem({
         ) : (
           allSelectedItems.map((item) => (
             <Input
-              width='w-[376px]'
+              width='w-full max-w-[376px] md:w-[376px]'
               key={item}
               label={`${item}`}
               placeholder='해당 카테고리 상품의 상세 정보를 입력해 주세요'

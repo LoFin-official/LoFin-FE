@@ -4,6 +4,7 @@ import AnniversaryItem from '@/components/shared/AnniversaryItem';
 import Header from '@/components/shared/Header';
 import BottomBar from '@/components/shared/BottomBar';
 import ProfileItem from '@/components/shared/ProfileItem';
+import { backendUrl } from '@/config/config';
 
 interface Anniversary {
   _id: string;
@@ -22,8 +23,6 @@ interface ProfileResponse {
     profilePicture: string | null;
   };
 }
-
-const backendUrl = 'http://192.168.208.161:5000';
 
 export default function AnniversaryPage() {
   const router = useRouter();
@@ -103,7 +102,7 @@ export default function AnniversaryPage() {
 
   // 수정 페이지로 이동 함수
   const onEditClick = (anniversaryId: string) => {
-    router.push(`/my-page/anniversary/edit?id=${anniversaryId}`);
+    router.replace(`/my-page/anniversary/edit?id=${anniversaryId}`);
   };
 
   // 삭제 후 UI 및 DB에서 삭제 처리 함수

@@ -4,8 +4,7 @@ import Input from '@/components/shared/Input';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -103,16 +102,16 @@ export default function RegisterPage() {
 
   return (
     <>
-      <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between w-full px-4 mx-auto'>
-        <div className='flex flex-1 items-center justify-center'>
-          <div className='flex flex-col gap-8 items-center'>
+      <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between w-full px-4 mx-auto overflow-auto pb-60'>
+        <div className='flex flex-1 items-center'>
+          <div className='flex flex-col gap-8 items-center w-full max-w-[412px] mx-atuo'>
             <Image src='/images/LoFin.png' alt='LoFin' width={200} height={200} />
-            <div className='flex flex-col gap-1 w-full max-w-[380px]'>
-              <div className='flex flex-row gap-2'>
+            <div className='flex flex-col gap-1'>
+              <div className='flex flex-row gap-2 w-full max-w-[380px]'>
                 <Input
                   label='아이디'
                   placeholder='이메일을 입력해 주세요.'
-                  width='w-full max-w-[277px]'
+                  width='w-full max-w-[277px] md:w-[277px]'
                   name='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -128,12 +127,12 @@ export default function RegisterPage() {
               )}
             </div>
             {showVerification && (
-              <div className='flex flex-col gap-1 w-full max-w-[380px]'>
-                <div className='flex flex-row gap-2'>
+              <div className='flex flex-col gap-1'>
+                <div className='flex flex-row gap-2 w-full max-w-[380px]'>
                   <Input
                     label='인증번호'
                     placeholder='인증번호 6자리를 입력해 주세요.'
-                    width='w-full max-w-[277px]'
+                    width='w-full max-w-[277px] md:w-[277px]'
                     maxLength={6}
                     name='verificationCode'
                     value={verificationCode}
@@ -183,7 +182,7 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
-        <Button isComplete={isComplete} onClick={handleRegister} className='mb-4 px-4'>
+        <Button isComplete={isComplete} onClick={handleRegister} className='mb-4 px-4 mt-4'>
           회원가입
         </Button>
       </div>

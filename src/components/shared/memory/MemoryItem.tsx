@@ -1,6 +1,7 @@
 import { HeartIcon } from '@/assets/icons/SvgIcon';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useRouter } from 'next/router';
+import { backendUrl } from '@/config/config';
 
 interface Memory {
   title: string;
@@ -39,11 +40,7 @@ export default function MemoryItem({ memories, onDelete }: MemoryItemProps) {
           <div className={`w-[296px] h-[336px] flex flex-col gap-2 rounded-[18px] p-4 ${item.border ? 'border border-[#FF4C80]' : ''}`}>
             <div className='w-[264px] h-[252px] rounded-[18px] bg-[#eeeeee] overflow-hidden'>
               {item.imageUrl ? (
-                <img
-                  src={item.imageUrl ? `http://192.168.208.161:5000${item.imageUrl}` : undefined}
-                  alt={item.title}
-                  className='w-full h-full object-cover'
-                />
+                <img src={item.imageUrl ? `${backendUrl}${item.imageUrl}` : undefined} alt={item.title} className='w-full h-full object-cover' />
               ) : (
                 <div className='w-full h-full flex items-center justify-center text-[#999999]'>사진이 없습니다</div>
               )}
