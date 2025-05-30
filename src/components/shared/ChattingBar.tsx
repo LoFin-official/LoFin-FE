@@ -1,4 +1,4 @@
-import { EmojiEditIcon, EmojiIcon, ImageIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
+import { DayDeleteIcon, DayEditIcon, EmojiEditIcon, EmojiIcon, ImageIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
@@ -11,6 +11,9 @@ export default function ChattingBar() {
 
   const [emojis, setEmojis] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]); // 임시 이모티콘 리스트
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEmojiIndex, setSelectedEmojiIndex] = useState<number | null>(null);
 
   const router = useRouter();
 
@@ -32,10 +35,9 @@ export default function ChattingBar() {
 
   const handleLongPressStart = (index: number) => {
     const timer = setTimeout(() => {
-      if (confirm('이 이모티콘을 삭제하시겠습니까?')) {
-        setEmojis((prev) => prev.filter((_, i) => i !== index));
-      }
-    }, 600); // 600ms 이상 누르면 삭제
+      setSelectedEmojiIndex(index);
+      setIsModalOpen(true);
+    }, 600); // 600ms 이상 눌렀을 때만 실행
 
     setLongPressTimer(timer);
   };
@@ -45,6 +47,19 @@ export default function ChattingBar() {
       clearTimeout(longPressTimer);
       setLongPressTimer(null);
     }
+  };
+
+  const handleDeleteClick = () => {
+    if (selectedEmojiIndex !== null) {
+      setEmojis((prev) => prev.filter((_, i) => i !== selectedEmojiIndex));
+    }
+    setIsModalOpen(false);
+    setSelectedEmojiIndex(null);
+  };
+
+  const handleModalClose = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsModalOpen(false);
   };
 
   const handleCreateEmoji = () => {
@@ -112,6 +127,33 @@ export default function ChattingBar() {
           </div>
         )}
       </div>
+
+      {isModalOpen && (
+        <>
+          <div className='fixed inset-0 flex items-center justify-center bg-[#1B1B1B] bg-opacity-50 z-50'>
+            <div className='w-52 h-24 relative'>
+              <div className='w-52 h-24 left-0 top-0 absolute bg-[#ffffff] rounded-xl' />
+              <div className='w-32 left-[40px] top-[16px] absolute text-center justify-start text-[#333333] text-base font-medium leading-tight'>
+                삭제하시겠습니까?
+              </div>
+              <div
+                className='left-[137px] top-[61px] absolute text-right justify-start text-[#FF4C80] text-base font-medium leading-tight cursor-pointer'
+                onClick={handleDeleteClick}
+              >
+                삭제
+              </div>
+              <div
+                className='left-[36px] top-[61px] absolute text-right justify-start text-[#333333] text-base font-medium  leading-tight cursor-pointer'
+                onClick={handleModalClose}
+              >
+                취소
+              </div>
+              <div className='w-52 h-px left-0 top-[52px] absolute bg-[#EEEEEE]' />
+              <div className='w-px h-9 left-[100px] top-[53px] absolute bg-[#EEEEEE]' />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
