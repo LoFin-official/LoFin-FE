@@ -162,6 +162,7 @@ export default function WishCategoryItem({
           </div>
         </div>
       </div>
+
       {/* 선택된 아이템에 대한 Input 필드들 */}
       <div className='flex flex-col gap-8 w-full max-w-[348px]'>
         <div className='h-6 text-xl font-bold text-[#333333] w-full max-w-[380px] md:w-[380px] mx-auto text-left'>선택된 카테고리</div>

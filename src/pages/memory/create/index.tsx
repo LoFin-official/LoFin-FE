@@ -139,7 +139,7 @@ export default function MemoryCreatePage() {
         throw new Error('추억 저장에 실패했습니다.');
       }
 
-      router.push('/memory');
+      router.replace('/memory');
     } catch (err) {
       console.error(err);
       setError('추억 저장 중 오류가 발생했습니다.');

@@ -10,7 +10,7 @@ const getBackendUrl = () => {
 
   if (isRunningInWebView) {
     // WebView 환경 (Expo 앱)에서는 로컬 네트워크 IP 사용
-    return 'http://192.168.208.161:5000';
+    return 'http://192.168.211.217:5000';
   } else {
     // 일반 웹 브라우저 환경에서는 localhost 사용
     return 'http://localhost:5000';

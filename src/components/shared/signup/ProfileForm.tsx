@@ -152,11 +152,9 @@ export default function ProfileForm({ onNext, currentStep }: { onNext: () => voi
       </div>
 
       {/* 하단 버튼 */}
-      <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
-        <Button isComplete={isComplete} onClick={handleSubmit} className='mb-4'>
-          프로필 설정 완료
-        </Button>
-      </div>
+      <Button isComplete={isComplete} onClick={handleSubmit} className='mb-4'>
+        프로필 설정 완료
+      </Button>
     </div>
   );
 }

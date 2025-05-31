@@ -102,7 +102,7 @@ export default function RegisterPage() {
 
   return (
     <>
-      <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between w-full px-4 mx-auto overflow-auto pb-60'>
+      <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between w-full px-4 mx-auto'>
         <div className='flex flex-1 items-center'>
           <div className='flex flex-col gap-8 items-center w-full max-w-[412px] mx-atuo'>
             <Image src='/images/LoFin.png' alt='LoFin' width={200} height={200} />

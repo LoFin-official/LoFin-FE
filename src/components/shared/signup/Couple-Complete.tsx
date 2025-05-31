@@ -165,11 +165,9 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
           </div>
         </div>
       </div>
-      <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
-        <Button isComplete={isComplete} onClick={handleStart} className='w-full max-w-[380px]'>
-          시작하기
-        </Button>
-      </div>
+      <Button isComplete={isComplete} onClick={handleStart} className='w-full max-w-[380px]'>
+        시작하기
+      </Button>
     </div>
   );
 }
