@@ -114,17 +114,18 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
           />
         </div>
       </div>
-
-      <Button
-        isComplete={isAnyItemSelected}
-        onClick={() => {
-          if (!isAnyItemSelected) return;
-          saveSelection();
-        }}
-        className='mb-4'
-      >
-        선택 완료
-      </Button>
+      <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
+        <Button
+          isComplete={isAnyItemSelected}
+          onClick={() => {
+            if (!isAnyItemSelected) return;
+            saveSelection();
+          }}
+          className='mb-4 '
+        >
+          선택 완료
+        </Button>
+      </div>
     </div>
   );
 }

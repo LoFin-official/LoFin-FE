@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router';
 import BottomSheet from '@/components/shared/BottomSheet';
 import { DeleteIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
-
-const backendUrl = 'http://192.168.35.111:5000'; // API 주소
+import { backendUrl } from '@/config/config';
 
 interface QuestionBottomSheetProps {
   isOpen: boolean;
@@ -60,6 +59,50 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id, on
       alert(error.message || '답변 삭제 중 오류가 발생했습니다.');
     }
   };
+  const handleDeleteQuestion = async () => {
+    if (!id || Array.isArray(id)) {
+      console.error('Invalid question ID');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      const confirm = window.confirm('정말로 질문을 삭제하시겠습니까?');
+      if (!confirm) return;
+
+      const response = await fetch(`${backendUrl}/question/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '질문 삭제에 실패했습니다.');
+      }
+
+      const result = await response.json();
+      alert(result.message || '질문이 삭제되었습니다.');
+
+      // 삭제 후 콜백 실행 (필요하다면)
+      if (onAnswerDeleted) {
+        onAnswerDeleted();
+      }
+
+      onClose();
+      router.push('/question'); // 질문 목록 페이지로 이동
+    } catch (error: any) {
+      console.error('질문 삭제 오류:', error);
+      alert(error.message || '질문 삭제 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <BottomSheet height={'144px'} isOpen={isOpen} onClose={onClose}>
@@ -78,9 +121,9 @@ export default function QuestionBottomSheet({ isOpen, onClose, hasAnswer, id, on
               <QuestionEditIcon onClick={() => {}} />
               <div className='h-6 text-lg'>답변하기</div>
             </div>
-            <div onClick={handleDeleteAnswer} className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'>
+            <div onClick={handleDeleteQuestion} className='flex flex-row gap-0.5 h-[72px] px-4 items-center text-[#C58EF1] cursor-pointer'>
               <DeleteIcon />
-              <div className='h-6 text-lg'>삭제하기</div>
+              <div className='h-6 text-lg'>질문 삭제하기</div>
             </div>
           </>
         ) : (

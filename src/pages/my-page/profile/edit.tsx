@@ -175,7 +175,7 @@ export default function ProfileEditPage() {
   };
   console.log('previewUrl:', formData.previewUrl);
   return (
-    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center'>
+    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center overflow-auto pb-40'>
       <div className='flex flex-col gap-16 items-center w-full max-w-[412px] px-4'>
         {/* 이미지 미리보기 */}
         <div className='relative w-[150px] h-[150px] rounded-full overflow-hidden bg-[#CCCCCC]'>

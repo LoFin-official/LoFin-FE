@@ -182,7 +182,7 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
-        <Button isComplete={isComplete} onClick={handleRegister} className='mb-4 px-4'>
+        <Button isComplete={isComplete} onClick={handleRegister} className='mb-4 px-4 mt-4'>
           회원가입
         </Button>
       </div>

@@ -2,7 +2,7 @@ import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
 import Button from '@/components/shared/Button';
 import React, { useEffect, useState } from 'react';
 import Input from '../Input';
-
+import { backendUrl } from '@/config/config';
 // 서버 URL 결정 함수 - 웹과 WebView 환경을 모두 지원
 const getBackendUrl = () => {
   // 실행 환경 확인 (WebView인지 여부 확인)

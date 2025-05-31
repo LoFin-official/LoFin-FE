@@ -102,7 +102,7 @@ export default function AnniversaryPage() {
 
   // 수정 페이지로 이동 함수
   const onEditClick = (anniversaryId: string) => {
-    router.push(`/my-page/anniversary/edit?id=${anniversaryId}`);
+    router.replace(`/my-page/anniversary/edit?id=${anniversaryId}`);
   };
 
   // 삭제 후 UI 및 DB에서 삭제 처리 함수

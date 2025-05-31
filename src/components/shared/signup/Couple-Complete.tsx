@@ -113,8 +113,8 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
   const steps = ['1', '2', '3', '4'];
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] pt-8 py-4 mx-auto'>
-      <div className='flex flex-1 w-full max-w-[380px] mx-auto'>
+    <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] pt-8 py-4 px-4'>
+      <div className='flex flex-1 justify-center'>
         <div className='flex flex-col gap-8 items-center'>
           <div className='flex flex-row gap-1 items-center'>
             {steps.map((step, index) => (
@@ -136,7 +136,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
             <div>로딩 중...</div>
           ) : profileData ? (
             <ProfileItem
-              type='profile'
+              type='none'
               myNickname={profileData.myProfile.nickname}
               partnerNickname={profileData.partnerProfile.nickname}
               myProfileImageUrl={

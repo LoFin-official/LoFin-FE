@@ -15,25 +15,24 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
 
+  const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
   const showCroppedImage = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
     try {
       const cropped = await getCroppedImg(imageSrc, croppedAreaPixels, 100);
-      setCroppedImage(cropped);  // 미리보기용 이미지 상태 업데이트
+      // 여기에 서버 저장 로직 또는 채팅 전송 로직 추가
 
       if (onComplete) {
-        // cropped가 base64 URL이라면 Blob 변환 필요
-        // base64 → Blob → File 변환 예시
-        const response = await fetch(cropped);
-        const blob = await response.blob();
-        const file = new File([blob], "croppedEmoji.png", { type: blob.type });
+        const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 100);
+        const file = new File([blob], 'emoji.png', { type: 'image/png' });
         onComplete(file);
-    }
+      }
     } catch (e) {
       console.error(e);
     }
-  }, [imageSrc, croppedAreaPixels, onComplete]);
-
+  }, [imageSrc, croppedAreaPixels]);
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -45,12 +44,7 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
       reader.readAsDataURL(file);
     }
   };
-
-  // 누락된 onCropComplete 함수 추가 예시
-  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
-
+  
   return (
     <div className='flex flex-col items-center gap-2'>
       {!imageSrc && (

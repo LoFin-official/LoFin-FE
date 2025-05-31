@@ -121,7 +121,6 @@ export default function ProfileForm({ onNext, currentStep }: { onNext: () => voi
             <input type='file' accept='image/*' onChange={handleImageChange} className='absolute inset-0 opacity-0 cursor-pointer' />
           </div>
 
-          {/* 닉네임 입력 */}
           <Input
             width='w-full max-w-[380px] md:w-[380px]'
             label='닉네임'

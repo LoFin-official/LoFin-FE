@@ -7,7 +7,7 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
     image.src = url;
   });
 
-const getCroppedImg = async (imageSrc: string, pixelCrop: any, size: number): Promise<string> => {
+const getCroppedImg = async (imageSrc: string, pixelCrop: any, size: number): Promise<Blob> => {
   const image = await createImage(imageSrc);
   const canvas = document.createElement('canvas');
   canvas.width = size;
@@ -18,7 +18,12 @@ const getCroppedImg = async (imageSrc: string, pixelCrop: any, size: number): Pr
 
   ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, size, size);
 
-  return canvas.toDataURL('image/jpeg'); // 혹은 'image/png'
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error('Blob 생성 실패'));
+    }, 'image/png'); // 필요에 따라 image/jpeg도 가능
+  });
 };
 
 export default getCroppedImg;

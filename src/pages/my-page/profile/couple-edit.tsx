@@ -145,11 +145,11 @@ export default function CoupleSinceEditPage() {
   };
 
   return (
-    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center'>
+    <div className='flex flex-col justify-between min-h-[calc(100vh-112px)] pt-16 items-center overflow-auto pb-40'>
       <div className='flex flex-col gap-16 items-center'>
         {profileData && (
           <ProfileItem
-            type='profile'
+            type='none'
             myNickname={profileData.myProfile.nickname}
             partnerNickname={profileData.partnerProfile.nickname}
             myProfileImageUrl={

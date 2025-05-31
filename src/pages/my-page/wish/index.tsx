@@ -4,8 +4,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import { useRouter } from 'next/router';
-
-const backendUrl = 'http://192.168.208.161:5000'; // 백엔드 서버 주소
+import { backendUrl } from '@/config/config';
 
 export default function WishPage() {
   const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
@@ -120,7 +119,7 @@ export default function WishPage() {
         });
       });
 
-      const res = await fetch('http://192.168.208.161:5000/wishlistUpdate/item/update', {
+      const res = await fetch(`${backendUrl}/wishlistUpdate/item/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -175,9 +174,11 @@ export default function WishPage() {
             {successMessage && <div className='mt-4 text-green-600 font-semibold'>{successMessage}</div>}
           </div>
         </div>
-        <Button isComplete={isComplete} onClick={handleComplete} className='mb-4'>
-          선택 완료
-        </Button>
+        <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
+          <Button isComplete={isComplete} onClick={handleComplete} className='mb-4'>
+            선택 완료
+          </Button>
+        </div>
       </div>
     </>
   );

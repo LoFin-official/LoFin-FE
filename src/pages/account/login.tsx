@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
   const isValidEmail = (email: string) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|co\.kr|kr|edu|gov|io|me)$/.test(email);
   };
@@ -38,14 +39,25 @@ export default function LoginPage() {
       if (response.ok) {
         console.log('로그인 성공:', data);
 
-        // 토큰 저장
+        //  토큰 저장
         if (data.token) {
           localStorage.setItem('token', data.token);
+
+          //  WebView 내에서 실행 중이면 토큰 전달
+          if (window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === 'function') {
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: 'LOGIN_SUCCESS',
+                token: data.token,
+              })
+            );
+          }
         } else {
           alert('서버에서 토큰이 전달되지 않았습니다.');
           return;
         }
 
+        //  페이지 이동
         router.push('/memory');
       } else {
         alert(data.message || '로그인 실패');
@@ -58,7 +70,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)]'>
+      <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)] overflow-auto pb-[190px]'>
         <Image src='/images/LoFin.png' alt='LoFin' width={250} height={250} />
         <div className='flex flex-col gap-8 w-full max-w-[412px]'>
           <div className='w-full max-w-[380px] md:w-[412px] flex flex-col gap-8'>

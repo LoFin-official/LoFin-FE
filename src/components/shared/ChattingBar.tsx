@@ -1,6 +1,7 @@
 import { DayDeleteIcon, DayEditIcon, EmojiEditIcon, EmojiIcon, ImageIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { backendUrl } from '@/config/config';
 
 export default function ChattingBar() {
   const [openPanel, setOpenPanel] = useState<'plus' | 'emoji' | null>(null);
@@ -9,11 +10,11 @@ export default function ChattingBar() {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const [emojis, setEmojis] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]); // 임시 이모티콘 리스트
+  const [emojis, setEmojis] = useState<{ _id: string; imageUrl: string }[]>([]);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEmojiIndex, setSelectedEmojiIndex] = useState<number | null>(null);
+  const [selectedEmojiId, setSelectedEmojiId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -21,24 +22,46 @@ export default function ChattingBar() {
     setOpenPanel((prev) => (prev === type ? null : type));
   };
 
-  // 애니메이션 효과
+  const fetchStickers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${backendUrl}/emoticon`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setEmojis(data.stickers);
+      } else {
+        console.error('스티커 불러오기 실패');
+      }
+    } catch (err) {
+      console.error('스티커 API 오류:', err);
+    }
+  };
+
   useEffect(() => {
+    if (openPanel === 'emoji') {
+      fetchStickers();
+    }
+
     if (openPanel) {
       setIsVisible(true);
-      setTimeout(() => setIsAnimating(true), 10); // 다음 프레임에 트리거
+      setTimeout(() => setIsAnimating(true), 10);
     } else {
       setIsAnimating(false);
-      const timer = setTimeout(() => setIsVisible(false), 300); // 애니메이션 후 DOM 제거
+      const timer = setTimeout(() => setIsVisible(false), 300);
       return () => clearTimeout(timer);
     }
   }, [openPanel]);
 
-  const handleLongPressStart = (index: number) => {
+  const handleLongPressStart = (id: string) => {
     const timer = setTimeout(() => {
-      setSelectedEmojiIndex(index);
+      setSelectedEmojiId(id);
       setIsModalOpen(true);
-    }, 600); // 600ms 이상 눌렀을 때만 실행
-
+    }, 600);
     setLongPressTimer(timer);
   };
 
@@ -49,21 +72,41 @@ export default function ChattingBar() {
     }
   };
 
-  const handleDeleteClick = () => {
-    if (selectedEmojiIndex !== null) {
-      setEmojis((prev) => prev.filter((_, i) => i !== selectedEmojiIndex));
-    }
-    setIsModalOpen(false);
-    setSelectedEmojiIndex(null);
-  };
-
-  const handleModalClose = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setIsModalOpen(false);
-  };
-
   const handleCreateEmoji = () => {
     router.push('/chat/emoji/create');
+  };
+
+  const handleDeleteClick = async () => {
+    if (!selectedEmojiId) return;
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${backendUrl}/emoticon/${selectedEmojiId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setEmojis((prev) => prev.filter((emoji) => emoji._id !== selectedEmojiId));
+        alert('이모티콘이 삭제되었습니다.');
+      } else {
+        alert('삭제 실패: ' + data.message);
+      }
+    } catch (err) {
+      console.error('삭제 오류:', err);
+      alert('삭제 중 오류가 발생했습니다.');
+    } finally {
+      setIsModalOpen(false);
+      setSelectedEmojiId(null);
+    }
+  };
+
+  const handleModalClose = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setIsModalOpen(false);
+    setSelectedEmojiId(null);
   };
 
   return (
@@ -79,19 +122,25 @@ export default function ChattingBar() {
               placeholder='메시지 보내기'
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              onFocus={() => setOpenPanel(null)}
-            ></input>
+              onFocus={(e) => {
+                setOpenPanel(null);
+                setTimeout(() => {
+                  e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+              }}
+            />
             <EmojiIcon className={'cursor-pointer'} onClick={() => togglePanel('emoji')} />
           </div>
           <div className='flex mr-1 my-1'>
-            <SendIcon className={inputText.trim() ? 'text-[#FF9BB3] cursor-pointer' : 'text-[#d9d9d9]'} onClick={() => {}}></SendIcon>
+            <SendIcon className={inputText.trim() ? 'text-[#FF9BB3] cursor-pointer' : 'text-[#d9d9d9]'} onClick={() => {}} />
           </div>
         </div>
 
         {isVisible && (
           <div
-            className={`w-full border-t border-[#d9d9d9] bg-white overflow-hidden transition-all duration-300 ease-in-out
-          ${isAnimating ? 'max-h-[252px]' : 'max-h-0'}`}
+            className={`w-full border-t border-[#d9d9d9] bg-white overflow-hidden transition-all duration-300 ease-in-out ${
+              isAnimating ? 'max-h-[252px]' : 'max-h-0'
+            }`}
           >
             {openPanel === 'plus' && (
               <div className='flex flex-row gap-8 px-6 py-4'>
@@ -105,19 +154,20 @@ export default function ChattingBar() {
                 </div>
               </div>
             )}
-
-            {/* 생성된 이모티콘 */}
+            
             {openPanel === 'emoji' && (
               <div className='h-[252px] flex flex-col gap-2 bg-white px-4 py-4 overflow-y-auto scrollbar-hide'>
                 <div className='flex flex-row flex-wrap justify-start gap-2 px-1'>
-                  {emojis.map((emoji, index) => (
-                    <div
-                      key={index}
-                      className='w-[68px] h-[68px] bg-[#eeeeee] rounded-lg'
-                      onMouseDown={() => handleLongPressStart(index)}
+                  {emojis.map((emoji) => (
+                    <img
+                      key={emoji._id}
+                      src={emoji.imageUrl.startsWith('http') ? emoji.imageUrl : `${backendUrl}${emoji.imageUrl}`}
+                      alt='emoji'
+                      className='w-[74px] md:w-[68px] h-[74px] md:h-[68px] bg-[#eeeeee] rounded-lg'
+                      onMouseDown={() => handleLongPressStart(emoji._id)}
                       onMouseUp={handleLongPressEnd}
                       onMouseLeave={handleLongPressEnd}
-                      onTouchStart={() => handleLongPressStart(index)}
+                      onTouchStart={() => handleLongPressStart(emoji._id)}
                       onTouchEnd={handleLongPressEnd}
                     />
                   ))}

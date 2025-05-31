@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 import { BackIcon, CloseIcon, MemoryIcon, MemoryImageIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
 import QuestionBottomSheet from './question/QuestionBottomSheet';
+import { backendUrl } from '@/config/config';
 
 interface HeaderProps {
   children: ReactNode;
@@ -23,7 +24,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create', '/chat/emoji/create'];
   const memoryPages = ['/memory'];
-  const memoryEditPages = ['/memory/create', '/memory/[id]', '/memory/edit'];
+  const memoryEditPages = ['/memory/[id]', '/memory/edit'];
   const questionEditPages = ['/question', '/question/[id]', '/my-page/anniversary'];
   const imagePages = ['/memory/edit'];
   const nextPages = ['/account/WishForm'];
@@ -39,6 +40,35 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   }
 
   let RightComponent: React.ReactNode = rightElement;
+
+  const handleSkip = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendUrl}/wishlist/selection/skip`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`건너뛰기 실패: ${errorData.message}`);
+        return;
+      }
+
+      router.push('/account/couple-connect');
+    } catch (error) {
+      console.error('건너뛰기 오류:', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+  };
 
   if (RightComponent === undefined) {
     if (pathname === '/memory/[id]') {
@@ -60,7 +90,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
       RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (nextPages.includes(pathname)) {
       RightComponent = (
-        <button className='h-5 text-sm text-[#767676] cursor-pointer' onClick={() => router.push('/account/couple-connect')}>
+        <button className='h-5 text-sm text-[#767676] cursor-pointer' onClick={handleSkip}>
           건너뛰기
         </button>
       );
@@ -75,13 +105,12 @@ export default function Header({ children, onBack, showBackButton, rightElement,
         <div className='text-right pr-2'>{RightComponent}</div>
       </div>
 
-      {/* 질문 답변, 수정, 삭제 바텀 시트 */}
       <QuestionBottomSheet
         isOpen={isSheetOpen}
         onClose={() => setIsSheetOpen(false)}
         hasAnswer={hasAnswer}
         id={id}
-        onAnswerDeleted={onAnswerDeleted} // 답변 삭제 콜백 전달
+        onAnswerDeleted={onAnswerDeleted}
       />
     </>
   );
