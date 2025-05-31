@@ -43,6 +43,16 @@ export default function LoginPage() {
         if (data.token) {
           localStorage.setItem('token', data.token);
 
+        // 🔽 추가: JWT에서 memberId를 추출해서 저장
+          try {
+            const payload = data.token.split('.')[1];
+            const decoded = JSON.parse(atob(payload)); // base64 decode
+            if (decoded.memberId) {
+              localStorage.setItem('userId', decoded.memberId);
+            }
+          } catch (e) {
+            console.error('토큰 디코딩 실패:', e);
+          }
           //  WebView 내에서 실행 중이면 토큰 전달
           if (window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === 'function') {
             window.ReactNativeWebView.postMessage(

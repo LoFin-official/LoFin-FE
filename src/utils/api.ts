@@ -1,32 +1,78 @@
-// utils/api.ts
-import { backendUrl } from '@/config/config';
-import axios from 'axios';
+import { backendUrl } from "@/config/config";
 
-export async function getChatMessages() {
-  const response = await axios.get('/api/messages');
-  return response.data;
+function getAuthToken() {
+  return localStorage.getItem("token");
 }
 
-export async function sendChatMessage(message: { text: string; type: 'sent' | 'received' }) {
-  const response = await axios.post('/api/messages', message);
-  return response.data;
-}
+// ✅ 메시지 조회 API
+export async function getChatMessages(senderId: string, receiverId: string) {
+  const token = getAuthToken();
 
-export const uploadEmoji = async (file: File, token: string) => {
-  const formData = new FormData();
-  formData.append('image', file);
-
-  const response = await fetch(`${backendUrl}/emoticon/upload`, {
-    method: 'POST',
+  const response = await fetch(`${backendUrl}/message/${senderId}/${receiverId}`, {
+    method: "GET",
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: formData,
   });
 
   if (!response.ok) {
-    throw new Error('Failed to upload emoji');
+    throw new Error("메시지 불러오기 실패");
   }
-  const result = await response.json();
-  return result;
-};
+
+  const resJson = await response.json();
+  console.log("📦 getChatMessages 응답 확인:", resJson);
+
+  if (!resJson || !Array.isArray(resJson.data)) {
+    throw new Error("서버 응답 형식이 잘못되었습니다.");
+  }
+
+  return resJson.data; // 메시지 배열만 반환
+}
+
+// ✅ 메시지 전송 API
+export async function sendChatMessage(message: {
+  text: string;
+  type: "sent" | "received";
+  receiverId: string;
+  imageUrl?: string;
+}) {
+  console.log("📨 sendChatMessage 호출됨:", message);
+
+  const token = getAuthToken();
+  console.log("🔐 토큰 확인:", token);
+
+  if (!message.receiverId) {
+    throw new Error("❌ receiverId가 없습니다.");
+  }
+
+  if (!message.text && !message.imageUrl) {
+    throw new Error("❌ 텍스트 또는 이미지 중 하나는 필수입니다.");
+  }
+
+  const body = {
+    receiver: message.receiverId,
+    content: message.text || "",
+    imageUrl: message.imageUrl || "",
+  };
+
+  console.log("📦 서버에 전송할 body:", body);
+
+  const response = await fetch(`${backendUrl}/message`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const resJson = await response.json();
+
+  if (!response.ok) {
+    console.error("❗ 서버 응답 오류:", resJson);
+    throw new Error(resJson.message || "메시지 전송 실패");
+  }
+
+  return resJson;
+}
