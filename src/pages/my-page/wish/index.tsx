@@ -56,7 +56,7 @@ export default function WishPage() {
             fetchedInputsMap[subCategory] = details || '';
           });
         } else {
-          console.warn('⚠️ selectedCategories가 비어있거나 존재하지 않음:', data);
+          console.warn('selectedCategories가 비어있거나 존재하지 않음:', data);
         }
 
         setSelectedItemsMap(fetchedItemsMap);

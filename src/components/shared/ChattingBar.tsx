@@ -1,7 +1,4 @@
-import { 
-  DayDeleteIcon, DayEditIcon, EmojiEditIcon, EmojiIcon, 
-  ImageIcon, PlusIcon, SendIcon 
-} from '@/assets/icons/SvgIcon';
+import { EmojiEditIcon, EmojiIcon, ImageIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState, useRef } from 'react';
 import { backendUrl } from '@/config/config';
@@ -13,8 +10,8 @@ interface Emoji {
 }
 
 interface ChattingBarProps {
-  receiverId: string;  // 메시지 받는 사람 ID (필수)
-  onNewMessage?: (message: any) => void;  // 실시간 새 메시지 도착 시 호출 (옵션)
+  receiverId: string; // 메시지 받는 사람 ID (필수)
+  onNewMessage?: (message: any) => void; // 실시간 새 메시지 도착 시 호출 (옵션)
 }
 
 export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarProps) {
@@ -176,10 +173,10 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           receiver: receiverId,
-          content: trimmed, 
-          imageUrl: ""  // 이미지 없는 일반 메시지
+          content: trimmed,
+          imageUrl: '', // 이미지 없는 일반 메시지
         }),
       });
 
@@ -190,7 +187,7 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
 
         // 메시지 전송 성공 시 onNewMessage 콜백 호출 가능
         if (onNewMessage) {
-          onNewMessage(data.message);  // 서버가 반환하는 메시지 데이터가 있을 경우
+          onNewMessage(data.message); // 서버가 반환하는 메시지 데이터가 있을 경우
         }
       } else {
         alert('메시지 전송 실패: ' + data.message);
@@ -235,10 +232,7 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
 
           {/* 전송 버튼 */}
           <div className='flex mr-1 my-1'>
-            <SendIcon
-              className={inputText.trim() ? 'text-[#FF9BB3] cursor-pointer' : 'text-[#d9d9d9]'}
-              onClick={handleSendMessage}
-            />
+            <SendIcon className={inputText.trim() ? 'text-[#FF9BB3] cursor-pointer' : 'text-[#d9d9d9]'} onClick={handleSendMessage} />
           </div>
         </div>
 
