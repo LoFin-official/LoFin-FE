@@ -287,26 +287,30 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
 
       {/* 삭제 확인 모달 */}
       {isModalOpen && (
-        <div className='fixed inset-0 flex items-center justify-center bg-[#1B1B1B] bg-opacity-50 z-50'>
-          <div className='w-52 h-24 relative'>
-            <div className='w-52 h-24 left-0 top-0 absolute bg-[#ffffff] rounded-xl' />
-            <div className='absolute top-[20px] text-base font-semibold text-[#333333] w-full text-center'>
-              정말 삭제하시겠어요?
+        <>
+          <div className='fixed inset-0 flex items-center justify-center bg-[#1B1B1B] bg-opacity-50 z-50'>
+            <div className='w-52 h-24 relative'>
+              <div className='w-52 h-24 left-0 top-0 absolute bg-[#ffffff] rounded-xl' />
+              <div className='w-32 left-[40px] top-[16px] absolute text-center justify-start text-[#333333] text-base font-medium leading-tight'>
+                삭제하시겠습니까?
+              </div>
+              <div
+                className='left-[137px] top-[61px] absolute text-right justify-start text-[#FF4C80] text-base font-medium leading-tight cursor-pointer'
+                onClick={handleDeleteClick}
+              >
+                삭제
+              </div>
+              <div
+                className='left-[36px] top-[61px] absolute text-right justify-start text-[#333333] text-base font-medium  leading-tight cursor-pointer'
+                onClick={handleModalClose}
+              >
+                취소
+              </div>
+              <div className='w-52 h-px left-0 top-[52px] absolute bg-[#EEEEEE]' />
+              <div className='w-px h-9 left-[100px] top-[53px] absolute bg-[#EEEEEE]' />
             </div>
-            <button
-              className='absolute w-[92px] h-[38px] bottom-[10px] left-[8px] rounded-lg bg-[#F68B87] font-bold text-[#ffffff] text-sm'
-              onClick={handleDeleteClick}
-            >
-              삭제
-            </button>
-            <button
-              className='absolute w-[92px] h-[38px] bottom-[10px] right-[8px] rounded-lg bg-[#333333] font-bold text-[#ffffff] text-sm'
-              onClick={handleModalClose}
-            >
-              취소
-            </button>
           </div>
-        </div>
+        </>
       )}
     </>
   );
