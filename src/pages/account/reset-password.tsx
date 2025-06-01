@@ -3,7 +3,7 @@ import Header from '@/components/shared/Header';
 import Input from '@/components/shared/Input';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { backendUrl } from '@/config/config';
 
 export default function ResetPasswordPage() {
@@ -62,7 +62,6 @@ export default function ResetPasswordPage() {
 
   return (
     <>
-      <Header>비밀번호 재설정</Header>
       <div className='flex flex-col min-h-[calc(100vh-56px)] justify-between gap-8 px-4 pt-16'>
         <div className='flex flex-1'>
           <div className='flex flex-col gap-8 items-center w-full max-w-[380px] mx-auto'>
@@ -108,6 +107,7 @@ export default function ResetPasswordPage() {
     </>
   );
 }
+
 ResetPasswordPage.getLayout = (page: ReactNode) => {
   return (
     <>

@@ -111,10 +111,11 @@ export default function WishPage() {
 
       Object.entries(selectedItemsMap).forEach(([mainCategory, subCategories]) => {
         subCategories.forEach((subCategory) => {
+          const detailInput = selectedInputsMap[subCategory] || '';
           selectedCategoriesPayload.push({
             mainCategory,
             subCategory,
-            details: selectedInputsMap[subCategory] || '',
+            details: detailInput.trim() !== '' ? detailInput : subCategory, // 입력값 없으면 subCategory
           });
         });
       });

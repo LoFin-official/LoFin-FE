@@ -13,7 +13,7 @@ interface Memory {
   imageUrl?: string[]; // 여러 이미지 URL 배열
   position: { x: number; y: number };
   rotation: number;
-  createdAt: string;
+  memoryDate: string;
   updatedAt: string;
 }
 
@@ -163,7 +163,7 @@ export default function MemoryDetailPage() {
           {/* 날짜 영역 */}
           <div className='w-full max-w-[380px] h-[52px] px-2 py-4 flex items-center gap-2 text-base text-[#333333]'>
             <MemoryDateIcon />
-            <span>{new Date(memory.createdAt).toLocaleDateString()}</span>
+            <span>{new Date(memory.memoryDate).toLocaleDateString()}</span>
           </div>
         </div>
       </div>

@@ -17,86 +17,88 @@ interface ProfileResponse {
   };
 }
 
+// (중략: import 생략)
+
 export default function CoupleCompletePage({ currentStep }: { currentStep: number }) {
   const [birth, setBirth] = useState('');
   const [profileData, setProfileData] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // 날짜 유효성 검사 함수 그대로 유지
   const isValidDate = (dateString: string) => {
     if (!/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateString)) return false;
     const [year, month, day] = dateString.split('-').map(Number);
-    if (month < 1 || month > 12 || day < 1 || day > 31) return false;
     const lastDayOfMonth = new Date(year, month, 0).getDate();
-    if (day > lastDayOfMonth) return false;
     const today = new Date();
     const inputDate = new Date(year, month - 1, day);
-    return inputDate <= today;
+    return month >= 1 && month <= 12 && day >= 1 && day <= lastDayOfMonth && inputDate <= today;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value;
-    const cleanValue = rawValue.replace(/[^\d-]/g, '');
-    const digits = cleanValue.replace(/-/g, '');
-    let formattedValue = '';
-    if (digits.length > 0) formattedValue = digits.slice(0, 4);
-    if (digits.length > 4) formattedValue += `-${digits.slice(4, 6)}`;
-    if (digits.length > 6) formattedValue += `-${digits.slice(6, 8)}`;
-    setBirth(formattedValue);
+    const rawValue = e.target.value.replace(/[^\d-]/g, '');
+    const digits = rawValue.replace(/-/g, '');
+    let formatted = '';
+    if (digits.length > 0) formatted = digits.slice(0, 4);
+    if (digits.length > 4) formatted += `-${digits.slice(4, 6)}`;
+    if (digits.length > 6) formatted += `-${digits.slice(6, 8)}`;
+    setBirth(formatted);
   };
 
   const isComplete = isValidDate(birth);
+
   const standardizeDate = (dateString: string): string => {
     const [year, month, day] = dateString.split('-').map(Number);
     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
   };
 
   const handleStart = async () => {
-    console.log('handleStart 호출됨');
-    if (!isComplete) return;
-
-    const standardizedDate = standardizeDate(birth);
-    const token = localStorage.getItem('token') || '';
-
-    if (!token) {
-      alert('로그인 후 다시 시도해 주세요.');
+    console.log('handleStart 호출, birth:', birth, 'isComplete:', isComplete);
+    if (!isComplete) {
+      alert('날짜 형식이 올바르지 않습니다.');
       return;
     }
-
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인 후 시도해 주세요.');
+      return;
+    }
     try {
-      const response = await fetch(`${backendUrl}/firstMet/firstmet`, {
+      const formattedDate = standardizeDate(birth);
+      console.log('표준화된 날짜:', formattedDate);
+
+      const res = await fetch(`${backendUrl}/firstMet/firstmet`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ firstMetDate: standardizedDate }),
+        body: JSON.stringify({ firstMetDate: formattedDate }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '처음 만난 날짜 설정 실패');
+      console.log('응답 상태:', res.status);
+      const resJson = await res.json();
+      console.log('응답 내용:', resJson);
+
+      if (!res.ok) {
+        throw new Error(resJson.message || '등록 실패');
       }
 
-      router.push('/memory');
+      console.log('API 성공, 페이지 이동 시도');
+      await router.push('/memory');
     } catch (error: any) {
-      console.error('처음 만난 날짜 설정 실패:', error.message);
+      console.error('등록 실패:', error.message);
       alert(`오류: ${error.message}`);
     }
   };
 
   const fetchProfile = async () => {
-    const token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('token');
     if (!token) return;
-
     try {
       const res = await fetch(`${backendUrl}/coupleprofile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('프로필 로드 실패');
+      if (!res.ok) throw new Error('프로필 실패');
       const data = await res.json();
       setProfileData(data);
     } catch (err) {
@@ -105,9 +107,45 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
       setLoading(false);
     }
   };
+  const checkFirstMet = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${backendUrl}/firstMet/firstMet/status`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('상태 체크 실패');
+      const data = await res.json();
+
+      console.log('firstMet 상태 체크 응답:', data);
+
+      // bothCompleted 기준으로 페이지 이동
+      if (data?.bothCompleted) {
+        router.push('/memory');
+      }
+    } catch (err) {
+      console.error('firstMet 상태 확인 실패:', err);
+    }
+  };
 
   useEffect(() => {
     fetchProfile();
+
+    let active = true;
+
+    const pollCheckFirstMet = async () => {
+      if (!active) return;
+
+      await checkFirstMet();
+      setTimeout(pollCheckFirstMet, 10000); // 10초 후 다시 호출
+    };
+
+    pollCheckFirstMet();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const steps = ['1', '2', '3', '4'];
@@ -124,6 +162,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
               </div>
             ))}
           </div>
+
           <div className='flex flex-col gap-0.5 w-[380px] text-center'>
             <span className='text-[#333333] text-xl font-bold'>
               축하합니다! 운명이 이어졌어요.
@@ -152,6 +191,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
             <div>프로필 정보 없음</div>
           )}
 
+          {/* 날짜 입력 */}
           <div className='flex flex-col gap-1'>
             <Input
               width='w-full max-w-[380px] md:w-[380px]'
@@ -165,11 +205,9 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
           </div>
         </div>
       </div>
-      <div className='mt-16 w-full max-w-[412px] mx-auto px-4'>
-        <Button isComplete={isComplete} onClick={handleStart} className='w-full max-w-[380px]'>
-          시작하기
-        </Button>
-      </div>
+      <Button isComplete={isComplete} onClick={handleStart} className='w-full max-w-[380px]'>
+        시작하기
+      </Button>
     </div>
   );
 }

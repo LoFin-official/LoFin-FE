@@ -60,8 +60,41 @@ export default function AnniversaryPage() {
 
         const anniversaryData: Anniversary[] = await anniversaryRes.json();
 
+        // 현재 날짜 (시간 제외, 00:00:00 으로 맞춤)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 2. 지난 날짜인 기념일 필터링
+        const pastAnniversaries = anniversaryData.filter((item) => {
+          const anniversaryDate = new Date(item.date);
+          anniversaryDate.setHours(0, 0, 0, 0);
+          return anniversaryDate < today;
+        });
+
+        // 3. 지난 기념일 서버에서 삭제
+        await Promise.all(
+          pastAnniversaries.map(async (item) => {
+            const deleteRes = await fetch(`${backendUrl}/anniversary/anniversarydelete/${item._id}`, {
+              method: 'DELETE',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            if (!deleteRes.ok) {
+              console.warn(`기념일 삭제 실패: ${item._id}`);
+            }
+          })
+        );
+
+        // 4. 남은 기념일만 필터링 (현재 날짜 이후 또는 오늘인 기념일)
+        const validAnniversaries = anniversaryData.filter((item) => {
+          const anniversaryDate = new Date(item.date);
+          anniversaryDate.setHours(0, 0, 0, 0);
+          return anniversaryDate >= today;
+        });
+
         // days가 적은 순서로 정렬
-        const sortedData = anniversaryData.sort((a, b) => a.days - b.days);
+        const sortedData = validAnniversaries.sort((a, b) => a.days - b.days);
 
         setAnniversaries(
           sortedData.map((item) => ({
@@ -77,7 +110,7 @@ export default function AnniversaryPage() {
           }))
         );
 
-        // 2. 프로필 데이터 요청
+        // 5. 프로필 데이터 요청 (기존 코드 유지)
         const profileRes = await fetch(`${backendUrl}/coupleprofile`, {
           headers: {
             Authorization: `Bearer ${token}`,

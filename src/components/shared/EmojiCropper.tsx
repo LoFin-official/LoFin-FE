@@ -18,7 +18,6 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
   const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
-
   const showCroppedImage = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
     try {
@@ -45,7 +44,7 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
       reader.readAsDataURL(file);
     }
   };
-
+  
   return (
     <div className='flex flex-col items-center gap-2'>
       {!imageSrc && (

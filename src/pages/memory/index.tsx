@@ -13,7 +13,7 @@ interface Memory {
   imageUrl?: string | string[]; // 단일 또는 배열 가능
   position: { x: number; y: number };
   rotation: number;
-  createdAt: string;
+  memoryDate: string;
   updatedAt: string;
 }
 
@@ -83,7 +83,7 @@ export default function MemoryPage() {
         const data = await res.json();
 
         // 날짜 기준 최신순 정렬
-        const sortedData = data.sort((a: Memory, b: Memory) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const sortedData = data.sort((a: Memory, b: Memory) => new Date(b.memoryDate).getTime() - new Date(a.memoryDate).getTime());
 
         setMemories(sortedData);
         setError(null);
@@ -137,8 +137,8 @@ export default function MemoryPage() {
       return {
         title: memory.title,
         text: memory.content,
-        date: formatDate(memory.createdAt),
-        dday: calculateDDay(coupleSince, memory.createdAt),
+        date: formatDate(memory.memoryDate),
+        dday: calculateDDay(coupleSince, memory.memoryDate),
         imageUrl: firstImageUrl, // 첫 번째 이미지 URL만 전달
         _id: memory._id,
         position: memory.position,
@@ -157,7 +157,7 @@ export default function MemoryPage() {
 
   return (
     <>
-      <div className='w-full max-w-[412px] mx-auto py-14 '>
+      <div className='w-full max-w-[412px] mx-autog '>
         {hasMemories ? (
           <div>
             <MemoryItem memories={prepareMemoryData(memories)} />

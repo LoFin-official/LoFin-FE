@@ -54,6 +54,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
