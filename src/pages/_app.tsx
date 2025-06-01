@@ -45,16 +45,11 @@ export default function App({ Component, pageProps }: MyAppProps) {
   return (
     <>
       <Head>
-        <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1.0, user-scalable=no'
-        />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />
       </Head>
 
       <div className='w-full h-screen flex justify-center items-center bg-white'>
-        <div className='w-full max-w-[412px] h-full'>
-          {getLayout(<Component {...pageProps} />)}
-        </div>
+        <div className='w-full max-w-[412px] h-full'>{getLayout(<Component {...pageProps} />)}</div>
       </div>
     </>
   );

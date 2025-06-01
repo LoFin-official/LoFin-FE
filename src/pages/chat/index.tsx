@@ -2,7 +2,7 @@ import ChattingBar from '@/components/shared/ChattingBar';
 import Header from '@/components/shared/Header';
 import React, { useEffect, useState } from 'react';
 import Chatting from '@/pages/chat/chatting';
-import { backendUrl } from "@/config/config";
+import { backendUrl } from '@/config/config';
 
 interface User {
   _id: string;
@@ -47,7 +47,7 @@ export default function ChatPage() {
   return (
     <>
       <Header>{partner?.nickname || '상대방'}</Header>
-      <div className="h-screen overflow-y-auto bg-[#FFD9E1] bg-opacity-35">
+      <div className='h-screen overflow-y-auto bg-[#FFD9E1] bg-opacity-35'>
         <Chatting partner={partner} />
       </div>
       <ChattingBar receiverId={partner?._id || ''} />
