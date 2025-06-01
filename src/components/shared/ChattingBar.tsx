@@ -176,33 +176,34 @@ export default function ChattingBar() {
             )}
           </div>
         )}
-        {isModalOpen && (
-          <>
-            <div className='fixed inset-0 flex items-center justify-center bg-[#1B1B1B] bg-opacity-50 z-50'>
-              <div className='w-52 h-24 relative'>
-                <div className='w-52 h-24 left-0 top-0 absolute bg-[#ffffff] rounded-xl' />
-                <div className='w-32 left-[40px] top-[16px] absolute text-center justify-start text-[#333333] text-base font-medium leading-tight'>
-                  삭제하시겠습니까?
-                </div>
-                <div
-                  className='left-[137px] top-[61px] absolute text-right justify-start text-[#FF4C80] text-base font-medium leading-tight cursor-pointer'
-                  onClick={handleDeleteClick}
-                >
-                  삭제
-                </div>
-                <div
-                  className='left-[36px] top-[61px] absolute text-right justify-start text-[#333333] text-base font-medium  leading-tight cursor-pointer'
-                  onClick={handleModalClose}
-                >
-                  취소
-                </div>
-                <div className='w-52 h-px left-0 top-[52px] absolute bg-[#EEEEEE]' />
-                <div className='w-px h-9 left-[100px] top-[53px] absolute bg-[#EEEEEE]' />
-              </div>
-            </div>
-          </>
-        )}
       </div>
+
+      {isModalOpen && (
+        <>
+          <div className='fixed inset-0 flex items-center justify-center bg-[#1B1B1B] bg-opacity-50 z-50'>
+            <div className='w-52 h-24 relative'>
+              <div className='w-52 h-24 left-0 top-0 absolute bg-[#ffffff] rounded-xl' />
+              <div className='w-32 left-[40px] top-[16px] absolute text-center justify-start text-[#333333] text-base font-medium leading-tight'>
+                삭제하시겠습니까?
+              </div>
+              <div
+                className='left-[137px] top-[61px] absolute text-right justify-start text-[#FF4C80] text-base font-medium leading-tight cursor-pointer'
+                onClick={handleDeleteClick}
+              >
+                삭제
+              </div>
+              <div
+                className='left-[36px] top-[61px] absolute text-right justify-start text-[#333333] text-base font-medium  leading-tight cursor-pointer'
+                onClick={handleModalClose}
+              >
+                취소
+              </div>
+              <div className='w-52 h-px left-0 top-[52px] absolute bg-[#EEEEEE]' />
+              <div className='w-px h-9 left-[100px] top-[53px] absolute bg-[#EEEEEE]' />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
