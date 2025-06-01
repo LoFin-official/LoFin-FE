@@ -12,6 +12,7 @@ interface Memory {
   title: string;
   content: string;
   imageUrl?: string | string[];
+  memoryDate: string; // 서버에서 사용하는 날짜 형식
   createdAt: string;
 }
 
@@ -26,8 +27,8 @@ export default function MemoryEditPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [images, setImages] = useState<{ id: number; url?: string; file?: File }[]>([]);
-  const [originalImageUrls, setOriginalImageUrls] = useState<string[]>([]); // ✅ 추가
-
+  const [originalImageUrls, setOriginalImageUrls] = useState<string[]>([]); // 추가
+  const today = new Date();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
 
@@ -55,7 +56,7 @@ export default function MemoryEditPage() {
         setTitle(memory.title);
         setText(memory.content);
 
-        const date = new Date(memory.createdAt);
+        const date = new Date(memory.memoryDate); // createdAt -> memoryDate 변경
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, '0');
         const d = String(date.getDate()).padStart(2, '0');
@@ -64,7 +65,7 @@ export default function MemoryEditPage() {
         if (memory.imageUrl) {
           const urls = Array.isArray(memory.imageUrl) ? memory.imageUrl : [memory.imageUrl];
           const fullUrls = urls.map((url) => (url.startsWith('http') ? url : `${backendUrl}${url}`));
-          setOriginalImageUrls(urls.map((url) => url.replace(backendUrl, ''))); // ✅ 원본 URL 저장
+          setOriginalImageUrls(urls.map((url) => url.replace(backendUrl, '')));
 
           setImages(
             fullUrls.map((url, idx) => ({
@@ -152,7 +153,7 @@ export default function MemoryEditPage() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', text);
-      formData.append('createdAt', formatDateForServer(selectedDate));
+      formData.append('memoryDate', formatDateForServer(selectedDate)); // createdAt -> memoryDate 변경
       formData.append('position', JSON.stringify({ x: 0, y: 0 }));
       formData.append('rotation', String(0));
 
@@ -263,7 +264,13 @@ export default function MemoryEditPage() {
       </div>
 
       {/* 바텀시트 */}
-      <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height='380px' onSelectDate={handleDateSelect} />
+      <BottomSheetDate
+        isOpen={isDateSheetOpen}
+        onClose={() => setIsDateSheetOpen(false)}
+        height={'380px'}
+        onSelectDate={handleDateSelect}
+        maxDate={today} // 여기 추가
+      />
     </>
   );
 }

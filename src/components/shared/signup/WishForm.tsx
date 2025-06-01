@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@/components/shared/Button';
 import WishCategoryItem from '@/components/shared/WishCategoryItem';
 import { ProgressIcon, ProgressingIcon } from '@/assets/icons/SvgIcon';
@@ -9,16 +9,69 @@ interface Props {
   currentStep: number;
 }
 
-export default function WishForm({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
+export default function WishForm({ onNext, currentStep }: Props) {
   const [selectedItemsMap, setSelectedItemsMap] = useState<Record<string, string[]>>({});
   const [selectedInputsMap, setSelectedInputsMap] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
   const steps = ['1', '2', '3', '4'];
-  // 모든 선택된 아이템을 하나의 배열로 만듦
+
   const allSelectedItems = Object.values(selectedItemsMap).flat();
   const isAnyItemSelected = allSelectedItems.length > 0;
 
   // JWT 토큰 (로컬스토리지 등에서 가져오는 예시)
   const token = localStorage.getItem('token') || '';
+
+  // 백엔드에서 저장된 선택 데이터 불러오기
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    async function fetchSelection() {
+      try {
+        const response = await fetch(`${backendUrl}/wishlist/selection`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.warn('기존 선택 데이터 로드 실패');
+          setLoading(false);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.selection && data.selection.selectedCategories) {
+          // selectedCategories 구조 예: [{mainCategory, subCategory, details}]
+          const newSelectedItemsMap: Record<string, string[]> = {};
+          const newSelectedInputsMap: Record<string, string> = {};
+
+          data.selection.selectedCategories.forEach((item: any) => {
+            if (!newSelectedItemsMap[item.mainCategory]) {
+              newSelectedItemsMap[item.mainCategory] = [];
+            }
+            newSelectedItemsMap[item.mainCategory].push(item.subCategory);
+            if (item.details) {
+              newSelectedInputsMap[item.subCategory] = item.details;
+            }
+          });
+
+          setSelectedItemsMap(newSelectedItemsMap);
+          setSelectedInputsMap(newSelectedInputsMap);
+        }
+      } catch (error) {
+        console.error('선택 데이터 불러오기 에러:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSelection();
+  }, [token]);
 
   // 선택 데이터를 백엔드 형식에 맞게 변환하는 함수
   const transformSelectedCategories = () => {
@@ -30,7 +83,6 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
 
   // 추가 상세정보도 보내야 하므로 details 객체 생성
   const createDetailsObject = () => {
-    // 예: { "subcategoryName": "직접입력값 or 기본값" }
     const details: Record<string, string> = {};
     Object.entries(selectedInputsMap).forEach(([key, value]) => {
       details[key] = value;
@@ -88,6 +140,10 @@ export default function WishForm({ onNext, currentStep }: { onNext: () => void; 
       alert('서버와 통신 중 오류가 발생했습니다.');
     }
   };
+
+  if (loading) {
+    return <div className='flex justify-center items-center min-h-[calc(100vh-56px)]'>로딩 중...</div>;
+  }
 
   return (
     <div className='flex flex-col min-h-[calc(100vh-56px)] w-full max-w-[412px] mx-auto pt-8 px-4'>

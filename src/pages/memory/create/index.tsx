@@ -27,7 +27,7 @@ export default function MemoryCreatePage() {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
+  const today = new Date();
   // **memberId 직접 사용하지 않고, 토큰 기반 인증으로 변경함**
   // const getMemberId = () => {
   //   return localStorage.getItem('memberId') || '사용자_아이디_또는_토큰에서_추출';
@@ -101,7 +101,7 @@ export default function MemoryCreatePage() {
       setIsLoading(true);
       setError('');
 
-      const token = localStorage.getItem('token'); // JWT 토큰 key 이름에 맞게 변경
+      const token = localStorage.getItem('token');
 
       if (!token) {
         setError('로그인이 필요합니다.');
@@ -110,10 +110,9 @@ export default function MemoryCreatePage() {
       }
 
       const formData = new FormData();
-      // **memberId는 토큰에서 추출하므로 formData에 넣지 않음**
       formData.append('title', title);
       formData.append('content', text);
-      formData.append('createdAt', selectedDateISO);
+      formData.append('memoryDate', selectedDateISO); // 여기 변경
 
       images.forEach((img) => {
         if (img.file) {
@@ -130,7 +129,7 @@ export default function MemoryCreatePage() {
       const response = await fetch(`${backendUrl}/memory`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`, // 토큰 헤더에 추가
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -234,7 +233,13 @@ export default function MemoryCreatePage() {
           setSelectedComponentName(Component.displayName || Component.name);
         }}
       ></BottomSheetMemoryItem>
-      <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height={'380px'} onSelectDate={handleDateSelect} />
+      <BottomSheetDate
+        isOpen={isDateSheetOpen}
+        onClose={() => setIsDateSheetOpen(false)}
+        height={'380px'}
+        onSelectDate={handleDateSelect}
+        maxDate={today} // 여기 추가
+      />
     </>
   );
 }

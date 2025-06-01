@@ -9,13 +9,22 @@ interface BottomSheetDateProps {
   height: string;
   onClose: () => void;
   onSelectDate: (date: Date) => void;
+  maxDate?: Date; // maxDate 추가
+  minDate?: Date; // 새로 추가 (최소 날짜)
 }
 
 /** 캘린더 관련 타입 */
 type DatePiece = Date | null;
 type SelectedDate = DatePiece | [DatePiece, DatePiece];
-
-export default function BottomSheetDate({ className, isOpen, onClose, height, onSelectDate }: BottomSheetDateProps) {
+export default function BottomSheetDate({
+  className,
+  isOpen,
+  onClose,
+  height,
+  onSelectDate,
+  minDate, // 추가
+  maxDate, // 추가
+}: BottomSheetDateProps) {
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
 
   // 날짜를 YYYY-MM-DD 형식으로 변환하는 함수
@@ -29,14 +38,23 @@ export default function BottomSheetDate({ className, isOpen, onClose, height, on
   // 날짜 선택 핸들러
   const handleDateChange = useCallback(
     (date: SelectedDate) => {
-      setSelectedDate(date);
-
       if (date instanceof Date) {
-        onSelectDate(date); // 부모로 날짜 전달
-        onClose(); // 바텀시트 닫기
+        // minDate / maxDate 검사
+        if (minDate && date < minDate) {
+          alert(`이전 날짜는 선택할 수 없습니다.`);
+          return;
+        }
+        if (maxDate && date > maxDate) {
+          alert(`이후 날짜는 선택할 수 없습니다.`);
+          return;
+        }
+
+        setSelectedDate(date);
+        onSelectDate(date);
+        onClose();
       }
     },
-    [onSelectDate, onClose]
+    [onSelectDate, onClose, minDate, maxDate]
   );
 
   // 캘린더 네비게이션 레이블 포맷 함수
@@ -55,15 +73,17 @@ export default function BottomSheetDate({ className, isOpen, onClose, height, on
         <Calendar
           onChange={handleDateChange}
           value={selectedDate}
-          navigationLabel={formatNavigationLabel}
+          navigationLabel={({ date }) => `${date.getFullYear()}년 ${date.getMonth() + 1}월`}
           showNavigation
           showNeighboringMonth
           nextLabel='>'
           next2Label={null}
           prevLabel='<'
           prev2Label={null}
-          formatDay={formatDay}
+          formatDay={(locale, date) => date.getDate().toString()}
           calendarType='gregory'
+          minDate={minDate}
+          maxDate={maxDate}
         />
       </div>
     </BottomSheet>

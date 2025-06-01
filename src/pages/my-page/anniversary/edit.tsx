@@ -18,7 +18,7 @@ export default function AnniversaryEditPage() {
   const [initialSelectedDate, setInitialSelectedDate] = useState('');
   const [initialAnniversaryName, setInitialAnniversaryName] = useState('');
   const [loading, setLoading] = useState(true);
-
+  const today = new Date();
   // 날짜 형식 변환 함수
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -147,7 +147,13 @@ export default function AnniversaryEditPage() {
           디데이 수정
         </Button>
       </div>
-      <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height={'380px'} onSelectDate={handleDateSelect} />
+      <BottomSheetDate
+        isOpen={isDateSheetOpen}
+        onClose={() => setIsDateSheetOpen(false)}
+        height={'380px'}
+        onSelectDate={handleDateSelect}
+        minDate={today}
+      />
     </>
   );
 }

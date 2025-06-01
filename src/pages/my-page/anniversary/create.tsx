@@ -13,6 +13,7 @@ export default function AnniversaryCreatePage() {
   const [anniversaryName, setAnniversaryName] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const today = new Date();
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -85,7 +86,13 @@ export default function AnniversaryCreatePage() {
           {loading ? '생성 중...' : '디데이 생성'}
         </Button>
       </div>
-      <BottomSheetDate isOpen={isDateSheetOpen} onClose={() => setIsDateSheetOpen(false)} height={'380px'} onSelectDate={handleDateSelect} />
+      <BottomSheetDate
+        isOpen={isDateSheetOpen}
+        onClose={() => setIsDateSheetOpen(false)}
+        height={'380px'}
+        onSelectDate={handleDateSelect}
+        minDate={today}
+      />
     </>
   );
 }
