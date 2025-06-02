@@ -18,37 +18,14 @@ interface BottomSheetDateProps {
 export default function BottomSheetMemoryEditDelete({ className, isOpen, onClose, id, onEdited, onDeleted }: BottomSheetDateProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const router = useRouter();
 
   const handleEditConfirm = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('로그인이 필요합니다.');
-        return;
-      }
-
-      // 예시용 API 요청 (수정 로직은 실제 구현에 맞게 변경)
-      const response = await fetch(`${backendUrl}/memory/${id}`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // 수정 내용 전달 (예: 제목 변경 등)
-          title: '수정된 제목',
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '수정 실패');
-      }
-
-      alert('수정되었습니다.');
       setShowEditModal(false);
       onClose();
       onEdited?.();
+      router.push(`/memory/edit?id=${id}`);
     } catch (error: any) {
       alert(error.message || '수정 중 오류 발생');
     }
@@ -79,6 +56,7 @@ export default function BottomSheetMemoryEditDelete({ className, isOpen, onClose
       setShowDeleteModal(false);
       onClose();
       onDeleted?.();
+      router.push(`/memory`);
     } catch (error: any) {
       alert(error.message || '삭제 중 오류 발생');
     }

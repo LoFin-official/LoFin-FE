@@ -39,21 +39,23 @@ export default function LoginPage() {
       if (response.ok) {
         console.log('로그인 성공:', data);
 
-        //  토큰 저장
         if (data.token) {
           localStorage.setItem('token', data.token);
 
-        // 🔽 추가: JWT에서 memberId를 추출해서 저장
+          // JWT에서 memberId 추출
+          let memberId = null;
           try {
             const payload = data.token.split('.')[1];
-            const decoded = JSON.parse(atob(payload)); // base64 decode
+            const decoded = JSON.parse(atob(payload));
             if (decoded.memberId) {
+              memberId = decoded.memberId;
               localStorage.setItem('userId', decoded.memberId);
             }
           } catch (e) {
             console.error('토큰 디코딩 실패:', e);
           }
-          //  WebView 내에서 실행 중이면 토큰 전달
+
+          // WebView용 메시지 전송
           if (window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === 'function') {
             window.ReactNativeWebView.postMessage(
               JSON.stringify({
@@ -62,13 +64,40 @@ export default function LoginPage() {
               })
             );
           }
+
+          // **커플 연결 상태 확인 API 호출**
+          if (memberId) {
+            const userResponse = await fetch(`${backendUrl}/auth/${memberId}`, {
+              headers: {
+                Authorization: `Bearer ${data.token}`,
+              },
+            });
+
+            if (userResponse.ok) {
+              const userData = await userResponse.json();
+              console.log('userData:', userData);
+
+              if (
+                userData.success &&
+                userData.data.connected === false &&
+                userData.data.partnerId == null &&
+                userData.data.firstMetDate == null &&
+                userData.data.coupleId == null
+              ) {
+                router.push('/signup/profile');
+                return;
+              }
+            } else {
+              console.warn('사용자 정보 조회 실패');
+            }
+          }
+
+          // 커플 연결 되어 있으면 메인 페이지로 이동
+          router.push('/memory');
         } else {
           alert('서버에서 토큰이 전달되지 않았습니다.');
           return;
         }
-
-        //  페이지 이동
-        router.push('/memory');
       } else {
         alert(data.message || '로그인 실패');
       }

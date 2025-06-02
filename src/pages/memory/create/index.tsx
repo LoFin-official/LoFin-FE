@@ -16,7 +16,7 @@ interface ImageData {
 
 export default function MemoryCreatePage() {
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedDateISO, setSelectedDateISO] = useState(''); // 서버에 보낼 ISO 형식 날짜
+  const [selectedDateISO, setSelectedDateISO] = useState('');
   const [isItemSheetOpen, setIsItemSheetOpen] = useState(false);
   const [selectedComponentName, setSelectedComponentName] = useState<string | null>(null);
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
@@ -28,10 +28,6 @@ export default function MemoryCreatePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const today = new Date();
-  // **memberId 직접 사용하지 않고, 토큰 기반 인증으로 변경함**
-  // const getMemberId = () => {
-  //   return localStorage.getItem('memberId') || '사용자_아이디_또는_토큰에서_추출';
-  // };
 
   const resizeHeight = (textarea: React.RefObject<HTMLTextAreaElement | null>, e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (textarea.current) {
@@ -92,17 +88,26 @@ export default function MemoryCreatePage() {
     setImages(images.filter((img) => img.id !== idToRemove));
   };
 
-  const isComplete = title.trim() !== '' && text.trim() !== '' && selectedComponentName !== '' && selectedDate !== '';
+  const isComplete = title.trim() !== '' && text.trim() !== '' && selectedDate !== '' && !!selectedComponentName;
 
   const handleMemory = async () => {
-    if (!isComplete) return;
+    if (!isComplete) {
+      setError('모든 필수 항목을 입력하고 추억 아이템을 선택해주세요.');
+      return;
+    }
+
+    // 선택된 컴포넌트 이름이 없는 경우 에러 처리
+    if (!selectedComponentName) {
+      setError('기록할 추억 아이템을 선택해주세요.');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       setIsLoading(true);
       setError('');
 
       const token = localStorage.getItem('token');
-
       if (!token) {
         setError('로그인이 필요합니다.');
         setIsLoading(false);
@@ -112,7 +117,7 @@ export default function MemoryCreatePage() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', text);
-      formData.append('memoryDate', selectedDateISO); // 여기 변경
+      formData.append('memoryDate', selectedDateISO);
 
       images.forEach((img) => {
         if (img.file) {
@@ -125,6 +130,7 @@ export default function MemoryCreatePage() {
 
       formData.append('position', JSON.stringify(position));
       formData.append('rotation', rotation.toString());
+      formData.append('styleType', selectedComponentName); // 이제 selectedComponentName가 null이 아님을 확신할 수 있습니다.
 
       const response = await fetch(`${backendUrl}/memory`, {
         method: 'POST',
@@ -134,10 +140,7 @@ export default function MemoryCreatePage() {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error('추억 저장에 실패했습니다.');
-      }
-
+      if (!response.ok) throw new Error('추억 저장에 실패했습니다.');
       router.replace('/memory');
     } catch (err) {
       console.error(err);
@@ -183,7 +186,6 @@ export default function MemoryCreatePage() {
                   </div>
                 </div>
               ))}
-
               {images.length < 5 && (
                 <div className='w-[150px] h-[200px] rounded-md bg-[#f8f8f8] flex items-center justify-center cursor-pointer' onClick={handleAddImage}>
                   <div className='text-3xl text-[#cccccc]'>+</div>
@@ -194,7 +196,6 @@ export default function MemoryCreatePage() {
 
           <input type='file' accept='image/*' multiple className='hidden' ref={fileInputRef} onChange={handleFileChange} />
 
-          {/* 날짜 선택 부분 */}
           <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
             <div
               className={`flex flex-row gap-1 text-base cursor-pointer ${selectedDate ? 'text-[#333333]' : 'text-[#999999]'}`}
@@ -205,14 +206,13 @@ export default function MemoryCreatePage() {
             </div>
           </div>
 
-          {/* 추억 아이템 선택 부분 */}
           <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
             <div
               className={`flex flex-row gap-1 text-base cursor-pointer ${selectedComponentName ? 'text-[#333333]' : 'text-[#999999]'}`}
               onClick={() => setIsItemSheetOpen(true)}
             >
               <MemoryItemIcon />
-              {selectedComponentName ? selectedComponentName : '기록할 추억을 선택해 주세요.'}
+              {selectedComponentName || '기록할 추억을 선택해 주세요.'}
             </div>
           </div>
 
@@ -225,6 +225,7 @@ export default function MemoryCreatePage() {
           </div>
         </div>
       </div>
+
       <BottomSheetMemoryItem
         isOpen={isItemSheetOpen}
         onClose={() => setIsItemSheetOpen(false)}
@@ -232,23 +233,21 @@ export default function MemoryCreatePage() {
         onSelectComponent={(Component) => {
           setSelectedComponentName(Component.displayName || Component.name);
         }}
-      ></BottomSheetMemoryItem>
+      />
       <BottomSheetDate
         isOpen={isDateSheetOpen}
         onClose={() => setIsDateSheetOpen(false)}
         height={'380px'}
         onSelectDate={handleDateSelect}
-        maxDate={today} // 여기 추가
+        maxDate={today}
       />
     </>
   );
 }
 
-MemoryCreatePage.getLayout = (page: ReactNode) => {
-  return (
-    <>
-      <Header>추억 작성</Header>
-      <BottomBar>{page}</BottomBar>
-    </>
-  );
-};
+MemoryCreatePage.getLayout = (page: ReactNode) => (
+  <>
+    <Header>추억 작성</Header>
+    <BottomBar>{page}</BottomBar>
+  </>
+);

@@ -66,6 +66,40 @@ export default function MyPage() {
 
     fetchProfile();
   }, [router]);
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
+    }
+
+    if (!confirm('정말 회원 탈퇴를 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${backendUrl}/auth/delete`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error('회원 탈퇴 실패');
+      }
+
+      alert('회원 탈퇴가 완료되었습니다.');
+
+      localStorage.removeItem('token'); // 토큰 삭제
+      router.push('/'); // 첫 메인 페이지로 이동
+    } catch (error) {
+      console.error(error);
+      alert('회원 탈퇴 중 오류가 발생했습니다.');
+    }
+  };
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -74,7 +108,11 @@ export default function MyPage() {
   if (!profileData) {
     return <div>프로필 정보를 불러올 수 없습니다.</div>;
   }
-
+  const handleLogout = () => {
+    alert('로그아웃 되었습니다.');
+    localStorage.removeItem('token'); // 토큰 삭제
+    router.push('/index.tsx'); // 로그인 페이지로 이동
+  };
   return (
     <div className='flex flex-col gap-4 bg-[#ffd9e1]/35 min-h-[calc(100vh-56px)] items-center'>
       <div className='w-full max-w-[412px] flex flex-col gap-4 px-4'>
@@ -115,8 +153,12 @@ export default function MyPage() {
           </div>
         </div>
         <div className='flex flex-col gap-2 w-full max-w-[348px] h-12 text-base mx-auto'>
-          <div className='h-5 text-right mr-auto text-[#767676] cursor-pointer'>로그아웃</div>
-          <div className='h-5 text-left ml-auto text-[#CCCCCC] cursor-pointer'>회원탈퇴</div>
+          <div className='h-5 text-right mr-auto text-[#767676] cursor-pointer' onClick={handleLogout}>
+            로그아웃
+          </div>
+          <div className='h-5 text-left ml-auto text-[#CCCCCC] cursor-pointer' onClick={handleDeleteAccount}>
+            회원탈퇴
+          </div>
         </div>
       </div>
     </div>

@@ -4,16 +4,20 @@ import Header from '@/components/shared/Header';
 import BottomBar from '@/components/shared/BottomBar';
 import Button from '@/components/shared/Button';
 import BottomSheetDate from '@/components/shared/BottomSheetDate';
-import { ImageCloseIcon, MemoryDateIcon } from '@/assets/icons/SvgIcon';
+import { ImageCloseIcon, MemoryDateIcon, MemoryItemIcon } from '@/assets/icons/SvgIcon';
 import { backendUrl } from '@/config/config';
+import BottomSheetMemoryItem from '@/components/shared/BottomSheetMemoryItem';
 
 interface Memory {
   _id: string;
   title: string;
   content: string;
   imageUrl?: string | string[];
-  memoryDate: string; // 서버에서 사용하는 날짜 형식
+  memoryDate: string;
   createdAt: string;
+  position?: { x: number; y: number };
+  rotation?: number;
+  styleType?: string; // 추가됨
 }
 
 export default function MemoryEditPage() {
@@ -21,13 +25,20 @@ export default function MemoryEditPage() {
   const { id } = router.query;
   const memoryId = Array.isArray(id) ? id[0] : id;
 
+  const [styleType, setStyleType] = useState<string | null>(null); // styleType 상태
+
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [images, setImages] = useState<{ id: number; url?: string; file?: File }[]>([]);
-  const [originalImageUrls, setOriginalImageUrls] = useState<string[]>([]); // 추가
+  const [originalImageUrls, setOriginalImageUrls] = useState<string[]>([]);
+  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isItemSheetOpen, setIsItemSheetOpen] = useState(false);
+  const [selectedComponentName, setSelectedComponentName] = useState<string | null>(null);
+  const [rotation, setRotation] = useState<number>(0);
+
   const today = new Date();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
@@ -53,10 +64,11 @@ export default function MemoryEditPage() {
         if (!res.ok) throw new Error(`오류: ${res.status}`);
 
         const memory: Memory = await res.json();
+
         setTitle(memory.title);
         setText(memory.content);
 
-        const date = new Date(memory.memoryDate); // createdAt -> memoryDate 변경
+        const date = new Date(memory.memoryDate);
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, '0');
         const d = String(date.getDate()).padStart(2, '0');
@@ -74,6 +86,11 @@ export default function MemoryEditPage() {
             }))
           );
         }
+
+        // 위치, 회전, styleType 상태 반영
+        setPosition(memory.position ?? { x: 0, y: 0 });
+        setRotation(memory.rotation ?? 0);
+        setStyleType(memory.styleType ?? null);
 
         setLoading(false);
       } catch (err) {
@@ -153,9 +170,12 @@ export default function MemoryEditPage() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', text);
-      formData.append('memoryDate', formatDateForServer(selectedDate)); // createdAt -> memoryDate 변경
-      formData.append('position', JSON.stringify({ x: 0, y: 0 }));
-      formData.append('rotation', String(0));
+      formData.append('memoryDate', formatDateForServer(selectedDate));
+      formData.append('position', JSON.stringify(position)); // 위치 저장
+      formData.append('rotation', String(rotation)); // 회전 저장
+      if (styleType) {
+        formData.append('styleType', styleType); // styleType 저장
+      }
 
       if (removedImages.length > 0) {
         formData.append('removeImages', JSON.stringify(removedImages));
@@ -179,6 +199,14 @@ export default function MemoryEditPage() {
         return;
       }
 
+      // 서버가 수정된 데이터(위치/회전/styleType 포함)를 JSON으로 반환한다고 가정
+      const updatedMemory: Memory = await res.json();
+
+      // 서버 응답으로 위치/회전/styleType값 갱신
+      setPosition(updatedMemory.position ?? { x: 0, y: 0 });
+      setRotation(updatedMemory.rotation ?? 0);
+      setStyleType(updatedMemory.styleType ?? null);
+
       alert('수정 완료!');
       router.replace('/memory');
     } catch (err: any) {
@@ -189,7 +217,6 @@ export default function MemoryEditPage() {
   if (loading) return <div>로딩 중...</div>;
 
   const isComplete = title.trim() && text.trim() && selectedDate;
-
   return (
     <>
       <div className='flex flex-col h-[calc(100vh-112px)] w-full max-w-[412px] mx-auto px-4 pt-8 pb-4'>
@@ -255,6 +282,15 @@ export default function MemoryEditPage() {
           </div>
         </div>
 
+        <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
+          <div
+            className={`flex flex-row gap-1 text-base cursor-pointer ${selectedComponentName ? 'text-[#333333]' : 'text-[#999999]'}`}
+            onClick={() => setIsItemSheetOpen(true)}
+          >
+            <MemoryItemIcon />
+            {selectedComponentName || '기록할 추억을 선택해 주세요.'}
+          </div>
+        </div>
         {/* 수정 버튼 */}
         <div className='w-full max-w-[380px]'>
           <Button isComplete={!!isComplete} onClick={handleMemory}>
@@ -263,13 +299,21 @@ export default function MemoryEditPage() {
         </div>
       </div>
 
+      <BottomSheetMemoryItem
+        isOpen={isItemSheetOpen}
+        onClose={() => setIsItemSheetOpen(false)}
+        height={'500px'}
+        onSelectComponent={(Component) => {
+          setSelectedComponentName(Component.displayName || Component.name);
+        }}
+      />
       {/* 바텀시트 */}
       <BottomSheetDate
         isOpen={isDateSheetOpen}
         onClose={() => setIsDateSheetOpen(false)}
         height={'380px'}
         onSelectDate={handleDateSelect}
-        maxDate={today} // 여기 추가
+        maxDate={today}
       />
     </>
   );
