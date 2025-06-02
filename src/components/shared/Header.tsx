@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 import { BackIcon, CloseIcon, MemoryIcon, MemoryImageIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
 import QuestionBottomSheet from './question/QuestionBottomSheet';
+import BottomSheetMemoryEditDelete from './BottomSheetMemoryEditDelete';
 import { backendUrl } from '@/config/config';
 
 interface HeaderProps {
@@ -10,7 +11,7 @@ interface HeaderProps {
   rightElement?: ReactNode;
   showBackButton?: boolean;
   hasAnswer?: boolean;
-  onAnswerDeleted?: () => void; // 답변 삭제 후 콜백 함수 추가
+  onAnswerDeleted?: () => void;
 }
 
 export default function Header({ children, onBack, showBackButton, rightElement, hasAnswer, onAnswerDeleted }: HeaderProps) {
@@ -20,6 +21,8 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const id = query.id;
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create', '/chat/emoji/create'];
@@ -77,7 +80,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
     } else if (memoryPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push('/memory/create')} />;
     } else if (memoryEditPages.includes(pathname)) {
-      RightComponent = <MemoryImageIcon className='cursor-pointer' />;
+      RightComponent = <MemoryImageIcon className='cursor-pointer' onClick={() => setIsSheetOpen(true)} />;
     } else if (questionEditPages.includes(pathname)) {
       RightComponent =
         pathname === '/question/[id]' ? (
@@ -113,6 +116,8 @@ export default function Header({ children, onBack, showBackButton, rightElement,
         id={id}
         onAnswerDeleted={onAnswerDeleted}
       />
+
+      <BottomSheetMemoryEditDelete isOpen={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} id={id} />
     </>
   );
 }

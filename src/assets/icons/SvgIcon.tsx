@@ -72,9 +72,10 @@ export function CloseIcon({ onClick }: { onClick: () => void }) {
 }
 
 // 추억 사진 추가 아이콘
-export const MemoryImageIcon = ({ className }: { className?: string }) => {
+export function MemoryImageIcon({ className, onClick }: { className?: string; onClick?: () => void }) {
   return (
     <svg
+      onClick={onClick}
       className={className}
       width={24}
       height={24}
@@ -89,7 +90,7 @@ export const MemoryImageIcon = ({ className }: { className?: string }) => {
       />
     </svg>
   );
-};
+}
 
 export const ImageCloseIcon = ({ className }: { className?: string }) => {
   return (
