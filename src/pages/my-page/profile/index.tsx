@@ -79,6 +79,36 @@ export default function ProfilePage() {
 
     fetchProfile();
   }, [router]);
+  const handleDisconnect = async () => {
+    const confirmed = confirm('정말로 연결을 끊으시겠습니까?');
+    if (!confirmed) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendUrl}/auth/couple`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('연결 끊기에 실패했습니다.');
+      }
+
+      alert('연결이 끊어졌습니다.');
+      router.push('/'); // 연결 페이지로 이동하거나 리디렉션
+    } catch (error) {
+      console.error(error);
+      alert('오류가 발생했습니다.');
+    }
+  };
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -165,7 +195,9 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <span className='text-lg text-[#CCCCCC] self-end px-6 -mt-2 cursor-pointer'>연결 끊기</span>
+        <span className='text-lg text-[#CCCCCC] self-end px-6 -mt-2 cursor-pointer' onClick={handleDisconnect}>
+          연결 끊기
+        </span>
       </div>
     </>
   );

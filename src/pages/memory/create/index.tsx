@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, useRef } from 'react';
+import React, { useState, ReactNode, useRef, useEffect } from 'react';
 import BottomBar from '@/components/shared/BottomBar';
 import Header from '@/components/shared/Header';
 import { ImageCloseIcon, MemoryDateIcon, MemoryItemIcon } from '@/assets/icons/SvgIcon';
@@ -27,7 +27,10 @@ export default function MemoryCreatePage() {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [firstMeetingDate, setFirstMeetingDate] = useState<Date | null>(null);
   const today = new Date();
+  const [formData, setFormData] = useState<{ coupleSince?: string }>({});
+  const [initialDate, setInitialDate] = useState<string | null>(null);
 
   const resizeHeight = (textarea: React.RefObject<HTMLTextAreaElement | null>, e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (textarea.current) {
@@ -96,7 +99,6 @@ export default function MemoryCreatePage() {
       return;
     }
 
-    // 선택된 컴포넌트 이름이 없는 경우 에러 처리
     if (!selectedComponentName) {
       setError('기록할 추억 아이템을 선택해주세요.');
       setIsLoading(false);
@@ -130,7 +132,7 @@ export default function MemoryCreatePage() {
 
       formData.append('position', JSON.stringify(position));
       formData.append('rotation', rotation.toString());
-      formData.append('styleType', selectedComponentName); // 이제 selectedComponentName가 null이 아님을 확신할 수 있습니다.
+      formData.append('styleType', selectedComponentName);
 
       const response = await fetch(`${backendUrl}/memory`, {
         method: 'POST',
@@ -149,6 +151,44 @@ export default function MemoryCreatePage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (!token) return;
+
+      try {
+        const dateResponse = await fetch(`${backendUrl}/firstMet/firstmet`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const dateContentType = dateResponse.headers.get('content-type');
+        let dateResult;
+
+        if (dateContentType?.includes('application/json')) {
+          dateResult = await dateResponse.json();
+        } else {
+          const text = await dateResponse.text();
+          throw new Error(`잘못된 응답 형식입니다: ${text}`);
+        }
+
+        if (dateResponse.ok && dateResult.firstMetDate) {
+          setFormData({ coupleSince: dateResult.firstMetDate });
+          setInitialDate(dateResult.firstMetDate);
+          setFirstMeetingDate(new Date(dateResult.firstMetDate));
+        } else {
+          console.error('날짜 불러오기 실패:', dateResult.message || '서버 응답 오류');
+        }
+      } catch (error) {
+        console.error('첫 만남 날짜를 불러오는데 실패했습니다:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -240,6 +280,7 @@ export default function MemoryCreatePage() {
         height={'380px'}
         onSelectDate={handleDateSelect}
         maxDate={today}
+        minDate={firstMeetingDate || new Date('2025-01-01')} // 여기서 첫 만남 날짜 이전은 선택 불가
       />
     </>
   );
