@@ -109,7 +109,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)] overflow-auto pb-[190px]'>
+      <div className='flex flex-col items-center gap-8 px-4 py-16 min-h-[calc(100vh-56px)]'>
         <Image src='/images/LoFin.png' alt='LoFin' width={250} height={250} />
         <div className='flex flex-col gap-8 w-full max-w-[412px]'>
           <div className='w-full max-w-[380px] md:w-[412px] flex flex-col gap-8'>

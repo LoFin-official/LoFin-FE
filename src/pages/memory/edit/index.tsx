@@ -174,7 +174,7 @@ export default function MemoryEditPage() {
       formData.append('position', JSON.stringify(position)); // 위치 저장
       formData.append('rotation', String(rotation)); // 회전 저장
       if (styleType) {
-        formData.append('styleType', styleType); // styleType 저장
+        formData.append('styleType', styleType);
       }
 
       if (removedImages.length > 0) {

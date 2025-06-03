@@ -67,14 +67,14 @@ export default function QuestionAnswerPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          questionId: id, // 백엔드에서 사용
-          content: inputValue, // ✅ 수정된 부분 (answer → content)
+          questionId: id,
+          content: inputValue,
         }),
       });
 
       if (res.ok) {
         alert('답변을 작성했습니다.');
-        // 질문 상세 페이지로 이동 시 쿼리 변경하여 리렌더링 유도
+        // 질문 상세 페이지로 이동 시 쿼리 변경하여 리렌더링
         router.replace(`/question/${id}?updated=${Date.now()}`);
       } else {
         const err = await res.json();

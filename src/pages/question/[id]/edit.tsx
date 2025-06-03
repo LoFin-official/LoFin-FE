@@ -91,7 +91,7 @@ export default function QuestionEditPage() {
     try {
       // 답변 수정 API 요청
       const res = await fetch(`${backendUrl}/answer/${id}`, {
-        method: 'PUT', // 또는 백엔드 API에 맞게 PATCH 사용
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
