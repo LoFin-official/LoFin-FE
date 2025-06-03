@@ -36,13 +36,14 @@ export default function MemoryEditPage() {
   const [originalImageUrls, setOriginalImageUrls] = useState<string[]>([]);
   const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isItemSheetOpen, setIsItemSheetOpen] = useState(false);
-  const [selectedComponentName, setSelectedComponentName] = useState<string | null>(null);
+  // const [selectedComponentName, setSelectedComponentName] = useState<string | null>(null); // 삭제
   const [rotation, setRotation] = useState<number>(0);
-
+  const [firstMeetingDate, setFirstMeetingDate] = useState<Date | null>(null);
   const today = new Date();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
-
+  const [formData, setFormData] = useState<{ coupleSince?: string }>({});
+  const [initialDate, setInitialDate] = useState<string | null>(null);
   useEffect(() => {
     if (!memoryId) return;
 
@@ -213,6 +214,43 @@ export default function MemoryEditPage() {
       alert(`오류: ${err.message}`);
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (!token) return;
+
+      try {
+        const dateResponse = await fetch(`${backendUrl}/firstMet/firstmet`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const dateContentType = dateResponse.headers.get('content-type');
+        let dateResult;
+
+        if (dateContentType?.includes('application/json')) {
+          dateResult = await dateResponse.json();
+        } else {
+          const text = await dateResponse.text();
+          throw new Error(`잘못된 응답 형식입니다: ${text}`);
+        }
+
+        if (dateResponse.ok && dateResult.firstMetDate) {
+          setFormData({ coupleSince: dateResult.firstMetDate });
+          setInitialDate(dateResult.firstMetDate);
+          setFirstMeetingDate(new Date(dateResult.firstMetDate));
+        } else {
+          console.error('날짜 불러오기 실패:', dateResult.message || '서버 응답 오류');
+        }
+      } catch (error) {
+        console.error('첫 만남 날짜를 불러오는데 실패했습니다:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   if (loading) return <div>로딩 중...</div>;
 
@@ -229,7 +267,6 @@ export default function MemoryEditPage() {
             placeholder='제목을 입력해 주세요.'
           />
         </div>
-
         {/* 내용 */}
         <div className='flex-grow w-full max-w-[380px]'>
           <div className='w-full max-w-[364px] h-auto mx-2'>
@@ -243,7 +280,6 @@ export default function MemoryEditPage() {
             />
           </div>
         </div>
-
         {/* 이미지 */}
         <div className='flex-shrink-0'>
           {images.length > 0 && (
@@ -270,7 +306,6 @@ export default function MemoryEditPage() {
           )}
           <input type='file' accept='image/*' multiple ref={fileInputRef} className='hidden' onChange={handleFileChange} />
         </div>
-
         {/* 날짜 선택 */}
         <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
           <div
@@ -281,14 +316,13 @@ export default function MemoryEditPage() {
             <div>{selectedDate || '기록할 날짜를 선택해 주세요.'}</div>
           </div>
         </div>
-
         <div className='w-full max-w-[380px] h-[52px] px-2 py-4'>
           <div
-            className={`flex flex-row gap-1 text-base cursor-pointer ${selectedComponentName ? 'text-[#333333]' : 'text-[#999999]'}`}
+            className={`flex flex-row gap-1 text-base cursor-pointer ${styleType ? 'text-[#333333]' : 'text-[#999999]'}`}
             onClick={() => setIsItemSheetOpen(true)}
           >
             <MemoryItemIcon />
-            {selectedComponentName || '기록할 추억을 선택해 주세요.'}
+            {styleType || '기록할 추억을 선택해 주세요.'}
           </div>
         </div>
         {/* 수정 버튼 */}
@@ -304,7 +338,10 @@ export default function MemoryEditPage() {
         onClose={() => setIsItemSheetOpen(false)}
         height={'500px'}
         onSelectComponent={(Component) => {
-          setSelectedComponentName(Component.displayName || Component.name);
+          const newStyleType = Component.displayName || Component.name || null;
+          setStyleType(newStyleType);
+          // setSelectedComponentName(newStyleType); // 필요없음
+          setIsItemSheetOpen(false);
         }}
       />
       {/* 바텀시트 */}
@@ -314,6 +351,7 @@ export default function MemoryEditPage() {
         height={'380px'}
         onSelectDate={handleDateSelect}
         maxDate={today}
+        minDate={firstMeetingDate || new Date('2025-01-01')} // 여기서 첫 만남 날짜 이전은 선택 불가
       />
     </>
   );

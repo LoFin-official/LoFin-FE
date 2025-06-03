@@ -70,7 +70,7 @@ export default function MyPage() {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
-      router.push('/login');
+      router.push('/account/login');
       return;
     }
 
@@ -111,7 +111,7 @@ export default function MyPage() {
   const handleLogout = () => {
     alert('로그아웃 되었습니다.');
     localStorage.removeItem('token'); // 토큰 삭제
-    router.push('/index.tsx'); // 로그인 페이지로 이동
+    router.push('/'); // 로그인 페이지로 이동
   };
   return (
     <div className='flex flex-col gap-4 bg-[#ffd9e1]/35 min-h-[calc(100vh-56px)] items-center'>
