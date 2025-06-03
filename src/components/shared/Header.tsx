@@ -76,11 +76,11 @@ export default function Header({ children, onBack, showBackButton, rightElement,
 
   if (RightComponent === undefined) {
     if (pathname === '/memory/[id]') {
-      RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push(`/memory/edit?id=${id}`)} />;
+      RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => setIsBottomSheetOpen(true)} />;
     } else if (memoryPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push('/memory/create')} />;
     } else if (memoryEditPages.includes(pathname)) {
-      RightComponent = <MemoryImageIcon className='cursor-pointer' onClick={() => setIsSheetOpen(true)} />;
+      RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (questionEditPages.includes(pathname)) {
       RightComponent =
         pathname === '/question/[id]' ? (

@@ -20,6 +20,13 @@ interface MemoryItemProps {
   onDelete?: (id: string) => void;
 }
 
+// 이미지 URL을 올바르게 가져오는 헬퍼 함수
+const getImageUrl = (url?: string) => {
+  if (!url) return '/images/1.png'; // 기본 이미지 경로
+  if (url.startsWith('http')) return url; // 이미 완전한 URL인 경우 그대로 반환
+  return `${backendUrl}${url}`; // 상대 경로인 경우 backendUrl을 앞에 붙여 반환
+};
+
 export default function MemoryItem({ memories, onDelete }: MemoryItemProps) {
   const router = useRouter();
 
@@ -37,10 +44,11 @@ export default function MemoryItem({ memories, onDelete }: MemoryItemProps) {
           onClick={() => handleMemoryClick(item._id)}
         >
           {/* 사진 영역 */}
-          <div className={`w-[296px] h-[336px] flex flex-col gap-2 rounded-[18px] p-4 ${item.border ? 'border border-[#FF4C80]' : ''}`}>
+          <div className={`w-[296px] h-[336px] flex flex-col gap-2 rounded-[18px] p-4 bg-white ${item.border ? 'border border-[#FF4C80]' : ''}`}>
             <div className='w-[264px] h-[252px] rounded-[18px] bg-[#eeeeee] overflow-hidden'>
               {item.imageUrl ? (
-                <img src={item.imageUrl ? `${backendUrl}${item.imageUrl}` : undefined} alt={item.title} className='w-full h-full object-cover' />
+                // getImageUrl 헬퍼 함수를 사용하여 이미지 src 설정
+                <img src={getImageUrl(item.imageUrl)} alt={item.title} className='w-full h-full object-cover' />
               ) : (
                 <div className='w-full h-full flex items-center justify-center text-[#999999]'>사진이 없습니다</div>
               )}

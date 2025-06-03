@@ -10,11 +10,12 @@ interface Memory {
   _id: string;
   title: string;
   content: string;
-  imageUrl?: string[]; // 여러 이미지 URL 배열
+  imageUrl?: string[];
   position: { x: number; y: number };
   rotation: number;
   memoryDate: string;
   updatedAt: string;
+  styleType?: string; // 추가
 }
 
 export default function MemoryDetailPage() {
@@ -99,7 +100,13 @@ export default function MemoryDetailPage() {
   if (!memory) {
     return <NoItemText title='추억을 찾을 수 없습니다.' subtitle='존재하지 않는 추억입니다.' />;
   }
-
+  if (data.imageUrl && !Array.isArray(data.imageUrl)) {
+    data.imageUrl = [data.imageUrl];
+  }
+  if (!data.styleType) {
+    data.styleType = 'MemoryItem'; // 기본값 지정
+  }
+  setMemory(data);
   return (
     <>
       <div className='flex flex-col h-[calc(100vh-112px)] w-full max-w-[412px] mx-auto px-4 pt-8 pb-4'>
