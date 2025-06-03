@@ -70,6 +70,7 @@ export default function MemoryPolaroidItem2({
 
   return (
     <DraggablePolaroid
+      key={`${data._id}-${defaultX}-${defaultY}-${defaultRotation}`}
       defaultX={defaultX}
       defaultY={defaultY}
       defaultRotation={defaultRotation}

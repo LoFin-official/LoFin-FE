@@ -74,6 +74,7 @@ export default function MemoryPolaroidItem1({
 
   return (
     <DraggablePolaroid
+      key={`${data._id}-${defaultX}-${defaultY}-${defaultRotation}`}
       defaultX={defaultX}
       defaultY={defaultY}
       defaultRotation={defaultRotation}
@@ -88,7 +89,7 @@ export default function MemoryPolaroidItem1({
         onDoubleClick={handleDoubleClick} // 더블 클릭 이벤트 추가
       >
         <div className='w-[248px] h-[414px] flex flex-col gap-4'>
-          <div className='w-[248px] h-[330px] bg-[#eeeeee] overflow-hidden rounded-lg'>
+          <div className='w-[248px] h-[330px] bg-[#eeeeee] overflow-hidden'>
             <img src={getImageUrl(data.imageUrl)} alt={data.title} className='w-full h-full object-cover' />
           </div>
           <div className='w-[244px] h-[76px] flex flex-col gap-2 px-0.5 mx-0.5'>
