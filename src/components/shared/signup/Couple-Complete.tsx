@@ -82,7 +82,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
       if (!res.ok) {
         throw new Error(resJson.message || '등록 실패');
       }
-
+      alert('첫 만남 날짜가 등록되었습니다.');
       console.log('API 성공, 페이지 이동 시도');
       await router.push('/memory');
     } catch (error: any) {
@@ -122,6 +122,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
 
       // bothCompleted 기준으로 페이지 이동
       if (data?.bothCompleted) {
+        alert('상대방이 첫 만남 날짜를 입력했어요!\n 추억 페이지로 이동합니다!');
         router.push('/memory');
       }
     } catch (err) {
