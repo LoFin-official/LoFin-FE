@@ -174,7 +174,7 @@ export default function MemoryDetailPage() {
 MemoryDetailPage.getLayout = (page: ReactNode) => {
   return (
     <>
-      <Header>추억 상세페이지</Header>
+      <Header>추억</Header>
       <BottomBar>{page}</BottomBar>
     </>
   );
