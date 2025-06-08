@@ -21,6 +21,7 @@ interface MemoryPolaroidItemProps {
   onDragStart?: () => void;
   onDragEnd?: () => void;
   onPositionChange?: (x: number, y: number, rotation?: number) => void;
+  mode?: 'view' | 'edit';
 }
 
 const getImageUrl = (url?: string) => {
@@ -37,10 +38,13 @@ export default function MemoryPolaroidItem2({
   onDragStart,
   onDragEnd,
   onPositionChange,
+  mode = 'view',
 }: MemoryPolaroidItemProps) {
   const router = useRouter();
 
   const handleUpdate = async (pos: { x: number; y: number; rotation: number }) => {
+    if (mode !== 'edit') return;
+
     try {
       const response = await fetch(`${backendUrl}/memory/location/${data._id}`, {
         method: 'PATCH',
@@ -64,8 +68,10 @@ export default function MemoryPolaroidItem2({
     }
   };
 
-  const handleDoubleClick = () => {
-    router.push(`/memory/${data._id}`);
+  const handleClick = () => {
+    if (mode === 'view') {
+      router.push(`/memory/${data._id}`);
+    }
   };
 
   return (
@@ -74,31 +80,31 @@ export default function MemoryPolaroidItem2({
       defaultX={defaultX}
       defaultY={defaultY}
       defaultRotation={defaultRotation}
-      width={320}
-      height={528}
+      width={192}
+      height={283}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onUpdate={handleUpdate}
+      mode={mode}
     >
-      <div className='w-[320px] h-[528px] flex flex-col gap-1 items-center py-4 px-4 bg-white' onDoubleClick={handleDoubleClick}>
+      <div
+        className={`w-[192px] h-[288px] flex flex-col gap-1 items-center py-2 px-2 bg-white ${mode === 'view' ? 'cursor-pointer' : 'cursor-move'}`}
+        onClick={handleClick}
+      >
         {/* 사진 영역 */}
-        <div className='w-[288px] h-[444px] flex flex-col gap-4'>
-          <div className='w-[288px] h-[360px] bg-[#eeeeee] overflow-hidden'>
+        <div className='w-[176px] h-[267px]'>
+          <div className='w-[176px] h-[232px] bg-[#eeeeee] overflow-hidden'>
             <img src={getImageUrl(data.imageUrl)} alt='memory' className='w-full h-full object-cover pointer-events-none' />
-          </div>
-          <div className='w-[284px] h-[76px] flex flex-col gap-2 px-0.5 mx-0.5'>
-            <span className='h-7 text-xl text-[#333333] font-bold truncate'>{data.title}</span>
-            <span className='h-10 text-[#767676] line-clamp-3'>{data.text}</span>
           </div>
         </div>
 
         {/* 좋아요 & 날짜 영역 */}
         <div className='w-auto h-[48px] flex flex-col justify-center items-center self-end px-0.5'>
           <div className='flex flex-row gap-0.5 text-[#FF9BB3] items-center'>
-            <HeartIcon className='h-5 w-5' />
-            <span className='h-7 text-lg font-bold'>+ {data.dday}</span>
+            <HeartIcon className='h-4 w-4' />
+            <span className='h-5 font-bold'>+ {data.dday}</span>
           </div>
-          <span className='h-5 text-[#333333]'>{data.date}</span>
+          <span className='h-4 text-xs text-[#333333]'>{data.date}</span>
         </div>
       </div>
     </DraggablePolaroid>
