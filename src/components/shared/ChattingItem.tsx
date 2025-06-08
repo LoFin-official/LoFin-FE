@@ -7,7 +7,7 @@ export enum MessageType {
 }
 
 interface MessageGroupProps {
-  messages: { text: string; isRead: boolean }[];
+  messages: { text: React.ReactNode; isRead: boolean }[]; // ReactNode로 변경
   type: MessageType;
   time: string;
 }
@@ -28,8 +28,8 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({ messages, type, time
             {/* 읽지 않은 메시지 표시 및 시간 */}
             {isSent && (
               <div className='flex flex-col items-center mr-2'>
-                {!message.isRead && <div className='text-[8px] text-[#FF7A99] ml-6'>1</div>} {/* 읽지 않은 메시지에만 1 표시 */}
-                {isLastMessage && time && <div className='text-[8px] text-[#999999]'>{time}</div>} {/* 시간 표시 */}
+                {!message.isRead && <div className='text-[8px] text-[#FF7A99] ml-6'>1</div>}
+                {isLastMessage && time && <div className='text-[8px] text-[#999999]'>{time}</div>}
               </div>
             )}
 
@@ -38,7 +38,7 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({ messages, type, time
               <div className='relative mr-2'>
                 <div
                   className='w-10 h-10 rounded-full bg-[#999999] flex items-center justify-center'
-                  style={{ transform: 'translateY(-12px)' }} // 프로필 이미지를 위로 4px 이동
+                  style={{ transform: 'translateY(-12px)' }}
                 ></div>
               </div>
             )}
@@ -50,10 +50,10 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({ messages, type, time
             <div
               className={`h-8 px-2 py-1 text-[#ffffff] font-bold flex items-center justify-center ${
                 isSent
-                  ? 'bg-[#FF9BB3] rounded-tl-[15px] rounded-tr-[15px] rounded-bl-[15px]' // SENT 메시지
+                  ? 'bg-[#FF9BB3] rounded-tl-[15px] rounded-tr-[15px] rounded-bl-[15px]'
                   : isSecondMessage
-                    ? 'bg-[#D1A6F5] rounded-full' // RECEIVED 두 번째 메시지: 4방면 모두 둥글게
-                    : 'bg-[#D1A6F5] rounded-tr-[18px] rounded-bl-[18px] rounded-br-[18px]' // RECEIVED 기본 메시지
+                    ? 'bg-[#D1A6F5] rounded-full'
+                    : 'bg-[#D1A6F5] rounded-tr-[18px] rounded-bl-[18px] rounded-br-[18px]'
               }`}
             >
               {message.text}
