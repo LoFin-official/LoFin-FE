@@ -1,4 +1,3 @@
-// pages/present/index.tsx
 import BottomBar from '@/components/shared/BottomBar';
 import Header from '@/components/shared/Header';
 import PresentItem from '@/components/shared/PresentItem';
