@@ -51,7 +51,7 @@ export default function SwipeSlider({ items, onSelect }: SwipeSliderProps) {
   return (
     <>
       <div
-        className='w-full max-w-[400px] min-h-[530px] relative rounded-md flex items-center justify-center'
+        className='w-full max-w-[400px] min-h-[300px] relative rounded-md flex items-center justify-center'
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
