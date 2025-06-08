@@ -4,10 +4,10 @@ import Header from '@/components/shared/Header';
 import NoItemText from '@/components/shared/NoItemText';
 import MemoryItem from '@/components/shared/memory/MemoryItem';
 import MemoryPolaroidItem1 from '@/components/shared/memory/MemoryPolaroidItem1';
-import MemoryPolaroidItem2 from '@/components/shared/memory/MemoryPolaroidItem2'; // 추가
-import MemoryPolaroidItem3 from '@/components/shared/memory/MemoryPolaroidItem3'; // 추가
-import MemoryPolaroidItem4 from '@/components/shared/memory/MemoryPolaroidItem4'; // 추가
-import MemoryPolaroidItem5 from '@/components/shared/memory/MemoryPolaroidItem5'; // 추가
+import MemoryPolaroidItem2 from '@/components/shared/memory/MemoryPolaroidItem2';
+import MemoryPolaroidItem3 from '@/components/shared/memory/MemoryPolaroidItem3';
+import MemoryPolaroidItem4 from '@/components/shared/memory/MemoryPolaroidItem4';
+import MemoryPolaroidItem5 from '@/components/shared/memory/MemoryPolaroidItem5';
 import { useRouter } from 'next/router';
 import { backendUrl } from '@/config/config';
 
@@ -20,7 +20,7 @@ interface Memory {
   rotation: number;
   memoryDate: string;
   updatedAt: string;
-  styleType?: string; // 예: "MemoryPolaroidItem1", "MemoryPolaroidItem2", etc.
+  styleType?: string;
 }
 
 interface PreparedMemory {
@@ -151,8 +151,8 @@ export default function MemoryPage() {
           imageUrl: firstImageUrl,
           position: memory.position,
           rotation: memory.rotation,
-          border: true, // Defaulting to true for now, can be dynamic
-          styleType: memory.styleType || 'MemoryItem', // Default to 'MemoryItem' if not specified
+          border: true,
+          styleType: memory.styleType || 'MemoryItem',
         };
       })
       .sort((a, b) => a.dday - b.dday);
@@ -173,90 +173,54 @@ export default function MemoryPage() {
 
   return (
     <>
-      <div className='w-full max-w-[412px] mx-auto h-[calc(100vh-112px)] bg-[#FFD9E1]/35'>
-        {isLoading && <p>로딩 중...</p>}
-        {error && <p className='text-red-500'>{error}</p>}
-
-        {!isLoading && !error && (
-          <div className='relative'>
-            {' '}
-            {hasMemories ? (
-              preparedMemories.map((memory) => {
-                switch (memory.styleType) {
-                  case 'MemoryPolaroidItem1':
-                    return (
-                      <MemoryPolaroidItem1
-                        key={memory._id}
-                        data={memory}
-                        defaultX={memory.position?.x}
-                        defaultY={memory.position?.y}
-                        defaultRotation={memory.rotation}
-                        onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
-                      />
-                    );
-                  case 'MemoryPolaroidItem2':
-                    return (
-                      <MemoryPolaroidItem2
-                        key={memory._id}
-                        data={memory}
-                        defaultX={memory.position?.x}
-                        defaultY={memory.position?.y}
-                        defaultRotation={memory.rotation}
-                        onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
-                      />
-                    );
-                  case 'MemoryPolaroidItem3':
-                    return (
-                      <MemoryPolaroidItem3
-                        key={memory._id}
-                        data={memory}
-                        defaultX={memory.position?.x}
-                        defaultY={memory.position?.y}
-                        defaultRotation={memory.rotation}
-                        onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
-                      />
-                    );
-                  case 'MemoryPolaroidItem4':
-                    return (
-                      <MemoryPolaroidItem4
-                        key={memory._id}
-                        data={memory}
-                        defaultX={memory.position?.x}
-                        defaultY={memory.position?.y}
-                        defaultRotation={memory.rotation}
-                        onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
-                      />
-                    );
-                  case 'MemoryPolaroidItem5':
-                    return (
-                      <MemoryPolaroidItem5
-                        key={memory._id}
-                        data={memory}
-                        defaultX={memory.position?.x}
-                        defaultY={memory.position?.y}
-                        defaultRotation={memory.rotation}
-                        onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
-                      />
-                    );
-                  default: // 기본값으로 MemoryItem 렌더링
-                    return (
-                      <div key={memory._id} style={{ position: 'relative' }}>
-                        <MemoryItem memories={[memory]} />
-                      </div>
-                    );
-                }
-              })
-            ) : (
-              <NoItemText title='아직 우리만의 기록이 없어요.' subtitle='작은 순간부터 하나씩, 추억을 쌓아볼까요?' />
-            )}
-          </div>
-        )}
+      <div className='w-full max-w-[412px] mx-auto h-[calc(100vh-112px)] overflow-y-auto overflow-hidden bg-[#FFD9E1]/35'>
+        <div className='relative min-h-full pb-10'>
+          {' '}
+          {isLoading && <p className='p-4'>로딩 중...</p>}
+          {error && <p className='text-red-500 p-4'>{error}</p>}
+          {!isLoading && !error && (
+            <div className='relative bg-[#FFD9E1]/35'>
+              {' '}
+              {hasMemories ? (
+                preparedMemories.map((memory) => {
+                  switch (memory.styleType) {
+                    case 'MemoryPolaroidItem1':
+                      return (
+                        <MemoryPolaroidItem1
+                          key={memory._id}
+                          data={memory}
+                          defaultX={memory.position?.x}
+                          defaultY={memory.position?.y}
+                          defaultRotation={memory.rotation}
+                          onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
+                          mode='view'
+                        />
+                      );
+                    case 'MemoryPolaroidItem2':
+                      return (
+                        <MemoryPolaroidItem2
+                          key={memory._id}
+                          data={memory}
+                          defaultX={memory.position?.x}
+                          defaultY={memory.position?.y}
+                          defaultRotation={memory.rotation}
+                          onPositionChange={(x, y, rotation) => handleMemoryPositionChange(memory._id, x, y, rotation)}
+                          mode='view'
+                        />
+                      );
+                  }
+                })
+              ) : (
+                <NoItemText title='아직 우리만의 기록이 없어요.' subtitle='작은 순간부터 하나씩, 추억을 쌓아볼까요?' />
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
 }
 
-// 페이지 레이아웃 지정 (Next.js 커스텀 레이아웃 패턴)
 MemoryPage.getLayout = (page: ReactNode) => {
   return (
     <>
