@@ -336,7 +336,7 @@ export default function MemoryEditPage() {
       <BottomSheetMemoryItem
         isOpen={isItemSheetOpen}
         onClose={() => setIsItemSheetOpen(false)}
-        height={'500px'}
+        height={'400px'}
         onSelectComponent={(Component) => {
           const newStyleType = Component.displayName || Component.name || null;
           setStyleType(newStyleType);
