@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import Header from '@/components/shared/Header';
 import BottomBar from '@/components/shared/BottomBar';
 import Input from '@/components/shared/Input';
@@ -13,7 +13,9 @@ export default function AnniversaryCreatePage() {
   const [anniversaryName, setAnniversaryName] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [daysAfterToday, setDaysAfterToday] = useState('');
   const today = new Date();
+  const [firstMetDate, setFirstMetDate] = useState<Date | null>(null);
   const handleDateSelect = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -58,6 +60,48 @@ export default function AnniversaryCreatePage() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const fetchFirstMetDate = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await fetch(`${backendUrl}/firstMet/firstmet`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data?.firstMetDate) {
+          setFirstMetDate(new Date(data.firstMetDate));
+        }
+      } catch (error) {
+        console.error('첫 만남 날짜 불러오기 실패:', error);
+      }
+    };
+
+    fetchFirstMetDate();
+  }, []);
+
+  // 👇 daysAfterToday 변경 시 날짜 자동 계산
+  useEffect(() => {
+    const trimmed = daysAfterToday.trim();
+    const isValidNumber = /^\d{1,4}$/.test(trimmed);
+
+    if (isValidNumber && firstMetDate) {
+      const num = parseInt(trimmed, 10);
+      const newDate = new Date(firstMetDate);
+      newDate.setDate(firstMetDate.getDate() + num);
+
+      const y = newDate.getFullYear();
+      const m = String(newDate.getMonth() + 1).padStart(2, '0');
+      const d = String(newDate.getDate()).padStart(2, '0');
+      setSelectedDate(`${y}-${m}-${d}`);
+    }
+  }, [daysAfterToday, firstMetDate]);
 
   return (
     <>
@@ -78,6 +122,13 @@ export default function AnniversaryCreatePage() {
             value={selectedDate}
             readOnly
             onClick={() => setIsDateSheetOpen(true)}
+          />
+          <Input
+            label='D-몇일인가요? (선택 사항)'
+            placeholder='숫자만 입력 (예: 100)'
+            width='w-full max-w-[348px]'
+            value={daysAfterToday}
+            onChange={(e) => setDaysAfterToday(e.target.value)}
           />
         </div>
       </div>
