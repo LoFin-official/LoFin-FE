@@ -7,33 +7,80 @@ export enum MessageType {
 }
 
 interface MessageGroupProps {
-  messages: { text: React.ReactNode; isRead: boolean }[]; // ReactNode로 변경
+  messages: { text: React.ReactNode; isRead: boolean }[];
   type: MessageType;
   time: string;
 }
 
-// 메시지 그룹 컴포넌트 - 프로필 이미지 위로 띄우기 적용
+// 시간 문자열을 "HH:mm" 형식으로 변환하는 함수
+function formatTime(timeString: string) {
+  const date = new Date(timeString);
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
+// 메시지 그룹 컴포넌트
 export const MessageGroup: React.FC<MessageGroupProps> = ({ messages, type, time }) => {
   const isSent = type === MessageType.SENT;
+
+  // 메시지가 이미지인지 체크하는 헬퍼
+  function isImageMessage(text: React.ReactNode): boolean {
+    // React element인지, 타입이 'img'인지 확인
+    return React.isValidElement(text) && text.type === 'img';
+  }
 
   return (
     <div className='mb-4'>
       {messages.map((message, index) => {
         const isFirstMessage = index === 0;
         const isLastMessage = index === messages.length - 1;
-        const isSecondMessage = index === 1; // 두 번째 메시지 확인
+        const isSecondMessage = index === 1;
 
+        const isImage = isImageMessage(message.text);
+
+        if (isImage) {
+          const imageElement = message.text as React.ReactElement<React.ImgHTMLAttributes<HTMLImageElement>>;
+
+          const existingStyle = imageElement.props.style || {};
+          // 이미지 메시지는 버블 없이 크게 보여주기
+          return (
+            <div key={index} className={`flex items-center ${isSent ? 'justify-end' : 'justify-start'} mt-1`}>
+              {isFirstMessage && !isSent && (
+                <div className='relative mr-2'>
+                  <div
+                    className='w-10 h-10 rounded-full bg-[#999999] flex items-center justify-center'
+                    style={{ transform: 'translateY(-12px)' }}
+                  ></div>
+                </div>
+              )}
+              {!isFirstMessage && !isSent && <div className='w-10 mr-2'></div>}
+
+              {React.cloneElement(imageElement, {
+                style: {
+                  verticalAlign: 'middle',
+                  borderRadius: 8,
+                  ...existingStyle,
+                },
+                width: 200,
+                height: 200,
+                alt: imageElement.props.alt || 'emoji',
+              })}
+
+              {!isSent && isLastMessage && time && <div className='text-[8px] text-[#999999] ml-2'>{formatTime(time)}</div>}
+            </div>
+          );
+        }
+
+        // 이미지가 아닌 텍스트 메시지 기존 스타일 유지
         return (
           <div key={index} className={`flex items-end ${isSent ? 'justify-end' : 'justify-start'} mt-1`}>
-            {/* 읽지 않은 메시지 표시 및 시간 */}
             {isSent && (
               <div className='flex flex-col items-center mr-2'>
-                {!message.isRead && <div className='text-[8px] text-[#FF7A99] ml-6'>1</div>}
-                {isLastMessage && time && <div className='text-[8px] text-[#999999]'>{time}</div>}
+                {isLastMessage && time && <div className='text-[8px] text-[#999999]'>{formatTime(time)}</div>}
               </div>
             )}
 
-            {/* 프로필 이미지 (첫 메시지의 RECEIVED만) */}
             {isFirstMessage && !isSent && (
               <div className='relative mr-2'>
                 <div
@@ -43,10 +90,8 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({ messages, type, time
               </div>
             )}
 
-            {/* 프로필 공간 (첫 메시지가 아닌 RECEIVED만) */}
             {!isFirstMessage && !isSent && <div className='w-10 mr-2'></div>}
 
-            {/* 메시지 내용 */}
             <div
               className={`h-8 px-2 py-1 text-[#ffffff] font-bold flex items-center justify-center ${
                 isSent
@@ -59,8 +104,7 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({ messages, type, time
               {message.text}
             </div>
 
-            {/* 시간 표시 (RECEIVED 메시지는 오른쪽에) */}
-            {!isSent && isLastMessage && time && <div className='text-[8px] text-[#999999] ml-2'>{time}</div>}
+            {!isSent && isLastMessage && time && <div className='text-[8px] text-[#999999] ml-2'>{formatTime(time)}</div>}
           </div>
         );
       })}

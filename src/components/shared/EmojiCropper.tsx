@@ -21,7 +21,7 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
   const showCroppedImage = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
     try {
-      const cropped = await getCroppedImg(imageSrc, croppedAreaPixels, 100);
+      const cropped = await getCroppedImg(imageSrc, croppedAreaPixels, 300);
       // 여기에 서버 저장 로직 또는 채팅 전송 로직 추가
 
       if (onComplete) {
@@ -44,7 +44,7 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   return (
     <div className='flex flex-col items-center gap-2'>
       {!imageSrc && (

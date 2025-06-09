@@ -84,6 +84,8 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
     (newMsg: RawMessage) => {
       if (!memberId) return;
 
+      console.log('handleIncomingMessage 호출:', newMsg);
+
       setGroupedChats((prevGroups) => {
         const newDate = formatKoreanDate(newMsg.createdAt);
         const newType = newMsg.sender === memberId ? MessageType.SENT : MessageType.RECEIVED;
@@ -146,6 +148,8 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
         createdAt: now,
         isRead: false,
       };
+
+      console.log('내가 보낸 메시지:', newMessage);
 
       socketRef.current.emit('privateMessage', newMessage);
       handleIncomingMessage(newMessage);
