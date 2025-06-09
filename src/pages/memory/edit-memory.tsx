@@ -7,6 +7,7 @@ import MemoryPolaroidItem2 from '@/components/shared/memory/MemoryPolaroidItem2'
 import { fetchMemoriesFromAPI, prepareMemoryData } from '@/utils/memoryUtils';
 import type { Memory, PreparedMemory } from '@/utils/memoryUtils';
 import { backendUrl } from '@/config/config';
+import { useRouter } from 'next/router';
 
 // 임시 위치 정보를 저장할 타입
 interface DraftPosition {
@@ -23,6 +24,7 @@ export default function EditMemoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [coupleSince, setCoupleSince] = useState<string | null>(null);
+  const router = useRouter();
 
   // 첫 만남 날짜 불러오기
   useEffect(() => {
@@ -88,10 +90,11 @@ export default function EditMemoryPage() {
   }, [coupleSince]);
 
   // 저장 함수 - draftPositions의 값을 서버에 저장
-  // 저장 함수 - draftPositions의 값을 서버에 저장
   const handleSave = async () => {
     setIsSaving(true);
     const token = localStorage.getItem('token');
+
+    router.replace(`/memory`);
     try {
       for (const memory of memories) {
         const draftPosition = draftPositions[memory._id];
@@ -152,22 +155,6 @@ export default function EditMemoryPage() {
     }));
   };
 
-  // 변경사항이 있는지 확인하는 함수
-  const hasChanges = () => {
-    return memories.some((memory) => {
-      const draft = draftPositions[memory._id];
-      if (!draft) return false;
-
-      const original = {
-        x: memory.position?.x || 0,
-        y: memory.position?.y || 0,
-        rotation: memory.rotation || 0,
-      };
-
-      return draft.x !== original.x || draft.y !== original.y || draft.rotation !== original.rotation;
-    });
-  };
-
   const renderMemoryItem = (memory: PreparedMemory) => {
     // draftPositions에서 현재 위치를 가져오기
     const currentPosition = draftPositions[memory._id] || {
@@ -205,41 +192,38 @@ export default function EditMemoryPage() {
   };
 
   return (
-    <div className='w-full max-w-[412px] mx-auto h-[calc(100vh-112px)] overflow-y-auto bg-[#FBEFF2]'>
-      <div className='relative min-h-full pb-10'>
-        {!isLoading && !error && (
-          <>
-            {memories.length > 0 ? (
-              memories.map(renderMemoryItem)
-            ) : (
-              <NoItemText title='아직 우리만의 기록이 없어요.' subtitle='작은 순간부터 하나씩, 추억을 쌓아볼까요?' />
-            )}
-
-            {memories.length > 0 && (
-              <div className='fixed bottom-24 left-1/2 transform -translate-x-1/2 flex gap-3 z-10'>
-                <button
-                  className={`text-white px-6 py-3 rounded-lg shadow-lg ${
-                    hasChanges() ? 'bg-pink-400 hover:bg-pink-500' : 'bg-gray-300 cursor-not-allowed'
-                  }`}
-                  onClick={handleSave}
-                  disabled={isSaving || !hasChanges()}
-                >
-                  {isSaving ? '저장 중...' : '변경사항 저장'}
-                </button>
-              </div>
-            )}
-          </>
-        )}
+    <>
+      <Header
+        rightElement={
+          <button className='text-[#FF9BB3] text-base font-bold' onClick={handleSave} disabled={isSaving}>
+            {isSaving ? '저장 중...' : '완료'}
+          </button>
+        }
+      >
+        추억 편집
+      </Header>
+      <div className='w-full max-w-[412px] mx-auto h-[calc(100vh-112px)] overflow-y-auto bg-[#FF9BB3]/25'>
+        <div className='relative min-h-full pb-10'>
+          {!isLoading && !error && (
+            <>
+              {memories.length > 0 ? (
+                memories.map(renderMemoryItem)
+              ) : (
+                <NoItemText title='아직 우리만의 기록이 없어요.' subtitle='작은 순간부터 하나씩, 추억을 쌓아볼까요?' />
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
 EditMemoryPage.getLayout = (page: ReactNode) => {
   return (
     <>
-      <Header>추억 편집</Header>
-      <BottomBar>{page}</BottomBar>
+      {page}
+      <BottomBar />
     </>
   );
 };
