@@ -19,8 +19,6 @@ interface MyAppProps extends AppProps {
 export default function App({ Component, pageProps }: MyAppProps) {
   const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
 
-  // 소켓 연결 관련 useEffect 삭제!
-
   return (
     <>
       <Head>
