@@ -49,7 +49,7 @@ export default function LoginPage() {
             const decoded = JSON.parse(atob(payload));
             if (decoded.memberId) {
               memberId = decoded.memberId;
-              localStorage.setItem('userId', decoded.memberId);
+              localStorage.setItem('memberId', decoded.memberId);
             }
           } catch (e) {
             console.error('토큰 디코딩 실패:', e);
@@ -77,18 +77,24 @@ export default function LoginPage() {
               const userData = await userResponse.json();
               console.log('userData:', userData);
 
-              if (
-                userData.success &&
-                userData.data.connected === false &&
-                userData.data.partnerId == null &&
-                userData.data.firstMetDate == null &&
-                userData.data.coupleId == null
-              ) {
-                router.push('/signup/profile');
-                return;
+              if (userData.success) {
+                // ✅ coupleId 저장
+                if (userData.data.coupleId) {
+                  localStorage.setItem('coupleId', userData.data.coupleId);
+                }
+                if (
+                  userData.success &&
+                  userData.data.connected === false &&
+                  userData.data.partnerId == null &&
+                  userData.data.firstMetDate == null &&
+                  userData.data.coupleId == null
+                ) {
+                  router.push('/signup/profile');
+                  return;
+                }
+              } else {
+                console.warn('사용자 정보 조회 실패');
               }
-            } else {
-              console.warn('사용자 정보 조회 실패');
             }
           }
 

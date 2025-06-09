@@ -1,3 +1,4 @@
+// ChatPage.tsx
 import ChattingBar from '@/components/shared/ChattingBar';
 import Header from '@/components/shared/Header';
 import React, { useEffect, useState } from 'react';
@@ -15,24 +16,17 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchPartner = async () => {
       try {
-        const token = localStorage.getItem('token'); // 토큰명 확인 필요
-
+        const token = localStorage.getItem('token');
         if (!token) return;
 
         const res = await fetch(`${backendUrl}/coupleprofile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!res.ok) {
           console.error('커플 프로필 불러오기 실패', res.status);
           return;
         }
-
         const data = await res.json();
-
-        // partnerProfile이 있으면 상태 업데이트
         if (data.partnerProfile) {
           setPartner(data.partnerProfile);
         }
@@ -40,10 +34,10 @@ export default function ChatPage() {
         console.error('상대방 불러오기 실패:', err);
       }
     };
-
     fetchPartner();
   }, []);
 
+  // partner가 준비되면 ChattingBar에게 receiverId 전달
   return (
     <>
       <Header>{partner?.nickname || '상대방'}</Header>
