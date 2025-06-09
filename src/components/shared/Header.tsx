@@ -30,6 +30,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create', '/chat/emoji/create'];
   const memoryPages = ['/memory'];
+  const memoryEditModePages = ['/memory/edit-memory'];
   const memoryEditPages = ['/memory/[id]', '/memory/edit'];
   const questionEditPages = ['/question', '/question/[id]', '/my-page/anniversary'];
   const imagePages = ['/memory/edit'];
@@ -82,6 +83,8 @@ export default function Header({ children, onBack, showBackButton, rightElement,
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => setIsBottomSheetOpen(true)} />;
     } else if (memoryPages.includes(pathname)) {
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => setIsMemoryEditSheetOpen(true)} />;
+    } else if (memoryEditModePages.includes(pathname)) {
+      RightComponent = <div className='cursor-pointer' />;
     } else if (memoryEditPages.includes(pathname)) {
       RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (questionEditPages.includes(pathname)) {
