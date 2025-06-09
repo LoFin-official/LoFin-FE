@@ -279,7 +279,7 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
                   emojis.map((emoji) => (
                     <img
                       key={emoji._id}
-                      className='w-12 h-12 cursor-pointer rounded-[8px]'
+                      className='w-[68px] h-[68px] cursor-pointer rounded-[8px]'
                       src={`${backendUrl}${emoji.imageUrl}`}
                       alt='emoji'
                       onClick={() => {
