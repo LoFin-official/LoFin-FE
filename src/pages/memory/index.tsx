@@ -176,7 +176,7 @@ export default function MemoryPage() {
       <div className='w-full max-w-[412px] mx-auto h-[calc(100vh-112px)] overflow-y-auto overflow-hidden bg-[#FFD9E1]/35'>
         <div className='relative min-h-full pb-10'>
           {' '}
-          {isLoading && <p className='p-4'>로딩 중...</p>}
+          {isLoading && <p className='p-4'></p>}
           {error && <p className='text-red-500 p-4'>{error}</p>}
           {!isLoading && !error && (
             <div className='relative bg-[#FFD9E1]/35'>

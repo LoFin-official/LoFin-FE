@@ -88,6 +88,7 @@ export default function EditMemoryPage() {
   }, [coupleSince]);
 
   // 저장 함수 - draftPositions의 값을 서버에 저장
+  // 저장 함수 - draftPositions의 값을 서버에 저장
   const handleSave = async () => {
     setIsSaving(true);
     const token = localStorage.getItem('token');
@@ -95,8 +96,9 @@ export default function EditMemoryPage() {
       for (const memory of memories) {
         const draftPosition = draftPositions[memory._id];
         if (draftPosition) {
-          await fetch(`${backendUrl}/memory/${memory._id}`, {
-            method: 'PUT',
+          // MemoryPolaroidItem1에서 사용하던 엔드포인트와 동일하게 변경
+          const response = await fetch(`${backendUrl}/memory/location/${memory._id}`, {
+            method: 'PATCH', // PUT에서 PATCH로 변경
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
@@ -106,10 +108,15 @@ export default function EditMemoryPage() {
               rotation: draftPosition.rotation,
             }),
           });
+
+          if (!response.ok) {
+            console.error('위치 저장 실패', await response.text());
+            throw new Error('위치 저장 실패');
+          }
         }
       }
 
-      // 저장 성공 후 memories 상태도 업데이트 (선택사항)
+      // 저장 성공 후 memories 상태도 업데이트
       setMemories((prevMemories) =>
         prevMemories.map((memory) => {
           const draftPosition = draftPositions[memory._id];
@@ -143,20 +150,6 @@ export default function EditMemoryPage() {
         rotation: newRotation !== undefined ? newRotation : prev[id]?.rotation || 0,
       },
     }));
-  };
-
-  // 변경사항 취소 함수
-  const handleCancel = () => {
-    // draftPositions를 원래 memories의 위치로 되돌리기
-    const originalPositions: Record<string, DraftPosition> = {};
-    memories.forEach((memory) => {
-      originalPositions[memory._id] = {
-        x: memory.position?.x || 0,
-        y: memory.position?.y || 0,
-        rotation: memory.rotation || 0,
-      };
-    });
-    setDraftPositions(originalPositions);
   };
 
   // 변경사항이 있는지 확인하는 함수
@@ -224,11 +217,6 @@ export default function EditMemoryPage() {
 
             {memories.length > 0 && (
               <div className='fixed bottom-24 left-1/2 transform -translate-x-1/2 flex gap-3 z-10'>
-                {hasChanges() && (
-                  <button className='bg-gray-500 text-white px-4 py-3 rounded-lg shadow-lg' onClick={handleCancel} disabled={isSaving}>
-                    취소
-                  </button>
-                )}
                 <button
                   className={`text-white px-6 py-3 rounded-lg shadow-lg ${
                     hasChanges() ? 'bg-pink-400 hover:bg-pink-500' : 'bg-gray-300 cursor-not-allowed'

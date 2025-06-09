@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { backendUrl } from '@/config/config';
 import { onSocket, offSocket, emitSocket } from '@/socket';
-import { EmojiEditIcon, EmojiIcon, ImageIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
+import { EmojiEditIcon, EmojiIcon, PlusIcon, SendIcon } from '@/assets/icons/SvgIcon';
 
 interface Emoji {
   _id: string;
@@ -246,10 +246,6 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
                 <div className='w-full max-w-[66px] h-[68px] flex flex-col gap-1 my-auto cursor-pointer'>
                   <EmojiEditIcon onClick={handleCreateEmoji} />
                   <div className='text-xs font-bold text-[#333333] text-center'>이모티콘 제작</div>
-                </div>
-                <div className='w-full max-w-[66px] h-[68px] flex flex-col gap-1 my-auto'>
-                  <ImageIcon onClick={() => {}} />
-                  <div className='text-xs font-bold text-[#333333] text-center'>갤러리</div>
                 </div>
               </div>
             )}
