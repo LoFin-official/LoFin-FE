@@ -65,7 +65,7 @@ export default function LoginPage() {
             );
           }
 
-          // **커플 연결 상태 확인 API 호출**
+          // 커플 연결 상태 확인 API 호출
           if (memberId) {
             const userResponse = await fetch(`${backendUrl}/auth/${memberId}`, {
               headers: {
@@ -78,7 +78,7 @@ export default function LoginPage() {
               console.log('userData:', userData);
 
               if (userData.success) {
-                // ✅ coupleId 저장
+                // coupleId 저장
                 if (userData.data.coupleId) {
                   localStorage.setItem('coupleId', userData.data.coupleId);
                 }

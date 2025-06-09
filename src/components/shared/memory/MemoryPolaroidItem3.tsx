@@ -74,19 +74,19 @@ export default function MemoryPolaroidItem3({
       defaultX={defaultX}
       defaultY={defaultY}
       defaultRotation={defaultRotation}
-      width={332}
-      height={468}
+      width={232}
+      height={368}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onUpdate={handleUpdate}
     >
-      <div className='w-[332px] h-[468px] flex flex-col gap-1 items-center py-4 px-4 bg-white' onDoubleClick={handleDoubleClick}>
+      <div className='w-[232px] h-[368px] flex flex-col gap-1 items-center py-4 px-4 bg-white' onDoubleClick={handleDoubleClick}>
         {/* 사진 영역 */}
-        <div className='w-[300px] h-[384px] flex flex-col gap-4'>
-          <div className='w-[300px] h-[300px] bg-[#eeeeee] overflow-hidden'>
+        <div className='w-[200px] h-[384px] flex flex-col gap-4'>
+          <div className='w-[200px] h-[200px] bg-[#eeeeee] overflow-hidden'>
             <img src={getImageUrl(data.imageUrl)} alt='memory' className='w-full h-full object-cover' />
           </div>
-          <div className='w-[296px] h-[76px] flex flex-col gap-2 px-0.5 mx-0.5'>
+          <div className='w-[196px] h-[76px] flex flex-col gap-2 px-0.5 mx-0.5'>
             <span className='h-7 text-xl text-[#333333] font-bold truncate'>{data.title}</span>
             <span className='h-10 text-[#767676] line-clamp-3'>{data.text}</span>
           </div>

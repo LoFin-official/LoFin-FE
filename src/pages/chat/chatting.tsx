@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { MessageGroup, MessageType } from '@/components/shared/ChattingItem';
 import { getChatMessages } from '@/utils/api';
 import { getSocket } from '@/socket';
+import { backendUrl } from '@/config/config';
 
 interface ChatMessage {
   type: MessageType;
@@ -12,6 +13,7 @@ interface ChatMessage {
 interface Partner {
   _id: string;
   nickname: string;
+  profilePicture?: string | null; // 프로필 이미지 URL - null도 허용
 }
 
 interface ChatPageProps {
@@ -57,7 +59,7 @@ function groupRawMessagesByDate(rawMessages: RawMessage[], memberId: string): { 
       messages: [
         {
           text: msg.imageUrl ? (
-            <img src={msg.imageUrl} alt='emoji' style={{ width: 40, height: 40, verticalAlign: 'middle', borderRadius: 6 }} />
+            <img src={msg.imageUrl} alt='emoji' style={{ width: 100, height: 100, verticalAlign: 'middle', borderRadius: 6 }} />
           ) : (
             <span>{msg.content}</span>
           ),
@@ -80,9 +82,24 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
   const memberId = getMemberId();
   const socketRef = useRef<ReturnType<typeof getSocket> | null>(null);
 
+  // 상대방 프로필 이미지 URL 생성
+  const getPartnerProfileImageUrl = useCallback(() => {
+    if (!partner?.profilePicture) return null;
+
+    // 이미 완전한 URL인지 확인
+    if (partner.profilePicture.startsWith('http')) {
+      return partner.profilePicture;
+    }
+
+    // 백엔드 URL과 조합하여 완전한 URL 생성
+    return `${backendUrl}/${partner.profilePicture.replace(/^\/?/, '')}`;
+  }, [partner?.profilePicture]);
+
   const handleIncomingMessage = useCallback(
     (newMsg: RawMessage) => {
       if (!memberId) return;
+
+      console.log('handleIncomingMessage 호출:', newMsg);
 
       setGroupedChats((prevGroups) => {
         const newDate = formatKoreanDate(newMsg.createdAt);
@@ -93,7 +110,7 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
           messages: [
             {
               text: newMsg.imageUrl ? (
-                <img src={newMsg.imageUrl} alt='emoji' style={{ width: 40, height: 40, verticalAlign: 'middle', borderRadius: 6 }} />
+                <img src={newMsg.imageUrl} alt='emoji' style={{ width: 100, height: 100, verticalAlign: 'middle', borderRadius: 6 }} />
               ) : (
                 <span>{newMsg.content}</span>
               ),
@@ -146,6 +163,8 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
         createdAt: now,
         isRead: false,
       };
+
+      console.log('내가 보낸 메시지:', newMessage);
 
       socketRef.current.emit('privateMessage', newMessage);
       handleIncomingMessage(newMessage);
@@ -202,7 +221,13 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
                 </div>
               </div>
               {group.chats.map((chat, index) => (
-                <MessageGroup key={`${chat.time}-${index}`} messages={chat.messages} type={chat.type} time={chat.time} />
+                <MessageGroup
+                  key={`${chat.time}-${index}`}
+                  messages={chat.messages}
+                  type={chat.type}
+                  time={chat.time}
+                  partnerProfileImage={chat.type === MessageType.RECEIVED ? getPartnerProfileImageUrl() : null}
+                />
               ))}
             </div>
           ))}

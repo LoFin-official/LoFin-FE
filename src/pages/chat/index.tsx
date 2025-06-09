@@ -1,4 +1,3 @@
-// ChatPage.tsx
 import ChattingBar from '@/components/shared/ChattingBar';
 import Header from '@/components/shared/Header';
 import React, { useEffect, useState } from 'react';
