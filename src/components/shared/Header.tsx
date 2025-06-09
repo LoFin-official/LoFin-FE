@@ -4,6 +4,7 @@ import { BackIcon, CloseIcon, MemoryIcon, MemoryImageIcon, QuestionEditIcon } fr
 import QuestionBottomSheet from './question/QuestionBottomSheet';
 import BottomSheetMemoryEditDelete from './BottomSheetMemoryEditDelete';
 import { backendUrl } from '@/config/config';
+import BottomSheetMemoryEdit from './BottomSheetMemoryEdit';
 
 interface HeaderProps {
   children: ReactNode;
@@ -23,6 +24,8 @@ export default function Header({ children, onBack, showBackButton, rightElement,
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  const [isMemoryEditSheetOpen, setIsMemoryEditSheetOpen] = useState(false);
 
   const noIconPages = ['/memory', '/question', '/present', '/account/profile', '/account/wish', '/account/couple-connect'];
   const closeIconPages = ['/question/create', '/question/[id]/answer', '/question/[id]/edit', '/memory/create', '/chat/emoji/create'];
@@ -78,7 +81,7 @@ export default function Header({ children, onBack, showBackButton, rightElement,
     if (pathname === '/memory/[id]') {
       RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => setIsBottomSheetOpen(true)} />;
     } else if (memoryPages.includes(pathname)) {
-      RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => router.push('/memory/create')} />;
+      RightComponent = <MemoryIcon className='cursor-pointer' onClick={() => setIsMemoryEditSheetOpen(true)} />;
     } else if (memoryEditPages.includes(pathname)) {
       RightComponent = <MemoryImageIcon className='cursor-pointer' />;
     } else if (questionEditPages.includes(pathname)) {
@@ -118,6 +121,8 @@ export default function Header({ children, onBack, showBackButton, rightElement,
       />
 
       <BottomSheetMemoryEditDelete isOpen={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} id={id} />
+
+      <BottomSheetMemoryEdit isOpen={isMemoryEditSheetOpen} onClose={() => setIsMemoryEditSheetOpen(false)} />
     </>
   );
 }
