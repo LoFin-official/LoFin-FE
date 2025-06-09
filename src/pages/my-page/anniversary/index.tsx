@@ -74,7 +74,7 @@ export default function AnniversaryPage() {
         // 3. 지난 기념일 서버에서 삭제
         await Promise.all(
           pastAnniversaries.map(async (item) => {
-            const deleteRes = await fetch(`${backendUrl}/anniversary/anniversarydelete/${item._id}`, {
+            const deleteRes = await fetch(`${backendUrl}/anniversary/${item._id}`, {
               method: 'DELETE',
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -147,7 +147,7 @@ export default function AnniversaryPage() {
     }
 
     try {
-      const res = await fetch(`${backendUrl}/anniversary/anniversarydelete/${id}`, {
+      const res = await fetch(`${backendUrl}/anniversary/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

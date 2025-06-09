@@ -41,7 +41,7 @@ export default function AnniversaryEditPage() {
 
     const fetchAnniversary = async () => {
       try {
-        const res = await fetch(`${backendUrl}/anniversary/anniversaryedit/${id}`, {
+        const res = await fetch(`${backendUrl}/anniversary/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -94,7 +94,7 @@ export default function AnniversaryEditPage() {
     }
 
     try {
-      const res = await fetch(`${backendUrl}/anniversary/anniversaries/${id}`, {
+      const res = await fetch(`${backendUrl}/anniversary/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

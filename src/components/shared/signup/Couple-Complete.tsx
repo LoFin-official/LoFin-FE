@@ -139,7 +139,7 @@ export default function CoupleCompletePage({ currentStep }: { currentStep: numbe
       if (!active) return;
 
       await checkFirstMet();
-      setTimeout(pollCheckFirstMet, 10000); // 10초 후 다시 호출
+      setTimeout(pollCheckFirstMet, 2000); // 10초 후 다시 호출
     };
 
     pollCheckFirstMet();
