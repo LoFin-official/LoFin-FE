@@ -10,11 +10,11 @@ import { backendUrl } from '@/config/config';
 export default function AnniversaryEditPage() {
   const router = useRouter();
   const { id } = router.query;
-
+  const [daysAfterToday, setDaysAfterToday] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [anniversaryName, setAnniversaryName] = useState('');
-
+  const [firstMetDate, setFirstMetDate] = useState<Date | null>(null);
   const [initialSelectedDate, setInitialSelectedDate] = useState('');
   const [initialAnniversaryName, setInitialAnniversaryName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -27,7 +27,31 @@ export default function AnniversaryEditPage() {
     const d = String(date.getDate()).padStart(2, '0');
     return `${y}-${m}-${d}`;
   };
+  useEffect(() => {
+    const fetchFirstMetDate = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
 
+      try {
+        const response = await fetch(`${backendUrl}/firstMet/firstmet`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data?.firstMetDate) {
+          setFirstMetDate(new Date(data.firstMetDate));
+        }
+      } catch (error) {
+        console.error('첫 만남 날짜 불러오기 실패:', error);
+      }
+    };
+
+    fetchFirstMetDate();
+  }, []);
   // 서버에서 기념일 정보 불러오기
   useEffect(() => {
     if (!router.isReady || !id) return;
@@ -117,6 +141,21 @@ export default function AnniversaryEditPage() {
       alert('기념일 수정에 실패했습니다.');
     }
   };
+  useEffect(() => {
+    const trimmed = daysAfterToday.trim();
+    const isValidNumber = /^\d{1,4}$/.test(trimmed);
+
+    if (isValidNumber && firstMetDate) {
+      const num = parseInt(trimmed, 10);
+      const newDate = new Date(firstMetDate);
+      newDate.setDate(firstMetDate.getDate() + num);
+
+      const y = newDate.getFullYear();
+      const m = String(newDate.getMonth() + 1).padStart(2, '0');
+      const d = String(newDate.getDate()).padStart(2, '0');
+      setSelectedDate(`${y}-${m}-${d}`);
+    }
+  }, [daysAfterToday, firstMetDate]);
 
   if (loading) return <div>로딩 중...</div>;
 
@@ -139,6 +178,13 @@ export default function AnniversaryEditPage() {
             value={selectedDate}
             readOnly
             onClick={() => setIsDateSheetOpen(true)}
+          />
+          <Input
+            label='D-몇일인가요? (선택 사항)'
+            placeholder='숫자만 입력 (예: 100)'
+            width='w-full max-w-[348px]'
+            value={daysAfterToday}
+            onChange={(e) => setDaysAfterToday(e.target.value)}
           />
         </div>
       </div>
