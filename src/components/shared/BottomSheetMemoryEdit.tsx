@@ -1,6 +1,6 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import BottomSheet from './BottomSheet';
-import { DeleteIcon, QuestionEditIcon } from '@/assets/icons/SvgIcon';
+import { QuestionEditIcon, MemoryIcon } from '@/assets/icons/SvgIcon';
 import { useRouter } from 'next/router';
 
 interface BottomSheetDateProps {
@@ -40,7 +40,7 @@ export default function BottomSheetMemoryEdit({ className, isOpen, onClose, onEd
           <div className='w-full h-px bg-[#D9D9D9]'></div>
 
           <div className='flex flex-row gap-1 h-6 px-4 text-[#FF4C80] cursor-pointer' onClick={() => handleCreateConfirm()}>
-            <DeleteIcon />
+            <MemoryIcon />
             <span className='text-lg'>추억 작성하기</span>
           </div>
         </div>
