@@ -98,6 +98,18 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
       const token = localStorage.getItem('token');
       if (!token) return alert('로그인이 필요합니다.');
 
+      const tempMessage = {
+        _id: `temp-${Date.now()}`,
+        sender: 'me',
+        receiver: receiverId,
+        content: `[${emoji._id}]`,
+        imageUrl: `${backendUrl}${emoji.imageUrl}`,
+        createdAt: new Date().toISOString(),
+        isTemp: true,
+      };
+
+      onNewMessage?.(tempMessage);
+
       const res = await fetch(`${backendUrl}/message`, {
         method: 'POST',
         headers: {
@@ -106,28 +118,25 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
         },
         body: JSON.stringify({
           receiver: receiverId,
-          content: `[${emoji._id}]`, // 필요 없으면 빈 문자열도 가능
-          imageUrl: `${backendUrl}${emoji.imageUrl}`, // 절대경로로 보냄
+          content: `[${emoji._id}]`,
+          imageUrl: `${backendUrl}${emoji.imageUrl}`,
         }),
       });
 
       const data = await res.json();
       if (data.success) {
-        setInputText('');
-        setOpenPanel(null);
-        onNewMessage?.(data.message);
-
-        emitSocket('privateMessage', {
-          receiver: receiverId,
-          content: `[${emoji._id}]`,
-          imageUrl: `${backendUrl}${emoji.imageUrl}`,
-        });
+        // 서버 메시지로 교체 혹은 업데이트 가능
+        // onNewMessage?.(data.message);
       } else {
         alert('이모티콘 전송 실패: ' + data.message);
+        // 실패 시 임시 메시지 제거 또는 상태 변경 처리 (옵션)
       }
     } catch (err) {
       console.error(err);
       alert('이모티콘 전송 중 오류가 발생했습니다.');
+    } finally {
+      setInputText('');
+      setOpenPanel(null);
     }
   };
 
@@ -169,6 +178,23 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
 
     try {
       const token = localStorage.getItem('token');
+      if (!token) return alert('로그인이 필요합니다.');
+
+      // 임시 메시지 객체 생성 (서버에서 부여하는 ID, 시간 등은 없으니 임시값 사용)
+      const tempMessage = {
+        _id: `temp-${Date.now()}`,
+        sender: 'me', // 실제 유저 ID 넣어도 됨
+        receiver: receiverId,
+        content: trimmed,
+        imageUrl: '',
+        createdAt: new Date().toISOString(),
+        isTemp: true, // 임시임을 표시 (옵션)
+      };
+
+      // 바로 내 화면에 표시
+      onNewMessage?.(tempMessage);
+
+      // 백엔드에 전송
       const res = await fetch(`${backendUrl}/message`, {
         method: 'POST',
         headers: {
@@ -184,21 +210,18 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
 
       const data = await res.json();
       if (data.success) {
-        setInputText('');
-        setOpenPanel(null);
-        onNewMessage?.(data.message);
-
-        emitSocket('privateMessage', {
-          receiver: receiverId,
-          content: trimmed,
-          imageUrl: '',
-        });
+        // 서버에서 온 메시지로 교체하거나 업데이트 필요시 처리 (옵션)
+        // 예: onNewMessage(data.message); // 다시 서버 메시지 추가 or 교체
       } else {
         alert('메시지 전송 실패: ' + data.message);
+        // 실패 시 임시 메시지 제거하거나 상태 변경 필요 (옵션)
       }
     } catch (err) {
       console.error(err);
       alert('메시지 전송 중 오류가 발생했습니다.');
+    } finally {
+      setInputText('');
+      setOpenPanel(null);
     }
   };
 
@@ -256,7 +279,7 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
                   emojis.map((emoji) => (
                     <img
                       key={emoji._id}
-                      className='w-12 h-12 cursor-pointer rounded-[8px]'
+                      className='w-[68px] h-[68px] cursor-pointer rounded-[8px]'
                       src={`${backendUrl}${emoji.imageUrl}`}
                       alt='emoji'
                       onClick={() => {

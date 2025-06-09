@@ -21,11 +21,11 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
   const showCroppedImage = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
     try {
-      const cropped = await getCroppedImg(imageSrc, croppedAreaPixels, 100);
+      const cropped = await getCroppedImg(imageSrc, croppedAreaPixels, 300);
       // 여기에 서버 저장 로직 또는 채팅 전송 로직 추가
 
       if (onComplete) {
-        const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 100);
+        const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 300);
         const file = new File([blob], 'emoji.png', { type: 'image/png' });
         onComplete(file);
       }
@@ -44,7 +44,7 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   return (
     <div className='flex flex-col items-center gap-2'>
       {!imageSrc && (
@@ -102,15 +102,6 @@ const EmojiCropper = ({ onComplete }: EmojiCropperProps) => {
           <button onClick={showCroppedImage} className='bg-[#FF9BB3] text-white px-4 py-2 rounded hover:bg-[#FF4C80] mx-auto'>
             저장하기
           </button>
-        </div>
-      )}
-
-      {croppedImage && (
-        <div className='mt-4'>
-          <p>미리보기 (100x100 저장용):</p>
-          <img src={croppedImage} width={100} height={100} alt='이모티콘' />
-          <p className='mt-2'>패널 썸네일 (68x68):</p>
-          <img src={croppedImage} width={68} height={68} alt='썸네일' />
         </div>
       )}
     </div>
