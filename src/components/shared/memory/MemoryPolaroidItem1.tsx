@@ -2,7 +2,7 @@ import React from 'react';
 import { HeartIcon } from '@/assets/icons/SvgIcon';
 import DraggablePolaroid from '@/components/shared/memory/DraggablePolaroid';
 import { backendUrl } from '@/config/config';
-import { useRouter } from 'next/router'; // useRouter 임포트
+import { useRouter } from 'next/router';
 
 interface MemoryPolaroidItemProps {
   data: {
@@ -20,7 +20,7 @@ interface MemoryPolaroidItemProps {
   defaultRotation?: number;
   onDragStart?: () => void;
   onDragEnd?: () => void;
-  onPositionChange?: (x: number, y: number, rotation?: number) => void; // 위치 변경 콜백 추가
+  onPositionChange?: (x: number, y: number, rotation?: number) => void;
   mode?: 'view' | 'edit';
 }
 
@@ -40,30 +40,34 @@ export default function MemoryPolaroidItem1({
   onPositionChange,
   mode = 'view',
 }: MemoryPolaroidItemProps) {
-  const router = useRouter(); // useRouter 초기화
+  const router = useRouter();
 
-  // 위치 저장 API 호출 함수
+  // 편집 모드일 때는 API 호출하지 않고 부모 컴포넌트에만 알림
   const handleUpdate = async (pos: { x: number; y: number; rotation: number }) => {
-    if (mode !== 'edit') return;
+    if (mode === 'edit') {
+      // 편집 모드에서는 부모 컴포넌트의 draftPositions만 업데이트
+      if (onPositionChange) {
+        onPositionChange(pos.x, pos.y, pos.rotation);
+      }
+      return;
+    }
 
+    // view 모드에서만 실시간 저장 (기존 로직 유지)
     try {
       const response = await fetch(`${backendUrl}/memory/location/${data._id}`, {
-        // /:id 엔드포인트 사용
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          position: { x: pos.x, y: pos.y }, // 백엔드에서 position을 객체로 기대
-          rotation: pos.rotation, // rotation도 함께 전달
+          position: { x: pos.x, y: pos.y },
+          rotation: pos.rotation,
         }),
       });
       if (!response.ok) {
         console.error('위치 저장 실패', await response.text());
       } else {
         console.log('위치 저장 성공');
-        console.log('저장 위치:', pos); // 저장하려는 좌표 출력
-        // 부모 컴포넌트에 위치 변경 알림
         if (onPositionChange) {
-          onPositionChange(pos.x, pos.y, pos.rotation); // 업데이트된 실제 rotation 값 전달
+          onPositionChange(pos.x, pos.y, pos.rotation);
         }
       }
     } catch (error) {
@@ -71,7 +75,7 @@ export default function MemoryPolaroidItem1({
     }
   };
 
-  // 더블 클릭 핸들러
+  // 클릭 핸들러
   const handleClick = () => {
     if (mode === 'view') {
       router.push(`/memory/${data._id}`);
@@ -88,7 +92,7 @@ export default function MemoryPolaroidItem1({
       height={197}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      onUpdate={handleUpdate} // 위치 저장 함수 전달
+      onUpdate={handleUpdate}
       mode={mode}
     >
       <div

@@ -42,9 +42,17 @@ export default function MemoryPolaroidItem2({
 }: MemoryPolaroidItemProps) {
   const router = useRouter();
 
+  // 편집 모드일 때는 API 호출하지 않고 부모 컴포넌트에만 알림
   const handleUpdate = async (pos: { x: number; y: number; rotation: number }) => {
-    if (mode !== 'edit') return;
+    if (mode === 'edit') {
+      // 편집 모드에서는 부모 컴포넌트의 draftPositions만 업데이트
+      if (onPositionChange) {
+        onPositionChange(pos.x, pos.y, pos.rotation);
+      }
+      return;
+    }
 
+    // view 모드에서만 실시간 저장 (기존 로직 유지)
     try {
       const response = await fetch(`${backendUrl}/memory/location/${data._id}`, {
         method: 'PATCH',
@@ -58,7 +66,6 @@ export default function MemoryPolaroidItem2({
         console.error('위치 저장 실패', await response.text());
       } else {
         console.log('위치 저장 성공');
-        console.log('저장 위치:', pos);
         if (onPositionChange) {
           onPositionChange(pos.x, pos.y, pos.rotation);
         }
@@ -68,6 +75,7 @@ export default function MemoryPolaroidItem2({
     }
   };
 
+  // 클릭 핸들러
   const handleClick = () => {
     if (mode === 'view') {
       router.push(`/memory/${data._id}`);
