@@ -6,7 +6,7 @@ import Input from '../Input';
 // 서버 URL 결정 함수
 const getBackendUrl = () => {
   const isRunningInWebView = window.ReactNativeWebView !== undefined;
-  return isRunningInWebView ? 'http://192.168.35.111:5000' : 'http://localhost:5000';
+  return isRunningInWebView ? 'http://110.10.38.192:5000' : 'http://localhost:5000';
 };
 
 export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () => void; currentStep: number }) {
@@ -73,7 +73,6 @@ export default function CoupleConnectPage({ onNext, currentStep }: { onNext: () 
         if (userData.connected || userData.partnerId) {
           if (!isConnected) {
             setIsConnected(true);
-            alert('상대방이 커플 연결을 완료했습니다!\n다음 단계로 이동합니다!');
             onNext();
           }
         } else {
