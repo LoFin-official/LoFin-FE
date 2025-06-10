@@ -146,10 +146,10 @@ export default function MyPage() {
               <HeartIcon className='w-8 h-8' />
               기념일
             </div>
-            <div className='flex flex-col gap-4 w-[78px] text-[#FF9BB3] text-lg cursor-pointer items-center'>
+            {/* <div className='flex flex-col gap-4 w-[78px] text-[#FF9BB3] text-lg cursor-pointer items-center'>
               <AlertIcon onClick={() => router.push('/my-page/alert')} />
               알림
-            </div>
+            </div>*/}
           </div>
         </div>
         <div className='flex flex-col gap-2 w-full max-w-[348px] h-12 text-base mx-auto'>
