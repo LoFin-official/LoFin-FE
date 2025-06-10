@@ -15,7 +15,7 @@ interface ChattingBarProps {
 }
 
 export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarProps) {
-  const [openPanel, setOpenPanel] = useState<'plus' | 'emoji' | null>(null);
+  const [openPanel, setOpenPanel] = useState<'plus' | 'emoji' | 'keyboard' | null>(null);
   const [inputText, setInputText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -26,7 +26,7 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
 
   const router = useRouter();
 
-  const togglePanel = (type: 'plus' | 'emoji') => {
+  const togglePanel = (type: 'plus' | 'emoji' | 'keyboard') => {
     setOpenPanel((prev) => (prev === type ? null : type));
   };
 
@@ -239,22 +239,16 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onFocus={(e) => {
-                setOpenPanel(null);
+                setOpenPanel('keyboard');
                 setTimeout(() => {
-                  // 뷰포트 상단으로 강제 이동
-                  e.target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start', // 'center' 대신 'start' 사용
-                  });
-
-                  // 추가로 더 위로 스크롤하기 위해 window.scrollBy 사용
-                  setTimeout(() => {
-                    window.scrollBy({
-                      top: -48, // 100px 더 위로 스크롤
-                      behavior: 'smooth',
-                    });
-                  }, 100);
+                  e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 300);
+              }}
+              onBlur={() => {
+                // 키보드 패널만 닫기 (다른 패널은 유지)
+                if (openPanel === 'keyboard') {
+                  setOpenPanel(null);
+                }
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -284,6 +278,8 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
                 </div>
               </div>
             )}
+
+            {openPanel === 'keyboard' && <div className='h-[200px] bg-transparent'></div>}
 
             {openPanel === 'emoji' && (
               <div className='flex flex-row gap-4 px-6 py-4 overflow-x-auto'>
