@@ -12,9 +12,10 @@ interface Emoji {
 interface ChattingBarProps {
   receiverId: string;
   onNewMessage?: (message: any) => void;
+  onKeyboardToggle?: (isOpen: boolean) => void;
 }
 
-export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarProps) {
+export default function ChattingBar({ receiverId, onNewMessage, onKeyboardToggle }: ChattingBarProps) {
   const [openPanel, setOpenPanel] = useState<'plus' | 'emoji' | 'keyboard' | null>(null);
   const [inputText, setInputText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -27,7 +28,13 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
   const router = useRouter();
 
   const togglePanel = (type: 'plus' | 'emoji' | 'keyboard') => {
-    setOpenPanel((prev) => (prev === type ? null : type));
+    const newPanel = openPanel === type ? null : type;
+    setOpenPanel(newPanel);
+
+    // 키보드 패널 상태 변경 시 부모에게 알림
+    if (type === 'keyboard') {
+      onKeyboardToggle?.(newPanel === 'keyboard');
+    }
   };
 
   const fetchStickers = async () => {
@@ -279,7 +286,7 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
               </div>
             )}
 
-            {openPanel === 'keyboard' && <div className='h-[200px] bg-transparent'></div>}
+            {openPanel === 'keyboard' && <div className='max-h-[48px] h-[48px] md:h-[0px] bg-transparent'></div>}
 
             {openPanel === 'emoji' && (
               <div className='flex flex-row gap-4 px-6 py-4 overflow-x-auto'>
