@@ -11,6 +11,7 @@ interface User {
 
 export default function ChatPage() {
   const [partner, setPartner] = useState<User | null>(null);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   useEffect(() => {
     const fetchPartner = async () => {
@@ -36,14 +37,18 @@ export default function ChatPage() {
     fetchPartner();
   }, []);
 
+  const handleKeyboardToggle = (isOpen: boolean) => {
+    setIsKeyboardOpen(isOpen);
+  };
+
   // partner가 준비되면 ChattingBar에게 receiverId 전달
   return (
     <>
       <Header>{partner?.nickname || '상대방'}</Header>
-      <div className='h-[calc(100vh-104px)] overflow-y-auto bg-[#FFD9E1] bg-opacity-35'>
+      <div className={`h-[calc(100vh-104px)] overflow-y-auto bg-[#FFD9E1] bg-opacity-35 ${isKeyboardOpen ? 'mb-[48px]' : ''}`}>
         <Chatting partner={partner} />
       </div>
-      <ChattingBar receiverId={partner?._id || ''} />
+      <ChattingBar receiverId={partner?._id || ''} onKeyboardToggle={handleKeyboardToggle} />
     </>
   );
 }

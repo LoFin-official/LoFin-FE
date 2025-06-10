@@ -82,8 +82,6 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
   const memberId = getMemberId();
   const socketRef = useRef<ReturnType<typeof getSocket> | null>(null);
 
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
   // 상대방 프로필 이미지 URL 생성
   const getPartnerProfileImageUrl = useCallback(() => {
     if (!partner?.profilePicture) return null;
@@ -210,7 +208,7 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
   }, [partner, memberId, handleIncomingMessage]);
 
   return (
-    <div className={`flex flex-col h-[calc(100vh-104px)] bg-[#FFD9E1] bg-opacity-35 ${isKeyboardOpen ? 'mb-[48px]' : ''}`}>
+    <div className='flex flex-col h-[calc(100vh-104px)] bg-[#FFD9E1] bg-opacity-35'>
       <div className='flex-1 py-4 px-4 overflow-y-auto'>
         <div className='max-w-md mx-auto'>
           {error && <div className='text-center text-red-600 font-bold my-4'>{error}</div>}
