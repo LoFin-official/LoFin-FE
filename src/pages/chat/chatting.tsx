@@ -208,14 +208,14 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
   }, [partner, memberId, handleIncomingMessage]);
 
   return (
-    <div className='flex flex-col h-screen bg-[#FFD9E1] bg-opacity-35'>
-      <div className='flex-1 p-4 overflow-y-auto'>
+    <div className='flex flex-col h-[calc(100vh-104px)] bg-[#FFD9E1] bg-opacity-35'>
+      <div className='flex-1 py-4 px-4 overflow-y-auto'>
         <div className='max-w-md mx-auto'>
           {error && <div className='text-center text-red-600 font-bold my-4'>{error}</div>}
           {!error && groupedChats.length === 0 && <div className='text-center text-gray-500 my-4'>메시지가 없습니다.</div>}
           {groupedChats.map((group, idx) => (
             <div key={idx}>
-              <div className='px-2 py-[2px] w-40 h-6 relative bg-[#D9D9D9] rounded-[20px] overflow-hidden mx-auto mt-4'>
+              <div className='px-2 py-[2px] w-40 h-6 relative bg-[#D9D9D9] rounded-[20px] overflow-hidden mx-auto'>
                 <div className='w-36 h-5 left-[8px] top-[2px] absolute flex items-center justify-center text-[#ffffff] text-sm font-bold leading-normal'>
                   {group.date}
                 </div>

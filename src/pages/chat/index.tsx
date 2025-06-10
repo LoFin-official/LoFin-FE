@@ -40,7 +40,7 @@ export default function ChatPage() {
   return (
     <>
       <Header>{partner?.nickname || '상대방'}</Header>
-      <div className='h-screen overflow-y-auto bg-[#FFD9E1] bg-opacity-35'>
+      <div className='h-[calc(100vh-104px)] overflow-y-auto bg-[#FFD9E1] bg-opacity-35'>
         <Chatting partner={partner} />
       </div>
       <ChattingBar receiverId={partner?._id || ''} />
