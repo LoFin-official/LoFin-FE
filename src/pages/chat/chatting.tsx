@@ -208,7 +208,8 @@ export default function Chatting({ partner }: ChatPageProps): React.ReactElement
   }, [partner, memberId, handleIncomingMessage]);
 
   return (
-    <div className='flex flex-col h-[calc(100vh-104px)] bg-[#FFD9E1] bg-opacity-35'>
+    <div className='flex flex-col flex-1 bg-[#FFD9E1] bg-opacity-35'>
+      {/* 스크롤 영역 - flex-1으로 남은 공간 모두 사용 */}
       <div className='flex-1 py-4 px-4 overflow-y-auto'>
         <div className='max-w-md mx-auto'>
           {error && <div className='text-center text-red-600 font-bold my-4'>{error}</div>}

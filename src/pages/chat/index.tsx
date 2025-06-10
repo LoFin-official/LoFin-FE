@@ -43,12 +43,21 @@ export default function ChatPage() {
 
   // partner가 준비되면 ChattingBar에게 receiverId 전달
   return (
-    <>
-      <Header>{partner?.nickname || '상대방'}</Header>
-      <div className={`${isKeyboardOpen ? 'h-[calc(100vh-120px)]' : 'h-[calc(100vh-104px)]'} overflow-y-auto bg-[#FFD9E1] bg-opacity-35`}>
+    <div className='flex flex-col h-screen'>
+      {/* Header - 고정 높이 */}
+      <div className='flex-shrink-0'>
+        <Header>{partner?.nickname || '상대방'}</Header>
+      </div>
+
+      {/* Chat Content - 남은 공간을 모두 차지 */}
+      <div className='flex-1 flex flex-col min-h-0'>
         <Chatting partner={partner} />
       </div>
-      <ChattingBar receiverId={partner?._id || ''} onKeyboardToggle={handleKeyboardToggle} />
-    </>
+
+      {/* ChattingBar - 고정 높이 */}
+      <div className='flex-shrink-0'>
+        <ChattingBar receiverId={partner?._id || ''} onKeyboardToggle={handleKeyboardToggle} />
+      </div>
+    </div>
   );
 }
