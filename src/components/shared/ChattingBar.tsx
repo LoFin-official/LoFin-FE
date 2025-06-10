@@ -239,10 +239,21 @@ export default function ChattingBar({ receiverId, onNewMessage }: ChattingBarPro
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onFocus={(e) => {
-                setOpenPanel(null);
+                // 키보드가 완전히 나타날 때까지 충분한 시간 대기
                 setTimeout(() => {
-                  e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);
+                  // 더 강제적인 스크롤 옵션 사용
+                  e.target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start', // 'center' 대신 'start' 사용
+                    inline: 'nearest',
+                  });
+
+                  // 추가적으로 window 스크롤도 시도
+                  window.scrollTo({
+                    top: e.target.offsetTop - 20,
+                    behavior: 'smooth',
+                  });
+                }, 500);
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
